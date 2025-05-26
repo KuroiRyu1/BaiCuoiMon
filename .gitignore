@@ -365,6 +365,7 @@ FodyWeavers.xsd
 # Custom
 .Web.config
 *Web.config
+Web.config
 *.Web.config
 
 Entity
