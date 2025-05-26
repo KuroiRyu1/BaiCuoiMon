@@ -364,5 +364,4 @@ FodyWeavers.xsd
 
 # Custom
 /Web.config
-*.edmx
-*.edmx/
+Entity
