@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStoryProject", "WebStoryProject\WebStoryProject.csproj", "{A154DD7F-8318-4034-A0F4-D312938F08BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStoryApi", "WebStoryService\WebStoryApi.csproj", "{1C8D86E4-1DBF-40E8-95D3-6B2F50A69180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStoryConnect", "StoryWeb\WebStoryConnect.csproj", "{30A52EDA-F008-4049-AB92-9A3D4B9D13A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A154DD7F-8318-4034-A0F4-D312938F08BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A154DD7F-8318-4034-A0F4-D312938F08BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A154DD7F-8318-4034-A0F4-D312938F08BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A154DD7F-8318-4034-A0F4-D312938F08BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C8D86E4-1DBF-40E8-95D3-6B2F50A69180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C8D86E4-1DBF-40E8-95D3-6B2F50A69180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C8D86E4-1DBF-40E8-95D3-6B2F50A69180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8D86E4-1DBF-40E8-95D3-6B2F50A69180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30A52EDA-F008-4049-AB92-9A3D4B9D13A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30A52EDA-F008-4049-AB92-9A3D4B9D13A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30A52EDA-F008-4049-AB92-9A3D4B9D13A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30A52EDA-F008-4049-AB92-9A3D4B9D13A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
