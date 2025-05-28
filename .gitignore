@@ -369,4 +369,4 @@ Web.config
 *.Web.config
 packages.config
 
-Entity
+Entities
