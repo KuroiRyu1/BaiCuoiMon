@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using WebStoryService.Models.Entity;
+using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
 
 namespace WebStoryService.Models.Repositories
