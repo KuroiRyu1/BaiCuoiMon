@@ -14,8 +14,8 @@ namespace WebStoryService.Models.Repositories
             List<Category> list = new List<Category>();
             try
             {
-                DbEntities entities = new DbEntities();
-                list = entities.tbl_category.Select(d => new Category
+                DbEntities en = new DbEntities();
+                list = en.tbl_category.Select(d => new Category
                 {
                     Id = d.C_id,
                     Name = d.C_name,
@@ -26,6 +26,23 @@ namespace WebStoryService.Models.Repositories
             {
             }
             return list;
+        }
+        public int Post(Category item)
+        {
+            try
+            {
+                DbEntities en = new DbEntities();
+                var cate = new tbl_category { C_name = item.Name, C_active = item.Active };
+                en.tbl_category.Add(cate);
+                en.SaveChanges();
+                item.Id = cate.C_id;
+                return 1;
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
         }
     }
 }

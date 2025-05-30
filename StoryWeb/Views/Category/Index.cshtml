@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    List<StoryWeb.Models.ModelView.Category> cateList = (List<StoryWeb.Models.ModelView.Category>)ViewBag.cate;
+}
+
+<h2>Index</h2>
+<table class="table table-hover">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Active</th>
+    </tr>
+    @foreach (StoryWeb.Models.ModelView.Category item in cateList)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>
+                @if (item.Active == 1)
+                {
+                    <input type="checkbox" checked readonly>
+                }
+                else
+                {
+                    <input type="checkbox" readonly />
+                }
+
+
+            </td>
+        </tr>
+    }
+</table>

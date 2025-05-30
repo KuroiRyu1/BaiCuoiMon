@@ -12,7 +12,7 @@ namespace WebStoryService.Models.Repositories
             try
             {
                 //check exist data in table usertoken(idtk,userid,cokenCurrent,status)
-                if (username.Equals("getun") && password.Equals("wuwa") && token.Equals("123"))
+                if (username.Equals("admin") && password.Equals("123") && token.Equals("12345"))
                 {
                     return true;
                 }
