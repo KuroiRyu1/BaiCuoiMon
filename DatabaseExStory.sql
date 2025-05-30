@@ -46,7 +46,7 @@ CREATE TABLE tbl_user (
     _password NVARCHAR(50),
     _fullname NVARCHAR(100),
     _token NVARCHAR(20),
-    _role NVARCHAR(50)
+    _role INT
 );
 GO
 
