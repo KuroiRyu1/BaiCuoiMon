@@ -46,15 +46,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+=======
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+>>>>>>> b444a05dd9602a75e44c6c6b2f6e695cda24355c
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -143,72 +149,76 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\MyApi\Controllers\CategoryApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\ChapterApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UserApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
     <Compile Include="Areas\MyApi\MyApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\ExWebStoryModel.Context.cs">
+    <Compile Include="Models\Entities\DbEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ExWebStoryModel.Context.tt</DependentUpon>
+      <DependentUpon>DbEntities.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\ExWebStoryModel.cs">
+    <Compile Include="Models\Entities\DbEntities.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\ExWebStoryModel.Designer.cs">
+    <Compile Include="Models\Entities\DbEntities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ExWebStoryModel.edmx</DependentUpon>
+      <DependentUpon>DbEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Entities\sysdiagrams.cs">
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_author.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_category.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_chapter.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_chapter_comment.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_chapter_image.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Entities\tbl_Level_user.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_status.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_comment.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_follow.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_like.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Entities\tbl_story_schedule.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_type.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_user.cs">
-      <DependentUpon>ExWebStoryModel.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Function.cs" />
+    <Compile Include="Models\MD5Hash.cs" />
     <Compile Include="Models\ModelData\Category.cs" />
+    <Compile Include="Models\ModelData\Story.cs" />
+    <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />
+    <Compile Include="Models\Repositories\UserRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -231,15 +241,15 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\Entities\ExWebStoryModel.Context.tt">
+    <Content Include="Models\Entities\DbEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ExWebStoryModel.edmx</DependentUpon>
-      <LastGenOutput>ExWebStoryModel.Context.cs</LastGenOutput>
+      <DependentUpon>DbEntities.edmx</DependentUpon>
+      <LastGenOutput>DbEntities.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\Entities\ExWebStoryModel.tt">
+    <Content Include="Models\Entities\DbEntities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ExWebStoryModel.edmx</DependentUpon>
-      <LastGenOutput>ExWebStoryModel.cs</LastGenOutput>
+      <DependentUpon>DbEntities.edmx</DependentUpon>
+      <LastGenOutput>DbEntities.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -248,12 +258,12 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\MyApi\Views\web.config" />
-    <EntityDeploy Include="Models\Entities\ExWebStoryModel.edmx">
+    <EntityDeploy Include="Models\Entities\DbEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ExWebStoryModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>DbEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\Entities\ExWebStoryModel.edmx.diagram">
-      <DependentUpon>ExWebStoryModel.edmx</DependentUpon>
+    <Content Include="Models\Entities\DbEntities.edmx.diagram">
+      <DependentUpon>DbEntities.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
