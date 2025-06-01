@@ -148,63 +148,68 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\Model1.Context.cs">
+    <Compile Include="Models\Entities\DbEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
+      <DependentUpon>DbEntities.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\Model1.cs">
+    <Compile Include="Models\Entities\DbEntities.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\Model1.Designer.cs">
+    <Compile Include="Models\Entities\DbEntities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
+      <DependentUpon>DbEntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\sysdiagrams.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_author.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_category.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_chapter.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_chapter_comment.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_chapter_image.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_status.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_comment.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_follow.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_like.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_story_type.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_user.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Function.cs" />
+    <Compile Include="Models\MD5Hash.cs" />
     <Compile Include="Models\ModelData\Category.cs" />
+    <Compile Include="Models\ModelData\Story.cs" />
+    <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />
+    <Compile Include="Models\Repositories\UserRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -227,15 +232,15 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\Entities\Model1.Context.tt">
+    <Content Include="Models\Entities\DbEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+      <DependentUpon>DbEntities.edmx</DependentUpon>
+      <LastGenOutput>DbEntities.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\Entities\Model1.tt">
+    <Content Include="Models\Entities\DbEntities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.cs</LastGenOutput>
+      <DependentUpon>DbEntities.edmx</DependentUpon>
+      <LastGenOutput>DbEntities.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -244,12 +249,12 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\MyApi\Views\web.config" />
-    <EntityDeploy Include="Models\Entities\Model1.edmx">
+    <EntityDeploy Include="Models\Entities\DbEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+      <LastGenOutput>DbEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\Entities\Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
+    <Content Include="Models\Entities\DbEntities.edmx.diagram">
+      <DependentUpon>DbEntities.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
