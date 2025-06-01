@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace WebStoryService.Areas.MyApi.Controllers
 {
@@ -14,7 +15,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
     {
         [Route("get")]
         [HttpGet]
-        public IEnumerable<Models.ModelData.Category> Get()
+        public IEnumerable<Category> Get()
         {
             var headerData = Request.Headers;
             string username = string.Empty;
@@ -41,6 +42,21 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
 
             return new List<Category>();
+        }
+        [Route("post")]
+        [HttpPost]
+        public int Post([FromBody] Category value)
+        {
+            if (value != null)
+            {
+                CategoryRes res = new CategoryRes();
+
+                if (res.Post(value) == 1)
+                {
+                    return 1;
+                }
+            }
+            return 0;
         }
     }
 }

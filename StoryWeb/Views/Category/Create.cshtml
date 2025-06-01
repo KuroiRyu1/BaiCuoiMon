@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+<form action="@Url.Action("CreateConfirm","Category")" method="post">
+    <div class="row">
+        <label class="col-2" for="Name">Name</label>
+        <input class="col-6" type="text" id="Name" name="Name" value="" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="Active">Active</label>
+        <input class="col-1" type="checkbox" id="Active" name="Active" value="1" />
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
