@@ -53,6 +53,63 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return result;
         }
-        
+        [Route("list")]
+        [HttpGet]
+        public IEnumerable<User> Get()
+        {
+            UserRes res = new UserRes();
+            return res.Gets();
+        }
+        [Route("delete/{userId}")]
+        [HttpPatch]
+        public int Delete(int userId)
+        {
+            try
+            {
+                using (DbEntities en = new DbEntities())
+                {
+                    var userToDeactivate = en.tbl_user.FirstOrDefault(d => d.C_id == userId);
+                    if (userToDeactivate != null)
+                    {
+                        userToDeactivate.C_active = 0;
+                        en.SaveChanges();
+                        return 1; 
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return 0; 
+        }
+        [Route("detail/{userId}")]
+        [HttpGet]
+        public User Detail(int userId)
+        {
+            User user = null;
+            try
+            {
+                using (DbEntities en = new DbEntities())
+                {
+                    user = en.tbl_user.Where(d => d.C_id == userId)
+                        .Select(d => new User
+                        {
+                            Id = (int)d.C_id,
+                            FullName = d.C_fullname,
+                            Username = d.C_username,
+                            Active = d.C_active ?? 0,
+                            Password = d.C_password,
+                            token = d.C_token, 
+                            role = d.C_role ?? 0
+                        }).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return user;
+        }
     }
 }
