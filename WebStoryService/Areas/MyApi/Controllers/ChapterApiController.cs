@@ -1,91 +1,118 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+using WebStoryService.Models.Entities;
 
 namespace WebStoryService.Areas.MyApi.Controllers
 {
-    [RoutePrefix("story")]
-    public class ChapterApiController : Controller
+    [RoutePrefix("api/chapters")]
+    public class ChapterApiController : ApiController
     {
-        [Route("chapter")]
+        private readonly DbEntities _db = new DbEntities(); // Sử dụng DbEntities từ EDMX
+
         [HttpGet]
-        // GET: MyApi/ChapterApi
-        public ActionResult GetChapter()
+        [Route("{storyId}")]
+        public IHttpActionResult GetByStory(int storyId)
         {
-            return View();
+            var chapters = _db.tbl_chapter
+                            .Where(c => c.C_story_id == storyId)
+                            .Select(c => new
+                            {
+                                c.C_id,
+                                c.C_title,
+                                c.C_content
+                            })
+                            .ToList();
+
+            return Ok(chapters);
         }
 
-        // GET: MyApi/ChapterApi/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: MyApi/ChapterApi/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: MyApi/ChapterApi/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        // GET api/chapters/single/{chapterId}
+        [HttpGet]
+        [Route("single/{chapterId}")]
+        public IHttpActionResult GetSingle(int chapterId)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                var chapter = _db.tbl_chapter.Find(chapterId);
+                if (chapter == null) return NotFound();
+                return Ok(chapter);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return InternalServerError(ex);
             }
         }
 
-        // GET: MyApi/ChapterApi/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: MyApi/ChapterApi/Edit/5
+        // POST api/chapters
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [Route("")]
+        public IHttpActionResult Create([FromBody] tbl_chapter chapter)
         {
             try
             {
-                // TODO: Add update logic here
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-                return RedirectToAction("Index");
+                chapter.C_day_create = DateTime.Now;
+                _db.tbl_chapter.Add(chapter);
+                _db.SaveChanges();
+
+                return Ok(chapter.C_id);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return InternalServerError(ex);
             }
         }
 
-        // GET: MyApi/ChapterApi/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: MyApi/ChapterApi/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        // PUT api/chapters/{chapterId}
+        [HttpPut]
+        [Route("{chapterId}")]
+        public IHttpActionResult Update(int chapterId, [FromBody] tbl_chapter data)
         {
             try
             {
-                // TODO: Add delete logic here
+                var chapter = _db.tbl_chapter.Find(chapterId);
+                if (chapter == null) return NotFound();
 
-                return RedirectToAction("Index");
+                chapter.C_title = data.C_title;
+                chapter.C_content = data.C_content;
+                _db.SaveChanges();
+
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return InternalServerError(ex);
+            }
+        }
+
+        // DELETE api/chapters/{chapterId}
+        [HttpDelete]
+        [Route("{chapterId}")]
+        public IHttpActionResult Delete(int chapterId)
+        {
+            try
+            {
+                var chapter = _db.tbl_chapter.Find(chapterId);
+                if (chapter == null) return NotFound();
+
+                // Xóa tất cả ảnh liên quan trước
+                var images = _db.tbl_chapter_image
+                               .Where(i => i.C_chapter_id == chapterId)
+                               .ToList();
+                _db.tbl_chapter_image.RemoveRange(images);
+
+                _db.tbl_chapter.Remove(chapter);
+                _db.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
         }
     }

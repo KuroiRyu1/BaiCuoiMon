@@ -10,7 +10,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
     [RoutePrefix("user")]
     public class UserApiController : ApiController
     {
-        [Route("login")]
-        [HttpGet]
+        //[Route("login")]
+        //[HttpGet]
     }
 }
