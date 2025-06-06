@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Story</h2>
+<form action="@Url.Action("CreateConfirm", "Story")" method="post">
+    <div class="row">
+        <label class="col-2" for="Title">Title</label>
+        <input class="col-6" type="text" id="Title" name="Title" value="" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="Introduction">Introduction</label>
+        <textarea class="col-6" id="Introduction" name="Introduction"></textarea>
+    </div>
+    <div class="row">
+        <label class="col-2" for="Image">Image</label>
+        <input class="col-6" type="text" id="Image" name="Image" value="default.jpg" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="ChapterNumber">Chapter Number</label>
+        <input class="col-6" type="number" id="ChapterNumber" name="ChapterNumber" value="1" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="AuthorId">Author ID</label>
+        <input class="col-6" type="number" id="AuthorId" name="AuthorId" value="1" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="StatusId">Status ID</label>
+        <input class="col-6" type="number" id="StatusId" name="StatusId" value="1" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="CategoryId">Category ID</label>
+        <input class="col-6" type="number" id="CategoryId" name="CategoryId" value="1" />
+    </div>
+    <div class="row">
+        <label class="col-2" for="StoryTypeId">Story Type ID</label>
+        <input class="col-6" type="number" id="StoryTypeId" name="StoryTypeId" value="1" />
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
