@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using WebStoryService.Models.Entities;
 
 namespace WebStoryService.Models.ModelData
 {
@@ -15,12 +17,11 @@ namespace WebStoryService.Models.ModelData
         public string Image { get; set; } = "default.jpg";
         public int LikeNumber { get; set; } = 0;
         public int FollowNumber { get; set; } = 0;
-        public int ViewNumber { get; set; } = 0;
+        public decimal ViewNumber { get; set; } = 0;
 
         public int AuthorId { get; set; } = 0;
         public int StatusId { get; set; } = 0;
         public int CategoryId { get; set; } = 0;
         public int StoryTypeId { get; set; } = 0;
-        public int ScheduleId { get; set; } = 0;
     }
 }

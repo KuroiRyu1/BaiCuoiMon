@@ -141,7 +141,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\MyApi\Controllers\CategoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterApiController.cs" />
-    <Compile Include="Areas\MyApi\Controllers\UserApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
     <Compile Include="Areas\MyApi\MyApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -209,6 +208,7 @@
     <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />
+    <Compile Include="Models\Repositories\StoryRes.cs" />
     <Compile Include="Models\Repositories\UserRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
