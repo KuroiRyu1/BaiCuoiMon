@@ -1,0 +1,262 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using WebStoryService.Models.ModelData;
+using WebStoryService.Models.Repositories;
+
+namespace WebStoryService.Areas.MyApi.Controllers
+{
+    [RoutePrefix("story")]
+    public class StoryApiController : ApiController
+    {
+        private StoryRes _storyRes = new StoryRes();
+
+        [Route("get")]
+        [HttpGet]
+        public IEnumerable<Story> Get(int? categoryId = null, int page = 1, int pageSize = 10)
+        {
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                return _storyRes.Gets(categoryId, page, pageSize);
+            }
+
+            return new List<Story>();
+        }
+
+        [Route("get/{id}")]
+        [HttpGet]
+        public HttpResponseMessage GetById(int id)
+        {
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                var story = _storyRes.GetById(id);
+                if (story == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, new { error = "Story not found" });
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, story);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token" });
+        }
+
+        [Route("post")]
+        [HttpPost]
+        public HttpResponseMessage Post([FromBody] Story value)
+        {
+            if (value == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Invalid story data" });
+            }
+
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                int result = _storyRes.Post(value, username, token);
+                if (result == 1)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Story created", Id = value.Id });
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Failed to create story. Check admin role or data." });
+            }
+
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token or not admin" });
+        }
+
+        [Route("put/{id}")]
+        [HttpPut]
+        public HttpResponseMessage Put(int id, [FromBody] Story value)
+        {
+            if (value == null || id != value.Id)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Invalid story data or ID mismatch" });
+            }
+
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                int result = _storyRes.Put(value, username, token);
+                if (result == 1)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Story updated" });
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Failed to update story. Check admin role or data." });
+            }
+
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token or not admin" });
+        }
+
+        [Route("delete/{id}")]
+        [HttpDelete]
+        public HttpResponseMessage Delete(int id)
+        {
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                int result = _storyRes.Delete(id, username, token);
+                if (result == 1)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Story deleted" });
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Failed to delete story. Check admin role or dependencies." });
+            }
+
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token or not admin" });
+        }
+
+        [Route("increment-view/{id}")]
+        [HttpPost]
+        public HttpResponseMessage IncrementView(int id)
+        {
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                int result = _storyRes.IncrementView(id);
+                if (result == 1)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "View incremented" });
+                }
+                return Request.CreateResponse(HttpStatusCode.NotFound, new { error = "Story not found" });
+            }
+
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token" });
+        }
+
+        [Route("search")]
+        [HttpGet]
+        public IEnumerable<Story> Search(string keyword = "", int? categoryId = null)
+        {
+            var headerData = Request.Headers;
+            string username = string.Empty;
+            string password = string.Empty;
+            string token = string.Empty;
+
+            if (headerData.Contains("username"))
+            {
+                username = headerData.GetValues("username").First();
+            }
+            if (headerData.Contains("pwd"))
+            {
+                password = headerData.GetValues("pwd").First();
+            }
+            if (headerData.Contains("tk"))
+            {
+                token = headerData.GetValues("tk").First();
+            }
+
+            if (AccountRep.checkToken(username, password, token) == true)
+            {
+                return _storyRes.Search(keyword, categoryId);
+            }
+
+            return new List<Story>();
+        }
+    }
+}

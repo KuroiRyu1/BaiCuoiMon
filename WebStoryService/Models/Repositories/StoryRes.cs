@@ -13,9 +13,12 @@ namespace WebStoryService.Models.Repositories
             List<Story> list = new List<Story>();
             try
             {
-                using (DbEntities en = new DbEntities())
+                using (var en = new DbEntities())
                 {
-                    var query = en.tbl_story.AsQueryable();
+                    var query = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
+                        .AsQueryable();
                     if (categoryId.HasValue && categoryId.Value != 0)
                     {
                         query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value);
@@ -37,7 +40,9 @@ namespace WebStoryService.Models.Repositories
                             AuthorId = s.C_author_id ?? 0,
                             StatusId = s.C_status_id ?? 0,
                             CategoryId = s.C_category_id ?? 0,
-                            StoryTypeId = s.C_story_type_id ?? 0
+                            StoryTypeId = s.C_story_type_id ?? 0,
+                            AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
+                            CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
                         }).ToList();
                 }
             }
@@ -53,9 +58,11 @@ namespace WebStoryService.Models.Repositories
             Story story = new Story();
             try
             {
-                using (DbEntities en = new DbEntities())
+                using (var en = new DbEntities())
                 {
                     story = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
                         .Where(s => s.C_id == id)
                         .Select(s => new Story
                         {
@@ -70,7 +77,9 @@ namespace WebStoryService.Models.Repositories
                             AuthorId = s.C_author_id ?? 0,
                             StatusId = s.C_status_id ?? 0,
                             CategoryId = s.C_category_id ?? 0,
-                            StoryTypeId = s.C_story_type_id ?? 0
+                            StoryTypeId = s.C_story_type_id ?? 0,
+                            AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
+                            CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
                         }).FirstOrDefault();
                 }
             }
@@ -261,7 +270,10 @@ namespace WebStoryService.Models.Repositories
             {
                 using (var en = new DbEntities())
                 {
-                    var query = en.tbl_story.AsQueryable();
+                    var query = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
+                        .AsQueryable();
                     if (!string.IsNullOrEmpty(keyword))
                     {
                         query = query.Where(s => (s.C_title ?? "").Contains(keyword) || (s.C_introduction ?? "").Contains(keyword));
@@ -285,7 +297,9 @@ namespace WebStoryService.Models.Repositories
                             AuthorId = s.C_author_id ?? 0,
                             StatusId = s.C_status_id ?? 0,
                             CategoryId = s.C_category_id ?? 0,
-                            StoryTypeId = s.C_story_type_id ?? 0
+                            StoryTypeId = s.C_story_type_id ?? 0,
+                            AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
+                            CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
                         }).ToList();
                 }
             }
