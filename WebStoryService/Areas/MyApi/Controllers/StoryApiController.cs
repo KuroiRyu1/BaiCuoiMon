@@ -71,12 +71,12 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 var story = _storyRes.GetById(id);
                 if (story == null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, new { error = "Story not found" });
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, story);
             }
 
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token" });
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
         [Route("post")]
@@ -85,7 +85,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             if (value == null)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Invalid story data" });
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var headerData = Request.Headers;
@@ -111,12 +111,12 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 int result = _storyRes.Post(value, username, token);
                 if (result == 1)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Story created", Id = value.Id });
+                    return Request.CreateResponse(HttpStatusCode.OK, value.Id);
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Failed to create story. Check admin role or data." });
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token or not admin" });
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
         [Route("put/{id}")]
@@ -125,7 +125,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             if (value == null || id != value.Id)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Invalid story data or ID mismatch" });
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var headerData = Request.Headers;
@@ -151,12 +151,12 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 int result = _storyRes.Put(value, username, token);
                 if (result == 1)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Story updated" });
+                    return Request.CreateResponse(HttpStatusCode.OK);
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Failed to update story. Check admin role or data." });
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token or not admin" });
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
         [Route("delete/{id}")]
@@ -186,12 +186,12 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 int result = _storyRes.Delete(id, username, token);
                 if (result == 1)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Story deleted" });
+                    return Request.CreateResponse(HttpStatusCode.OK);
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = "Failed to delete story. Check admin role or dependencies." });
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token or not admin" });
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
         [Route("increment-view/{id}")]
@@ -221,12 +221,12 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 int result = _storyRes.IncrementView(id);
                 if (result == 1)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "View incremented" });
+                    return Request.CreateResponse(HttpStatusCode.OK);
                 }
-                return Request.CreateResponse(HttpStatusCode.NotFound, new { error = "Story not found" });
+                return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new { error = "Invalid token" });
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
         [Route("search")]

@@ -141,6 +141,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\MyApi\Controllers\CategoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\StoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
     <Compile Include="Areas\MyApi\MyApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
