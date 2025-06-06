@@ -21,6 +21,8 @@ namespace WebStoryService.Models.Repositories
                     Username = d.C_username,
                     Active = d.C_active ?? 0,
                     Password = d.C_password,
+                    Email =d.C_email,
+                    role = (int)d.C_role,
                 }).ToList();
             }
             catch (Exception ex)
@@ -34,15 +36,17 @@ namespace WebStoryService.Models.Repositories
             try
             {
                 DbEntities en = new DbEntities();
-                user = en.tbl_user.Where(d=> d.C_username.Equals(username)&&d.C_password.Equals(password))
-                    .Select(d => new User { 
-                        Id =(int) d.C_id,
-                        Username =d.C_username,
+                user = en.tbl_user.Where(d => d.C_username.Equals(username) && d.C_password.Equals(password))
+                    .Select(d => new User {
+                        Id = (int)d.C_id,
+                        Username = d.C_username,
                         FullName = d.C_fullname,
                         Active = d.C_active ?? 0,
                         Password = d.C_password,
                         token = d.C_token,
-                }).FirstOrDefault();
+                        Email = d.C_email,
+                        role = (int)d.C_role
+                    }).FirstOrDefault();
             }
             catch(Exception ex)
             {
@@ -59,8 +63,10 @@ namespace WebStoryService.Models.Repositories
                     C_username = user.Username,
                     C_password = user.Password,
                     C_fullname = user.FullName,
-                    C_role = user.role,
+                    C_role = 1,
                     C_active = 1,
+                    C_token = user.token,
+                    C_email = user.Email,
                 };
                 en.tbl_user.Add(tbl);
                 en.SaveChanges();

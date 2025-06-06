@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+<form action="@Url.Action("LoginConfirm","User")" method="post">
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" value="" />
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" value="" />
+    <button class="btn btn bg-primary">Login</button>
+</form>
+

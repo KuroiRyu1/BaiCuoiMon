@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+    string email = "";
+}
+
+<h2>Register</h2>
+<form action="@Url.Action("LoginConfirm","User")" method="post">
+    <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" value="" />
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" value="" />
+    </div>
+    <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="" />
+    </div>
+    <div>
+        <label for="fullname">FullName</label>
+        <input type="text" name="fullname" id="fullname" value="" />
+        <button></button>
+    </div>
+    <div>
+        <label for="code">verification code</label>
+        <input type="text" name="code" id="code" value="" />
+        <a onclick="getEmail()" href="@Url.Action("Code", "User", new {a = email})">content</a>
+    </div>
+    <button class="btn btn bg-primary">Register</button>
+</form>
+<script>
+    function getEmail() {
+        email = document.getElementById("email").value;
+    }
+</script>

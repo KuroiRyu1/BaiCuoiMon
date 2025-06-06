@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.ModelBinding;
 using WebStoryService.Models;
 using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
@@ -15,15 +16,14 @@ namespace WebStoryService.Areas.MyApi.Controllers
     public class UsersApiController : ApiController
     {
         [Route("login")]
-        [HttpGet]
-        public User Login(string username = "getun", string password = "123")
+        [HttpPost]
+        public User Login(User user)
         {
-            User user = new User();
             try
             {
-                string a = Function.MD5Hash(password);
+                string a = Function.MD5Hash(user.Password);
                 UserRes userRes = new UserRes();
-                user = userRes.Login(username, a);
+                user = userRes.Login(user.Username, a);
             }
             catch (Exception ex)
             {
@@ -31,19 +31,22 @@ namespace WebStoryService.Areas.MyApi.Controllers
             return user;
         }
         [Route("register")]
-        [HttpGet]
-        public int Register(string username = "",string fullname="",string password="")
+        [HttpPost]
+        public int Register(User user)
         {
             int result = 0;
-            //if (user != null)
+            if (user != null)
             {
                 UserRes userRes = new UserRes();
-                if (userRes.checkUsername(username) == 0)
+                if (userRes.checkUsername(user.Username) == 0)
                 {
-                    //if (userRes.Register(user) != 0)
-                    //{
-                    //    result = 1;
-                    //}
+                    user.Password = Function.MD5Hash(user.Password);
+                    user.token = Function.GenerateToken();
+
+                        if (userRes.Register(user) != 0)
+                        {
+                            result = 1;
+                        }
                 }
                 else
                 {
