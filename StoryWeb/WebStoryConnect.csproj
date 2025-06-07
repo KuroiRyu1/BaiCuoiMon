@@ -122,12 +122,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\StoryController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ModelView\Category.cs" />
+    <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\User.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
+    <Compile Include="Models\Repositories\StoryRep.cs" />
     <Compile Include="Models\Repositories\UserRep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -184,6 +187,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
+    <Content Include="Views\Story\Index.cshtml" />
+    <Content Include="Views\Story\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
