@@ -123,9 +123,11 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StoryController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelView\Category.cs" />
     <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\User.cs" />
@@ -189,6 +191,10 @@
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\Story\Index.cshtml" />
     <Content Include="Views\Story\Create.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\UserInfo.cshtml" />
+    <Content Include="Views\User\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -15,6 +15,7 @@ namespace WebStoryService.Models.ModelData
         public int Active { get; set; } = 0;
         public string token { get; set; } = "";
         public int role { get; set; } = 1;
+        public string Email { get; set; } = "no email";
     }
     
 }
