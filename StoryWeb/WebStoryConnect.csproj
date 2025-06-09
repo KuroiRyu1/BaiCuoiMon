@@ -238,6 +238,7 @@
     <Content Include="Views\Story\Edit.cshtml" />
     <Content Include="Views\Story\Delete.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Views\Shared\_LayoutMember.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

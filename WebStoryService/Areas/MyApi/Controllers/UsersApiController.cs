@@ -13,7 +13,7 @@ using WebStoryService.Models.Repositories;
 namespace WebStoryService.Areas.MyApi.Controllers
 {
     [RoutePrefix("user")]
-    public class UsersApiController : ApiController
+    public class UsersApiController :ApiController
     {
         [Route("login")]
         [HttpPost]
