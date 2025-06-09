@@ -1,6 +1,6 @@
 ﻿@model StoryWeb.Models.ModelView.Story
 @{
-    ViewBag.Title = "Thêm truyện";
+    ViewBag.Title = "Chỉnh sửa truyện";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -9,13 +9,14 @@
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card shadow p-4 mb-5 bg-white rounded">
-                    <h3 class="text-center mb-4">Thêm truyện mới</h3>
+                    <h3 class="text-center mb-4">Chỉnh sửa truyện</h3>
                     @if (ViewBag.Error != null)
                     {
                         <div class="alert alert-danger text-center">@ViewBag.Error</div>
                     }
-                    @using (Html.BeginForm("CreateConfirm", "Story", FormMethod.Post))
+                    @using (Html.BeginForm("EditConfirm", "Story", FormMethod.Post))
                     {
+                        @Html.HiddenFor(m => m.Id)
                         <div class="form-group mb-3">
                             <label>Tiêu đề:</label>
                             @Html.TextBoxFor(m => m.Title, new { @class = "form-control", required = "required" })
@@ -56,7 +57,7 @@
                             @Html.TextBoxFor(m => m.StoryTypeId, new { @class = "form-control", type = "number", min = "1" })
                             @Html.ValidationMessageFor(m => m.StoryTypeId, "", new { @class = "text-danger" })
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Thêm truyện</button>
+                        <button type="submit" class="btn btn-primary w-100">Cập nhật truyện</button>
                     }
                 </div>
             </div>

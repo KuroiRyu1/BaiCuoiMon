@@ -1,32 +1,60 @@
 ﻿@{
-    ViewBag.Title = "Index";
-    List<StoryWeb.Models.ModelView.Story> storyList = (List<StoryWeb.Models.ModelView.Story>)ViewBag.stories;
+    ViewBag.Title = "Danh sách truyện";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var storyList = (List<StoryWeb.Models.ModelView.Story>)ViewBag.stories ?? new List<StoryWeb.Models.ModelView.Story>();
 }
 
-<h2>Story List</h2>
-<table class="table table-hover">
-    <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Category</th>
-        <th>Chapters</th>
-        <th>Likes</th>
-        <th>Follows</th>
-        <th>Views</th>
-    </tr>
-    @foreach (StoryWeb.Models.ModelView.Story item in storyList)
-    {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.Title</td>
-            <td>@item.AuthorName</td>
-            <td>@item.CategoryName</td>
-            <td>@item.ChapterNumber</td>
-            <td>@item.LikeNumber</td>
-            <td>@item.FollowNumber</td>
-            <td>@item.ViewNumber</td>
-        </tr>
-    }
-</table>
-<a href="@Url.Action("Create", "Story")" class="btn btn-primary">Add New Story</a>
+<div class="fashion_section">
+    <div class="container">
+        <h2 class="text-center mb-4">Quản lý truyện</h2>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success text-center">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger text-center">@TempData["Error"]</div>
+        }
+        <a href="@Url.Action("Create", "Story")" class="btn btn-success mb-3">Thêm truyện mới</a>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tiêu đề</th>
+                    <th>Tác giả</th>
+                    <th>Danh mục</th>
+                    <th>Số chương</th>
+                    <th>Lượt thích</th>
+                    <th>Lượt theo dõi</th>
+                    <th>Lượt xem</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in storyList)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Title</td>
+                        <td>@item.AuthorName</td>
+                        <td>@item.CategoryName</td>
+                        <td>@item.ChapterNumber</td>
+                        <td>@item.LikeNumber</td>
+                        <td>@item.FollowNumber</td>
+                        <td>@item.ViewNumber</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Story", new { id = item.Id })" class="btn btn-primary btn-sm">Sửa</a>
+                            <a href="@Url.Action("Delete", "Story", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                        </td>
+                    </tr>
+                }
+                @if (!storyList.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="text-center">Không có truyện nào.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
