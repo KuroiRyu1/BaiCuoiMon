@@ -1,14 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 
 namespace StoryWeb.Models
 {
     public class Function
     {
+        private static readonly char[] tokenChars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
+
+        public static string GenerateToken(int length = 20)
+        {
+            var random = new Random();
+            var token = new StringBuilder();
+
+            for (int i = 0; i < length; i++)
+            {
+                token.Append(tokenChars[random.Next(tokenChars.Length)]);
+            }
+
+            return token.ToString();
+        }
+
+        public static string MD5Hash(string text)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(text));
+                StringBuilder hashsb = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    hashsb.Append(b.ToString("X2"));
+                }
+                return hashsb.ToString();
+            }
+        }
         public static int limitnum(int num, int length)
         {
             int result = num;

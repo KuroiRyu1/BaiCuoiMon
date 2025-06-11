@@ -14,54 +14,127 @@ namespace StoryWeb.Models.Repositories
 {
     public class UserRep
     {
-        public UserRep() { }
-        public static UserRep _instance = null;
-        public static UserRep Instance {  
-            get {
-                
+        private static UserRep _instance;
+        private UserRep() { }
+
+        public static UserRep Instance
+        {
+            get
+            {
                 if (_instance == null)
                 {
                     _instance = new UserRep();
                 }
-                return _instance; 
-            } 
+                return _instance;
+            }
         }
-        public async Task<User> login(string username, string password)
+
+        private HttpClient CreateHttpClient()
         {
-            User user = new User();
-            user.Username = username;
-            user.Password = password;
-            HttpClient client = new HttpClient();
+            var client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:8078");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("username", "admin");
             client.DefaultRequestHeaders.Add("pwd", "123");
             client.DefaultRequestHeaders.Add("tk", "12345");
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-            HttpResponseMessage res = await client.PostAsync("user/login",content);
-            if (res.IsSuccessStatusCode)
-            {
-                return user;
-            }
-            return user;
+            return client;
         }
-        public async Task<int> Register(User user)
+
+        public async Task<User> Login(string username, string password)
         {
-            int result = 0;
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-            HttpResponseMessage res = await client.PostAsync("user/login", content);
-            if (res.IsSuccessStatusCode)
+            try
             {
-                var dataJson = res.Content.ReadAsStringAsync().Result;
-                result = JsonConvert.DeserializeObject<int>(dataJson);
+                using (var client = CreateHttpClient())
+                {
+                    var loginData = new { Username = username, Password = password };
+                    var content = new StringContent(
+                        JsonConvert.SerializeObject(loginData),
+                        Encoding.UTF8,
+                        "application/json");
+
+                    var response = await client.PostAsync("user/login", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<User>(dataJson);
+                    }
+                }
             }
-            return result;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login error: {ex.Message}");
+            }
+            return null;
         }
+
+        public async Task<bool> Register(User user)
+        {
+            try
+            {
+                using (var client = CreateHttpClient())
+                {
+                    var content = new StringContent(
+                        JsonConvert.SerializeObject(user),
+                        Encoding.UTF8,
+                        "application/json");
+
+                    var response = await client.PostAsync("user/register", content);
+                    return response.IsSuccessStatusCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Register error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            try
+            {
+                using (var client = CreateHttpClient())
+                {
+                    var response = await client.GetAsync($"user/get/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<User>(dataJson);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Get user error: {ex.Message}");
+            }
+            return null;
+        }
+        public async Task<List<User>> GetUser()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri("http://localhost:8078");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+                string url = $"user/list";
+              
+                HttpResponseMessage res = await client.GetAsync(url);
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = await res.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<User>>(dataJson);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+            }
+            return new List<User>();
+        }
+
     }
 }
