@@ -63,5 +63,31 @@ namespace StoryWeb.Models.Repositories
             }
             return result;
         }
+        public async Task<List<User>> GetUser()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri("http://localhost:8078");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+                string url = $"user/list";
+              
+                HttpResponseMessage res = await client.GetAsync(url);
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = await res.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<User>>(dataJson);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+            }
+            return new List<User>();
+        }
+
     }
 }

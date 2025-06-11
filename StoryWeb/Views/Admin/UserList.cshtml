@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Danh sách người dùng";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var userList = (List<StoryWeb.Models.ModelView.User>)ViewBag.user ?? new List<StoryWeb.Models.ModelView.User>();
 }
 
 <div class="fashion_section">
@@ -18,17 +19,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>
-                        <a href="#" class="btn btn-primary btn-sm">Sửa</a>
-                        <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
-                    </td>
-                </tr>
+                @foreach (var item in userList)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Username</td>
+                        <td>@item.Role</td>
+                        <td>@item.Email</td>
+                        <td>@item.Active</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Story", new { id = item.Id })" class="btn btn-primary btn-sm">Sửa</a>
+                            <a href="@Url.Action("Delete", "Story", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                        </td>
+                    </tr>
+                }
 
             </tbody>
         </table>

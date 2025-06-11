@@ -1,6 +1,9 @@
-﻿using System;
+﻿using StoryWeb.Models.ModelView;
+using StoryWeb.Models.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,9 +16,12 @@ namespace StoryWeb.Controllers
         {
             return View();
         }
-        public ActionResult UserList()
+        public async Task<ActionResult> UserList()
         {
+            var user = await UserRep.Instance.GetUser();
+            ViewBag.user = user ?? new List<User>();
             return View();
+
         }
     }
 }
