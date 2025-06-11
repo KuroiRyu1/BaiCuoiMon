@@ -24,24 +24,24 @@ namespace StoryWeb
         }
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            var app=(HttpApplication)sender;
-            var uriObj = app.Context.Request.Url.AbsolutePath;
-            if (uriObj.ToLower().Contains("admin") ||uriObj.ToLower().Contains("userinfo"))
-            {
-                if (app.Context.Session["user"] != null)
-                {
-                    User user = (User)app.Context.Session["user"];
-                    var user_role = user.Role;
-                    if (user_role != 0&& uriObj.ToLower().Contains("admin"))
-                    {
-                        app.Context.Response.RedirectToRoute(new { controller = "Home", action = "index" });
-                    }
-                }
-                else if (uriObj.ToLower().Contains("admin")||uriObj.ToLower().Contains("userinfo"))
-                {
-                    app.Context.Response.RedirectToRoute(new { controller = "User", action = "Login" });
-                }
-            }
+            //var app=(HttpApplication)sender;
+            //var uriObj = app.Context.Request.Url.AbsolutePath;
+            //if (uriObj.ToLower().Contains("admin") ||uriObj.ToLower().Contains("userinfo"))
+            //{
+            //    if (app.Context.Session["user"] != null)
+            //    {
+            //        User user = (User)app.Context.Session["user"];
+            //        var user_role = user.Role;
+            //        if (user_role != 0&& uriObj.ToLower().Contains("admin"))
+            //        {
+            //            app.Context.Response.RedirectToRoute(new { controller = "Home", action = "index" });
+            //        }
+            //    }
+            //    else if (uriObj.ToLower().Contains("admin")||uriObj.ToLower().Contains("userinfo"))
+            //    {
+            //        app.Context.Response.RedirectToRoute(new { controller = "User", action = "Login" });
+            //    }
+            //}
         }
     }
     
