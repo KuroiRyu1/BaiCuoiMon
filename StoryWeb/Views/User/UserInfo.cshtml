@@ -1,7 +1,10 @@
-﻿
-@{
-    ViewBag.Title = "UserInfo";
+﻿@{
+    var user = (StoryWeb.Models.ModelView.User)Session["user"];
 }
 
-<h2>UserInfo</h2>
+<h2>Thông tin tài khoản</h2>
 
+<p>Xin chào, @user.Username!</p>
+<p>Email: @user.Email</p>
+
+<a href="@Url.Action("Logout")" class="btn btn-danger">Đăng xuất</a>
