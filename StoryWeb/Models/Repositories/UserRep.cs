@@ -14,6 +14,7 @@ namespace StoryWeb.Models.Repositories
 {
     public class UserRep
     {
+        private static readonly HttpClient _client = CreateHttpClient();
         private static UserRep _instance;
         private UserRep() { }
 
@@ -29,16 +30,14 @@ namespace StoryWeb.Models.Repositories
             }
         }
 
-        private HttpClient CreateHttpClient()
+        private static HttpClient CreateHttpClient()
         {
             var client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:8078");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
             return client;
         }
+    
 
         public async Task<User> Login(string username, string password)
         {
@@ -56,8 +55,10 @@ namespace StoryWeb.Models.Repositories
 
                     if (response.IsSuccessStatusCode)
                     {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<User>(dataJson);
+                        string dataJson = await response.Content.ReadAsStringAsync();
+                        var result =  JsonConvert.DeserializeObject<User>(dataJson);
+
+                        return result;
                     }
                 }
             }
@@ -67,6 +68,7 @@ namespace StoryWeb.Models.Repositories
             }
             return null;
         }
+
 
         public async Task<bool> Register(User user)
         {
@@ -88,6 +90,32 @@ namespace StoryWeb.Models.Repositories
                 Console.WriteLine($"Register error: {ex.Message}");
                 return false;
             }
+        }
+        public async Task<string> AuthenticateAsync(string username, string password)
+        {
+            try
+            {
+                var loginData = new { Username = username, Password = password };
+
+                string jsonPayload = JsonConvert.SerializeObject(loginData);
+
+                var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _client.PostAsync("user/login", httpContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<User>(responseData);
+                    return result?.Token;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Lỗi mạng khi gọi API login: {ex.Message}");
+            }
+         
+            return null;
         }
 
         public async Task<User> GetUserById(int id)
