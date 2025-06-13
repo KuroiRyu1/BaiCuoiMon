@@ -93,5 +93,16 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+        public async Task<ActionResult> FollowPage()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return View();
+        }
     }
 }

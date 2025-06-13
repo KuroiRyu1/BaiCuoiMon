@@ -32,7 +32,7 @@ namespace StoryWeb.Models.Repositories
             user.Username = username;
             user.Password = password;
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("username", "admin");
             client.DefaultRequestHeaders.Add("pwd", "123");
@@ -49,7 +49,7 @@ namespace StoryWeb.Models.Repositories
         {
             int result = 0;
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("username", "admin");
             client.DefaultRequestHeaders.Add("pwd", "123");

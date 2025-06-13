@@ -112,17 +112,21 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ChapterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StoryController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\base_address.cs" />
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelView\Category.cs" />
+    <Compile Include="Models\ModelView\Chapter.cs" />
     <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\User.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
+    <Compile Include="Models\Repositories\ChapterRep.cs" />
     <Compile Include="Models\Repositories\StoryRep.cs" />
     <Compile Include="Models\Repositories\UserRep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -234,6 +238,11 @@
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\Shared\_LayoutMember.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Story\StoryInfo.cshtml" />
+    <Content Include="Views\Chapter\Read.cshtml" />
+    <Content Include="Views\Story\StoryList.cshtml" />
+    <Content Include="Views\Category\CategoryList.cshtml" />
+    <Content Include="Views\User\FollowPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

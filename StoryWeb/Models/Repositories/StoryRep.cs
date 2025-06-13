@@ -31,7 +31,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
@@ -60,7 +60,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
@@ -84,7 +84,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
@@ -110,7 +110,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
@@ -134,7 +134,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
@@ -157,7 +157,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
@@ -180,7 +180,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44326");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("username", "admin");
                 client.DefaultRequestHeaders.Add("pwd", "123");
