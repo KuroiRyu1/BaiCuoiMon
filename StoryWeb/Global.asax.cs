@@ -24,25 +24,28 @@ namespace StoryWeb
         }
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            var app=(HttpApplication)sender;
-            var uriObj = app.Context.Request.Url.AbsolutePath;
-            if (uriObj.ToLower().Contains("admin") ||uriObj.ToLower().Contains("userinfo"))
+            var app = (HttpApplication)sender;
+            var requestPath = app.Context.Request.Url.AbsolutePath.ToLower();
+
+            if (requestPath.Contains("/admin"))
             {
-                if (app.Context.Session["user"] != null)
+                if (app.Context.Session["user"] == null)
                 {
-                    User user = (User)app.Context.Session["user"];
-                    var user_role = user.Role;
-                    if (user_role != 0&& uriObj.ToLower().Contains("admin"))
-                    {
-                        app.Context.Response.RedirectToRoute(new { controller = "Home", action = "index" });
-                    }
-                }
-                else if (uriObj.ToLower().Contains("admin")||uriObj.ToLower().Contains("userinfo"))
-                {
+                    app.Context.Session["TempData"] = new TempDataDictionary { ["ErrorMessage"] = "Bạn cần đăng nhập để truy cập trang này." };
                     app.Context.Response.RedirectToRoute(new { controller = "User", action = "Login" });
+                }
+                else
+                {
+                    User usr = (User)app.Context.Session["user"];
+
+                    if (usr.Role != 1) 
+                    {
+                        app.Context.Session["TempData"] = new TempDataDictionary { ["ErrorMessage"] = "Bạn không có quyền truy cập trang này." };
+                        app.Context.Response.RedirectToRoute(new { controller = "Home", action = "Index" });
+                    }
                 }
             }
         }
+
     }
-    
 }

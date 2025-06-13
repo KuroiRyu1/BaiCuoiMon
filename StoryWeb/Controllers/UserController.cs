@@ -1,12 +1,14 @@
-﻿using StoryWeb.Models;
-using StoryWeb.Models.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
+using StoryWeb.Models;
+using StoryWeb.Models.ModelView;
+using StoryWeb.Models.Repositories;
 
 namespace StoryWeb.Controllers
 {
@@ -21,6 +23,32 @@ namespace StoryWeb.Controllers
         {
             return View();
         }
+
+        public ActionResult Login()
+        {
+            if (Session["user"] != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Login(string username, string password)
+        {
+            User user = await UserRep.Instance.AuthenticateAsync(username, password);
+            if (user == null)
+            {
+                ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng.";
+                return View();
+            }
+            Session["user"] = user;
+
+            return RedirectToAction("Index", "Home");
+
+        }
+
+
         public ActionResult Register()
         {
             if (Session["user"] != null)
@@ -29,68 +57,40 @@ namespace StoryWeb.Controllers
             }
             return View();
         }
-        public string Code(string email)
+        [HttpPost]
+      
+        public async Task<ActionResult> Register(string username, string password, string email, string fullname)
         {
-            string result = Function.SendMail(email);
-            return result;
-        }
-        public async Task<ActionResult> RegisterConfirm()
-        {
-            try
+            var newUser = new User
             {
-                string Username = Request.Form["username"];
-                string Password = Request.Form["password"];
-                if (Username != "" && Password != "")
-                {
-                    var user = await UserRep.Instance.login(Username, Password);
-                    if (user != null)
-                    {
-                        Session["user"] = user;
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Login", "User");
-                    }
-                }
-            }
-            catch (Exception ex)
+                Username = username,
+                Password =password,
+                Email = email,
+                FullName = fullname,
+                Active = 1,
+                Role = 0,
+            };
+
+            var isSuccess = await UserRep.Instance.Register(newUser);
+            if (!isSuccess)
             {
+                ViewBag.Error = "Đăng ký không thành công. Tên đăng nhập hoặc email có thể đã tồn tại.";
+                return View();
             }
 
-            return RedirectToAction("Index");
+            else
+            {
+                TempData["SuccessMessage"] = "Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.";
+                return RedirectToAction("Login");
+            }
+
+         
+
         }
-        public ActionResult Login()
+        public ActionResult Logout()
         {
-            if (Session["user"]!=null)
-            {
-                return RedirectToAction("index","Home");
-            }
-            return View();
-        }
-        public async Task<ActionResult> LoginConfirm()
-        {
-            try
-            {
-                string Username = Request.Form["username"];
-                string Password = Request.Form["password"];
-                if (Username != "" && Password != "")
-                {
-                   var user= await UserRep.Instance.login(Username, Password);
-                    if (user != null)
-                    {
-                        Session["user"] = user;
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Login", "User");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            Session.Clear();
+
             return RedirectToAction("Index", "Home");
         }
         public async Task<ActionResult> FollowPage()
