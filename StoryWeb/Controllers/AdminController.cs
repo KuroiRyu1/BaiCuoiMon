@@ -9,7 +9,6 @@ using System.Web.Mvc;
 
 namespace StoryWeb.Controllers
 {
-    [AdminAuthorize]
     public class AdminController : Controller
     {
         // GET: Admin

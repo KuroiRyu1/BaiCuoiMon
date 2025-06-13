@@ -91,7 +91,7 @@ namespace StoryWeb.Models.Repositories
                 return false;
             }
         }
-        public async Task<string> AuthenticateAsync(string username, string password)
+        public async Task<User> AuthenticateAsync(string username, string password)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace StoryWeb.Models.Repositories
                 {
                     string responseData = await response.Content.ReadAsStringAsync();
                     var result = JsonConvert.DeserializeObject<User>(responseData);
-                    return result?.Token;
+                    return result;
                 }
             }
             catch (HttpRequestException ex)
