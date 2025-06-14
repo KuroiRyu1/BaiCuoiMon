@@ -19,27 +19,33 @@ namespace WebStoryService.Areas.MyApi.Controllers
         [HttpGet]
         public IEnumerable<Story> Get(int? categoryId = null, int page = 1, int pageSize = 10)
         {
-            var headerData = Request.Headers;
-            string username = string.Empty;
-            string password = string.Empty;
-            string token = string.Empty;
+            try
+            {
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
 
-            if (headerData.Contains("username"))
-            {
-                username = headerData.GetValues("username").First();
-            }
-            if (headerData.Contains("pwd"))
-            {
-                password = headerData.GetValues("pwd").First();
-            }
-            if (headerData.Contains("tk"))
-            {
-                token = headerData.GetValues("tk").First();
-            }
+                //if (headerData.Contains("username"))
+                //{
+                //    username = headerData.GetValues("username").First();
+                //}
+                //if (headerData.Contains("pwd"))
+                //{
+                //    password = headerData.GetValues("pwd").First();
+                //}
+                //if (headerData.Contains("tk"))
+                //{
+                //    token = headerData.GetValues("tk").First();
+                //}
 
-            if (AccountRep.checkToken(username, password, token) == true)
+                //if (AccountRep.checkToken(username, password, token) == true)
+                //{
+                    return _storyRes.Gets(categoryId, page, pageSize);
+                //}
+            }
+            catch (Exception ex)
             {
-                return _storyRes.Gets(categoryId, page, pageSize);
             }
 
             return new List<Story>();
