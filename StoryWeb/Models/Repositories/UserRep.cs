@@ -30,8 +30,9 @@ namespace StoryWeb.Models.Repositories
             }
         }
 
-        private static HttpClient CreateHttpClient()
+        private static HttpClient CreateHttpClient(string username , string password)
         {
+
             User user = new User();
             user.Username = username;
             user.Password = password;
@@ -148,9 +149,6 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri("http://localhost:8078");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
                 string url = $"user/list";
               
                 HttpResponseMessage res = await client.GetAsync(url);
