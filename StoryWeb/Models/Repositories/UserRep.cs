@@ -33,8 +33,6 @@ namespace StoryWeb.Models.Repositories
         private static HttpClient CreateHttpClient()
         {
             User user = new User();
-            user.Username = username;
-            user.Password = password;
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
