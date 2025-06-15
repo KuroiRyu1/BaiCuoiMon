@@ -26,7 +26,7 @@ namespace StoryWeb.Controllers
             return View();
         }
         [Route("thongtintruyen/{id}")]
-        public async Task<ActionResult> StoryInfo(int id)
+        public async Task<ActionResult> StoryInfo(int id=0)
         {
             var story = await StoryRep.Instance.GetStoryById(id);
             var chapterList = await ChapterRep.Instance.getListOfChapter(id);

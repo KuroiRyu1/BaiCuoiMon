@@ -25,7 +25,7 @@
                     <div class="side-bar-wrap m-auto relative">
                         <div class="relative d-flex align-center">
                             <div class="v-image mx-auto responsive rounded ele-2 theme-dark">
-                                <img class="image" src="../image/sap-xuat-ngu-thi-isekai-0000579493-14-07-2024/1dloJFxmrbu-A6IgU6X-SPiNUmbfYNmBs62f6.jpg?code=gtt-yes" title="@story.Title" alt="@story.Title" />
+                                <img class="image" src="@Url.Content("~/Content")/Image/@story.Title/@story.Image" title="@story.Title" alt="@story.Title" />
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
 
-                <div class="rating mx-auto mt-3">
+                @*<div class="rating mx-auto mt-3">
                     <div class="d-flex mx-2 align-center zs-bg-1 rounded-sm ele-2">
                         <div class="v-rating v-rating--dense">
 
@@ -132,7 +132,7 @@
                             <small class="text--disabled">/5</small>
                         </div>
                     </div>
-                </div>
+                </div>*@
                 <div class="follow-comic d-flex align-center mt-3">
                     <a class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
                         <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
@@ -148,7 +148,7 @@
                     </a>
                 </div>
                 <div class="start-chapter d-flex align-center mt-3">
-                    <a class="btn-start mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                    <a href="@Url.Action("Read", "Chapter", new { id = story.Id, chapterIndex = 1 })" class="btn-start mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
                         <span class="v-btn-content">
                             <span class="text-capitalize">Đọc Từ Đầu</span>
                         </span>
@@ -241,12 +241,8 @@
                             </div>
                             <div class="information-section pa-4">
                                 <div class="row mb-1">
-                                    Tên khác:
-                                    <span class="other-name">Reincarnation of the Veteran Soldier</span>
-                                </div>
-                                <div class="row mb-1">
                                     Tác giả:
-                                    <span>Updating</span>
+                                    <span>@story.AuthorName</span>
                                 </div>
                                 <div class="row mb-1">
                                     Trạng thái:
@@ -280,7 +276,7 @@
                                         foreach (StoryWeb.Models.ModelView.Chapter item in chapterList)
                                         {
                                             <div class="col-md-6 col-lg-4 col-sm-6 col-12 w-100 p-12 py-1 border-box">
-                                                <a href="@Url.Action("Read", "Chapter", new {chapterId = item.Id})" class="d-flex align-center zs-bg-3 pa-1 v-card v-card-flat v-card-link v-sheet theme-dark 152">
+                                                <a href="@Url.Action("Read", "Chapter", new { id = item.StoryId,chapterIndex =item.ChapterIndex})" class="d-flex align-center zs-bg-3 pa-1 v-card v-card-flat v-card-link v-sheet theme-dark 152">
                                                     <div class="c-icon d-flex align-center justify-center rounded icon_wrapper v-sheet theme-dark">
 
 
@@ -310,7 +306,7 @@
                                         for (int i = 0; i < 12; i++)
                                         {
                                             <div class="col-md-6 col-lg-4 col-sm-6 col-12 w-100 p-12 py-1 border-box">
-                                                <a href="@Url.Action("Chapter", "Read", new {i})" class="d-flex align-center zs-bg-3 pa-1 v-card v-card-flat v-card-link v-sheet theme-dark 152">
+                                                <a href="@Url.Action("Read", "Chapter", new { id = chapterList[i].StoryId,chapterIndex =i})" class="d-flex align-center zs-bg-3 pa-1 v-card v-card-flat v-card-link v-sheet theme-dark 152">
                                                     <div class="c-icon d-flex align-center justify-center rounded icon_wrapper v-sheet theme-dark">
 
 

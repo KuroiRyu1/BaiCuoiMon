@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Http;
 using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
+using WebStoryService.Models.Repositories;
 
 namespace WebStoryService.Areas.MyApi.Controllers
 {
@@ -24,8 +25,19 @@ namespace WebStoryService.Areas.MyApi.Controllers
                                 Id = c.C_id,
                                 Title = c.C_title,
                                 Content = c.C_content,
+                                StoryId = storyId,
+                                ChapterIndex = (int)c.C_chapter_index,
                             })
                             .ToList();
+            return Ok(chapters);
+        }
+        [HttpGet]
+        [Route("{storyId}/{chapterIndex}")]
+        public IHttpActionResult ReadStory(int storyId,int chapterIndex)
+        {
+            var chapters = new Chapter();
+            ChapterRes res = new ChapterRes();
+            chapters= res.StoryRead(storyId, chapterIndex);
             return Ok(chapters);
         }
 

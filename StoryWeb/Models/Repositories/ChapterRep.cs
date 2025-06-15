@@ -22,6 +22,24 @@ namespace StoryWeb.Models.Repositories
                 return _instance; 
             } 
         }
+        public async Task<Chapter> GetOneChapter(int id=0)
+        {
+            var chapter = new Chapter();
+            try
+            {
+                if (id != 0)
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri(base_address.Address);
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    HttpResponseMessage res = await client.GetAsync($"chapter/single/{id}");
+                }
+            }
+            catch
+            (Exception ex){
+            }
+            return chapter;
+        }
         public async Task<Chapter> GetChapterDetail(string name)
         {
             Chapter chapter = new Chapter();
@@ -64,6 +82,27 @@ namespace StoryWeb.Models.Repositories
             }
             return chapters;
         }
-        
+        public async Task<Chapter> Read(int storyId,int chapterIndex)
+        {
+           var chapters = new Chapter();
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync($"api/chapters/{storyId}/{chapterIndex}");
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    chapters = JsonConvert.DeserializeObject<Chapter>(dataJson);
+                }
+                return chapters;
+            }
+            catch (Exception ex)
+            {
+            }
+            return chapters;
+        }
+
     }
 }

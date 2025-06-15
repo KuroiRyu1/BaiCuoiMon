@@ -12,5 +12,7 @@ namespace StoryWeb.Models.ModelView
         public string Content { get; set; } = "";
         public int StoryId { get; set; } = 0;
 
+        public int ChapterIndex { get; set; } = 0;  
+
     }
 }
