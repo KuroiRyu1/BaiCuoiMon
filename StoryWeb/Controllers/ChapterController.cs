@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoryWeb.Models.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +15,14 @@ namespace StoryWeb.Controllers
         {
             return View();
         }
-        public ActionResult Read()
+        public async Task<ActionResult> Read(int id=0,int chapterIndex=0)
         {
+            var chapter = await ChapterRep.Instance.Read(id,chapterIndex);
+            var Story = await StoryRep.Instance.GetStoryById(id);
+            var chapterImage = await ChapterImageRes.Instance.getChapterImage(chapter.Id);
+            ViewBag.chapter = chapter;
+            ViewBag.story = Story;
+            ViewBag.chapterImage = chapterImage;
             return View();
         }
     }

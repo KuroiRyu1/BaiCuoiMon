@@ -184,9 +184,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DbEntities.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\sysdiagram.cs">
-      <DependentUpon>DbEntities.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Entities\tbl_author.cs">
       <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>

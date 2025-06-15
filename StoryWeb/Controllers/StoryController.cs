@@ -26,7 +26,7 @@ namespace StoryWeb.Controllers
             return View();
         }
         [Route("thongtintruyen/{id}")]
-        public async Task<ActionResult> StoryInfo(int id)
+        public async Task<ActionResult> StoryInfo(int id=0)
         {
             var story = await StoryRep.Instance.GetStoryById(id);
             var chapterList = await ChapterRep.Instance.getListOfChapter(id);
@@ -109,8 +109,10 @@ namespace StoryWeb.Controllers
         }
         public async Task<ActionResult> StoryList(int page=1)
         {
-            var storyList = await StoryRep.Instance.GetStories(null,page,12);
+            var storyList = await StoryRep.Instance.GetStories(null,page,6);
+            var allstory = await StoryRep.Instance.GetAllStories();
             ViewBag.storyList = storyList;
+            ViewBag.allstory = allstory;
             ViewBag.page = page;
             return View();
         }

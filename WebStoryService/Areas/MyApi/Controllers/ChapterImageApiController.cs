@@ -35,7 +35,25 @@ namespace WebStoryService.Areas.MyApi.Controllers
                           .ToList();
             return Ok(images);
         }
-
+        [HttpGet]
+        [Route("images/{chapterId}")]
+        public List<ChapterImage> GetImage(int chapterId=0)
+        {
+            var image = new List<ChapterImage>();
+            try
+            {
+                ChapterImageRes res = new ChapterImageRes();
+                var item = res.getImage(chapterId);
+                if (item != null)
+                {
+                    image = item;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return image;
+        }
         [HttpPost]
         [Route("batch-append")]
         public IHttpActionResult AddImages([FromBody] AppendImagesModel model)

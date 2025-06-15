@@ -2,11 +2,13 @@
 using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -25,7 +27,25 @@ namespace StoryWeb.Models.Repositories
                 return _instance;
             }
         }
-
+        public async Task<List<Story>> GetAllStories()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync($"story/getall");
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<List<Story>>(dataJson);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return new List<Story>();
+        }
         public async Task<List<Story>> GetStories(int? categoryId = null, int page = 1, int pageSize = 10)
         {
             try
@@ -33,9 +53,6 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
                 string url = $"story/get?page={page}&pageSize={pageSize}";
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
@@ -62,9 +79,6 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
                 HttpResponseMessage res = await client.GetAsync($"story/get/{id}");
                 if (res.IsSuccessStatusCode)
                 {
@@ -86,9 +100,6 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
                 HttpResponseMessage res = await client.PostAsync("story/post", content);
                 if (res.IsSuccessStatusCode)
@@ -153,9 +164,6 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
                 HttpResponseMessage res = await client.PostAsync($"story/increment-view/{id}", null);
                 if (res.IsSuccessStatusCode)
                 {
@@ -176,9 +184,6 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
                 string url = $"story/search?keyword={Uri.EscapeDataString(keyword)}";
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
