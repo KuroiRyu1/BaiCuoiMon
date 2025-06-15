@@ -2,11 +2,13 @@
 using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -25,7 +27,25 @@ namespace StoryWeb.Models.Repositories
                 return _instance;
             }
         }
-
+        public async Task<List<Story>> GetAllStories()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync($"story/getall");
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<List<Story>>(dataJson);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return new List<Story>();
+        }
         public async Task<List<Story>> GetStories(int? categoryId = null, int page = 1, int pageSize = 10)
         {
             try

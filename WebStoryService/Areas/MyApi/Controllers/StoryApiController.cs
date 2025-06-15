@@ -50,6 +50,25 @@ namespace WebStoryService.Areas.MyApi.Controllers
 
             return new List<Story>();
         }
+        [HttpGet]
+        [Route("getall")]
+        public List<Story> getAll()
+        {
+            var story = new List<Story>();
+            try
+            {
+                StoryRes storyRes = new StoryRes();
+                var item = storyRes.GetAll();
+                if (item != null)
+                {
+                    story = item;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return story;
+        }
 
         [Route("get/{id}")]
         [HttpGet]
