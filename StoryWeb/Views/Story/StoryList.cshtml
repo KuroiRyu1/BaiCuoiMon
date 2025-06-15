@@ -18,9 +18,9 @@
         activePage = ViewBag.page;
     }
     int PageNum = activePage;
-    int PageMax = allStory.Count / 2;
+    int PageMax = allStory.Count / 6;
     int count = allStory.Count();
-    float FLoat = (float)count / 2;
+    float FLoat = (float)count / 6;
     if (FLoat > PageMax)
     {
         PageMax++;
@@ -79,7 +79,7 @@
                             }
                             if (PageMax < 6)
                             {
-                                for (int i = 1; i <= PageMax + 1; i++)
+                                for (int i = 1; i <= PageMax ; i++)
                                 {
                                     if (i != activePage)
                                     {
@@ -252,7 +252,7 @@
                             }
                             if (PageMax < 6)
                             {
-                                for (int i = 1; i <= PageMax + 1; i++)
+                                for (int i = 1; i <= PageMax; i++)
                                 {
                                     if (i != activePage)
                                     {
