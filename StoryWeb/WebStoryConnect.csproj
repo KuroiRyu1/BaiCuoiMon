@@ -357,6 +357,7 @@
     <Content Include="Views\Category\CategoryList.cshtml" />
     <Content Include="Views\User\FollowPage.cshtml" />
     <Content Include="Views\Admin\UserList.cshtml" />
+    <Content Include="Views\Admin\CategoryList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

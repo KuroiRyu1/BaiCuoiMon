@@ -107,9 +107,9 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("Index");
         }
-        public async Task<ActionResult> StoryList(int page=1)
+        public async Task<ActionResult> StoryList(int page = 1,int? categoryId=null)
         {
-            var storyList = await StoryRep.Instance.GetStories(null,page,6);
+            var storyList = await StoryRep.Instance.GetStories(categoryId, page, 6);
             var allstory = await StoryRep.Instance.GetAllStories();
             ViewBag.storyList = storyList;
             ViewBag.allstory = allstory;
