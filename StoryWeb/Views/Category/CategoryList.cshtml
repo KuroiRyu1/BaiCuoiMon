@@ -15,14 +15,14 @@
 
 
         <div class="container-1200 pa-2 mt-2 border-box zs-bg-1-variant rounded mb-3 mx-auto">
-            <div class="input-search-comic ma-3">
-                <button class="btn-search-action mx-1 rounded-sm mt-2 zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                    <span class="btn-default-icon-content">
-                        <span>Tìm Kiếm</span>
-                    </span>
-                </button>
-                <input maxlength="30" class="search-value mx-1 mt-2 rounded-sm zs-bg-3 btn-default btn-default-is-elevated theme-dark btn-size-default" type="text" placeholder="Nhập từ khóa">
-            </div>
+                <form method="get" action="@Url.Action("CategoryList", "Category")" class="input-search-comic ma-3">
+                    <button class="btn-search-action mx-1 rounded-sm mt-2 zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                        <span class="btn-default-icon-content">
+                            <span>Tìm Kiếm</span>
+                        </span>
+                    </button>
+                    <input name="name" maxlength="30" class="search-value mx-1 mt-2 rounded-sm zs-bg-3 btn-default btn-default-is-elevated theme-dark btn-size-default" type="text" placeholder="Nhập từ khóa">
+            </form>
             @*<fieldset class="block-status row block-item d-flex border-box zs-bg-3 rounded-sm">
                     <legend class="pl-2 d-flex">
                         <span>Trạng thái</span>
@@ -128,7 +128,7 @@
 
             </fieldset>
 
-            <fieldset class="block-order row block-item mt-5 d-flex border-box zs-bg-3 rounded-sm">
+            @*<fieldset class="block-order row block-item mt-5 d-flex border-box zs-bg-3 rounded-sm">
                 <legend class="pl-2 d-flex">
                     <span>Sắp Xếp</span>
                     <svg class="v-icon-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
@@ -190,12 +190,12 @@
                 </div>
 
 
-            </fieldset>
+            </fieldset>*@
         </div>
 
 
 
-        <div class="search-comic search-section container-1200 mt-2 mb-3 mx-auto">
+        @*<div class="search-comic search-section container-1200 mt-2 mb-3 mx-auto">
             <div class="topic border-box d-flex pr-3 w-100 mb-1 flex-column">
                 <div class="items-title d-flex align-center">
                     <div class="title-line text-h5 font-weight-medium px-4">Nội Dung</div>
@@ -247,7 +247,7 @@
                     <hr class="divider theme-dark">
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
 </main>
 

@@ -23,9 +23,18 @@ namespace StoryWeb.Controllers
             return View();
 
         }
-        public async Task<ActionResult> CategoryList()
+        public async Task<ActionResult> CategoryList(string name="")
         {
-            var cateList =  CategoryRep.Instance.getCates();
+            var cateList = new List<Category>();
+            if (string.IsNullOrEmpty(name))
+            {
+               cateList = await CategoryRep.Instance.getCates();
+            }
+            else
+            {
+                cateList =await CategoryRep.Instance.Search(name);
+            }
+            
             ViewBag.cateList = cateList;
             return View();
         }
