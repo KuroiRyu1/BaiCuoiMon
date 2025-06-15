@@ -24,8 +24,28 @@ namespace StoryWeb
         }
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            
+            var app = (HttpApplication)sender;
+            var requestPath = app.Context.Request.Url.AbsolutePath.ToLower();
+
+            if (requestPath.Contains("/admin"))
+            {
+                if (app.Context.Session["user"] == null)
+                {
+                    app.Context.Session["TempData"] = new TempDataDictionary { ["ErrorMessage"] = "Bạn cần đăng nhập để truy cập trang này." };
+                    app.Context.Response.RedirectToRoute(new { controller = "User", action = "Login" });
+                }
+                else
+                {
+                    User usr = (User)app.Context.Session["user"];
+
+                    if (usr.Role != 1) 
+                    {
+                        app.Context.Session["TempData"] = new TempDataDictionary { ["ErrorMessage"] = "Bạn không có quyền truy cập trang này." };
+                        app.Context.Response.RedirectToRoute(new { controller = "Home", action = "Index" });
+                    }
+                }
+            }
         }
+
     }
-    
 }

@@ -121,28 +121,32 @@ namespace WebStoryService.Areas.MyApi.Controllers
             return res.Gets();
         }
         [Route("delete/{userId}")]
-        [HttpPatch]
-        public int Delete(int userId)
+        [HttpPost]
+        public IHttpActionResult Delete(int userId)
         {
             try
             {
                 using (DbEntities en = new DbEntities())
                 {
-                    var userToDeactivate = en.tbl_user.FirstOrDefault(d => d.C_id == userId);
-                    if (userToDeactivate != null)
+                    var userToDelete = en.tbl_user.FirstOrDefault(d => d.C_id == userId);
+                    if (userToDelete != null)
                     {
-                        userToDeactivate.C_active = 0;
+                        en.tbl_user.Remove(userToDelete);
                         en.SaveChanges();
-                        return 1; 
+                        return Ok(new { message = "Xóa người dùng thành công." });
+                    }
+                    else
+                    {
+                        return NotFound();
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                return InternalServerError(ex);
             }
-            return 0; 
         }
+
         [Route("detail/{userId}")]
         [HttpGet]
         public User Detail(int userId)

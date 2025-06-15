@@ -29,7 +29,7 @@ namespace StoryWeb.Models.Repositories
         {
             var cates = new List<Category>();
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("username", "admin");
             client.DefaultRequestHeaders.Add("pwd", "123");
@@ -45,7 +45,7 @@ namespace StoryWeb.Models.Repositories
         public async Task<string> addCates(Category item)
         {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("username", "admin");
             client.DefaultRequestHeaders.Add("pwd", "123");

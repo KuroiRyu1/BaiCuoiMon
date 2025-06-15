@@ -26,7 +26,7 @@ namespace StoryWeb.Controllers
 
         public ActionResult Login()
         {
-            if (Request.Cookies["AuthToken"] != null)
+            if (Session["user"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -36,29 +36,22 @@ namespace StoryWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(string username, string password)
         {
-            string token = await UserRep.Instance.AuthenticateAsync(username, password);
-
-            if (string.IsNullOrEmpty(token))
+            User user = await UserRep.Instance.AuthenticateAsync(username, password);
+            if (user == null)
             {
                 ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng.";
                 return View();
             }
-
-            var authTokenCookie = new HttpCookie("AuthToken", token)
-            {
-                HttpOnly = true,
-                Expires = DateTime.Now.AddHours(8)
-            };
-            Response.Cookies.Add(authTokenCookie);
-
+            Session["user"] = user;
 
             return RedirectToAction("Index", "Home");
+
         }
 
 
         public ActionResult Register()
         {
-            if (Request.Cookies["AuthToken"] != null)
+            if (Session["user"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -75,7 +68,7 @@ namespace StoryWeb.Controllers
                 Email = email,
                 FullName = fullname,
                 Active = 1,
-                Role = 1,
+                Role = 0,
             };
 
             var isSuccess = await UserRep.Instance.Register(newUser);
@@ -96,20 +89,20 @@ namespace StoryWeb.Controllers
         }
         public ActionResult Logout()
         {
-
-            if (Request.Cookies["AuthToken"] != null)
-            {
-                var expiredCookie = new HttpCookie("AuthToken", "")
-                {
-                    Expires = DateTime.Now.AddDays(-1),
-
-                    HttpOnly = true
-                };
-
-                Response.Cookies.Add(expiredCookie);
-            }
+            Session.Clear();
 
             return RedirectToAction("Index", "Home");
+        }
+        public async Task<ActionResult> FollowPage()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return View();
         }
     }
 }

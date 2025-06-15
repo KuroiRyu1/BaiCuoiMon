@@ -32,8 +32,9 @@ namespace StoryWeb.Models.Repositories
 
         private static HttpClient CreateHttpClient()
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            User user = new User();
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             return client;
         }
@@ -91,7 +92,7 @@ namespace StoryWeb.Models.Repositories
                 return false;
             }
         }
-        public async Task<string> AuthenticateAsync(string username, string password)
+        public async Task<User> AuthenticateAsync(string username, string password)
         {
             try
             {
@@ -107,7 +108,7 @@ namespace StoryWeb.Models.Repositories
                 {
                     string responseData = await response.Content.ReadAsStringAsync();
                     var result = JsonConvert.DeserializeObject<User>(responseData);
-                    return result?.Token;
+                    return result;
                 }
             }
             catch (HttpRequestException ex)

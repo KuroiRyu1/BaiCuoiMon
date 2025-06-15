@@ -16,7 +16,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
 
         [Route("get")]
         [HttpGet]
-        public IEnumerable<Story> Get(int? categoryId = null, int page = 1, int pageSize = 10)
+        public IEnumerable<Story> Get(int? categoryId =null, int page = 1, int pageSize = 10)
         {
             var headerData = Request.Headers;
             string username = string.Empty;

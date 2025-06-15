@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using WebStoryService.Models.Entities;
+using WebStoryService.Models.ModelData;
 
 namespace WebStoryService.Areas.MyApi.Controllers
 {
@@ -17,14 +19,13 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             var chapters = _db.tbl_chapter
                             .Where(c => c.C_story_id == storyId)
-                            .Select(c => new
+                            .Select(c => new Chapter
                             {
-                                c.C_id,
-                                c.C_title,
-                                c.C_content
+                                Id = c.C_id,
+                                Title = c.C_title,
+                                Content = c.C_content,
                             })
                             .ToList();
-
             return Ok(chapters);
         }
 

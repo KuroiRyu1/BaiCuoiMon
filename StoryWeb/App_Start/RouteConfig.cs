@@ -18,6 +18,11 @@ namespace StoryWeb
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name:"Truyen",
+                url:"truyen/thongtintruyen/{name}",
+                defaults: new {controller= "Story", action ="StoryInfo",name = UrlParameter.Optional}
+                );
         }
     }
 }

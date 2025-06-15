@@ -2,6 +2,7 @@
 using StoryWeb.Models.Repositories;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,6 +10,7 @@ using System.Web.Mvc;
 
 namespace StoryWeb.Controllers
 {
+    [RoutePrefix("truyen")]
     public class StoryController : Controller
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -23,12 +25,22 @@ namespace StoryWeb.Controllers
             ViewBag.stories = stories ?? new List<Story>();
             return View();
         }
+        [Route("thongtintruyen/{id}")]
+        public async Task<ActionResult> StoryInfo(int id)
+        {
+            var story = await StoryRep.Instance.GetStoryById(id);
+            var chapterList = await ChapterRep.Instance.getListOfChapter(id);
+            ViewBag.story = story;
+            ViewBag.chapterList = chapterList;  
+            return View();
+        }
 
         // GET: Story/Create
         public ActionResult Create()
         {
             return View(new Story());
         }
+        
 
         // POST: Story/Create
         [HttpPost]
@@ -94,6 +106,13 @@ namespace StoryWeb.Controllers
                 TempData["Error"] = "Lỗi khi xóa truyện.";
             }
             return RedirectToAction("Index");
+        }
+        public async Task<ActionResult> StoryList(int page=1)
+        {
+            var storyList = await StoryRep.Instance.GetStories(null,page,12);
+            ViewBag.storyList = storyList;
+            ViewBag.page = page;
+            return View();
         }
     }
 }

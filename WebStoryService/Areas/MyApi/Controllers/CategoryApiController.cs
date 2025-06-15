@@ -136,9 +136,9 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return 0;
         }
-        [Route("softd")]
+        [Route("soft")]
         [HttpPut]
-        public int soft_delete([FromBody]Category item)
+        public int soft([FromBody]Category item)
         {
             try
             {
