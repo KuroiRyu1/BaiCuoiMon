@@ -34,7 +34,7 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpResponseMessage res = await client.GetAsync($"story/getall/{cateId}");
+                HttpResponseMessage res = await client.GetAsync($"story/getall?cateId={cateId}");
                 if (res.IsSuccessStatusCode)
                 {
                     var dataJson = res.Content.ReadAsStringAsync().Result;

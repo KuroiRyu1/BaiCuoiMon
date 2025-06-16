@@ -51,7 +51,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             return new List<Story>();
         }
         [HttpGet]
-        [Route("getall/{cateId}")]
+        [Route("getall")]
         public List<Story> getAll(int? cateId=null)
         {
             var story = new List<Story>();

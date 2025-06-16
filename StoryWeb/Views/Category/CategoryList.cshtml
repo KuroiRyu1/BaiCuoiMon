@@ -111,13 +111,11 @@
 
                 @foreach (var item in cateList)
                 {
-                    <legend>
-                        <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                            <a href="@Url.Action("StoryList", "Story", new {page=1,categoryId=item.Id})">
-                                <span class="txt pl-1">@item.Name</span>
-                            </a>
-                        </div>
-                    </legend>
+                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                        <a href="@Url.Action("StoryList", "Story", new {page=1,categoryId=item.Id})">
+                            <span class="txt pl-1 btn-default">@item.Name</span>
+                        </a>
+                    </div>
                 }
 
 
