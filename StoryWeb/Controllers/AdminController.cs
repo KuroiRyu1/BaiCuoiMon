@@ -272,5 +272,20 @@ namespace StoryWeb.Controllers
             }
             return Json(new System.Collections.Generic.List<dynamic>(), JsonRequestBehavior.AllowGet);
         }
+        public async Task<ActionResult> CategoryList(string name="")
+        {
+            var cateList = new List<Category>();
+            if (string.IsNullOrEmpty(name))
+            {
+               cateList = await CategoryRep.Instance.getCates();
+            }
+            else
+            {
+                cateList =await CategoryRep.Instance.Search(name);
+            }
+            
+            ViewBag.cateList = cateList;
+            return View();
+        }
     }
 }

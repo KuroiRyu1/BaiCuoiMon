@@ -178,5 +178,22 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return 0;
         }
+        [Route("search/{name}")]
+        public List<Category> searchByName(string name)
+        {
+            try
+            {
+                CategoryRes res= new CategoryRes();
+                if (!string.IsNullOrEmpty(name))
+                {
+                   return res.findByName(name);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new List<Category>();
+        }
     }
 }

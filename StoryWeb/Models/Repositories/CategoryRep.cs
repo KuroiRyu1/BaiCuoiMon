@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -52,6 +53,49 @@ namespace StoryWeb.Models.Repositories
                 return content.ToString();
             }
             return a;
+        }
+        public async Task<int> Edit(Category item)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(base_address.Address);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
+            HttpResponseMessage res = await client.PostAsync("category/put", content);
+            string a = JsonConvert.SerializeObject(item);
+            if (res.IsSuccessStatusCode)
+            {
+                return int.Parse(content.ToString());
+            }
+            return 0;
+        }
+        public async Task<int> Delete(Category item)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(base_address.Address);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
+            HttpResponseMessage res = await client.PostAsync("category/soft", content);
+            string a = JsonConvert.SerializeObject(item);
+            if (res.IsSuccessStatusCode)
+            {
+                return int.Parse(content.ToString());
+            }
+            return 0;
+        }
+        public async Task<List<Category>> Search(string name)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(base_address.Address);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(name), Encoding.UTF8, "application/json");
+            HttpResponseMessage res = await client.PostAsync($"category/search/{name}", content);
+            string a = JsonConvert.SerializeObject(name);
+            if (res.IsSuccessStatusCode)
+            {
+                var dataJson = res.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<List<Category>>(dataJson);
+            }
+            return new List<Category>();
         }
     }
 }
