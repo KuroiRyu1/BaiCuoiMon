@@ -197,5 +197,91 @@ namespace StoryWeb.Models.Repositories
             }
             return new List<Story>();
         }
+
+        public async Task<int> FollowStoryAsync(long userId, int storyId)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+
+                var body = new { UserId = userId, StoryId = storyId };
+                var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage res = await client.PostAsync("api/follow/story", content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return 1; // Theo dõi thành công
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log nếu cần: ex.Message
+            }
+            return 0; // Thất bại
+        }
+
+        public async Task<int> UnfollowStoryAsync(long userId, int storyId)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+
+                var body = new { UserId = userId, StoryId = storyId };
+                var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage res = await client.PostAsync("api/follow/story/unfollow", content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return 1; // Theo dõi thành công
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log nếu cần: ex.Message
+            }
+            return 0; // Thất bại
+        }
+
+        public async Task<bool> CheckIsFollowingAsync(long userId, int storyId)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+
+                string url = $"api/follow/story/user/{userId}";
+                HttpResponseMessage res = await client.GetAsync(url);
+
+                if (res.IsSuccessStatusCode)
+                {
+                    var json = await res.Content.ReadAsStringAsync();
+                    var stories = JsonConvert.DeserializeObject<List<dynamic>>(json);
+
+                    // Kiểm tra xem có tồn tại truyện đang xem trong danh sách đã theo dõi
+                    return stories.Any(s => (int)s.C_id == storyId);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log nếu cần: ex.Message
+            }
+
+            return false;
+        }
+
     }
 }

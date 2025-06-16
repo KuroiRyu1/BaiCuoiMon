@@ -30,6 +30,14 @@ namespace StoryWeb.Controllers
         {
             var story = await StoryRep.Instance.GetStoryById(id);
             var chapterList = await ChapterRep.Instance.getListOfChapter(id);
+            bool isFollowing = false;
+            User user = (User)Session["user"];
+            if (user != null)
+            {
+                isFollowing = await StoryRep.Instance.CheckIsFollowingAsync(user.Id, id);
+            }
+
+            ViewBag.IsFollowing = isFollowing;
             ViewBag.story = story;
             ViewBag.chapterList = chapterList;  
             return View();
@@ -113,6 +121,34 @@ namespace StoryWeb.Controllers
             ViewBag.storyList = storyList;
             ViewBag.page = page;
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Follow(int storyId)
+        {
+            var user = Session["user"] as User;
+            if (user == null)
+                return Json(new { success = false, message = "Bạn cần đăng nhập." });
+
+            int result = await StoryRep.Instance.FollowStoryAsync(user.Id, storyId);
+            if (result == 1)
+                return Json(new { success = true, message = "Bạn đã theo dõi truyện." });
+
+            return Json(new { success = false, message = "Không thể theo dõi truyện." });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Unfollow(int storyId)
+        {
+            var user = Session["user"] as User;
+            if (user == null)
+                return Json(new { success = false, message = "Bạn cần đăng nhập." });
+
+            int result = await StoryRep.Instance.UnfollowStoryAsync(user.Id, storyId);
+            if (result == 1)
+                return Json(new { success = true, message = "Bạn đã hủy theo dõi truyện." });
+
+            return Json(new { success = false, message = "Không thể theo dõi truyện." });
         }
     }
 }
