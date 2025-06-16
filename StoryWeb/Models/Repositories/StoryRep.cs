@@ -27,14 +27,14 @@ namespace StoryWeb.Models.Repositories
                 return _instance;
             }
         }
-        public async Task<List<Story>> GetAllStories()
+        public async Task<List<Story>> GetAllStories(int? cateId=null)
         {
             try
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpResponseMessage res = await client.GetAsync($"story/getall");
+                HttpResponseMessage res = await client.GetAsync($"story/getall/{cateId}");
                 if (res.IsSuccessStatusCode)
                 {
                     var dataJson = res.Content.ReadAsStringAsync().Result;

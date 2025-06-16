@@ -52,13 +52,21 @@ namespace WebStoryService.Models.Repositories
             }
             return list;
         }
-        public List<Story> GetAll()
+        public List<Story> GetAll(int? categoryId= null)
         {
             List<Story> list = new List<Story>();
             try
             {
                 var en = new DbEntities();
-                var item = en.tbl_story.Select(s=>new Story
+                var query = en.tbl_story
+                       .Include("tbl_author")
+                       .Include("tbl_category")
+                       .AsQueryable();
+                if (categoryId.HasValue && categoryId.Value != 0)
+                {
+                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value);
+                }
+                var item = query.Select(s=>new Story
                 {
                     Id = s.C_id,
                     Title = s.C_title,

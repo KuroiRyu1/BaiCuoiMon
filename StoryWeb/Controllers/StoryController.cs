@@ -110,7 +110,8 @@ namespace StoryWeb.Controllers
         public async Task<ActionResult> StoryList(int page = 1,int? categoryId=null)
         {
             var storyList = await StoryRep.Instance.GetStories(categoryId, page, 6);
-            var allstory = await StoryRep.Instance.GetAllStories();
+            var allstory = await StoryRep.Instance.GetAllStories(categoryId);
+            ViewBag.cateId = categoryId; 
             ViewBag.storyList = storyList;
             ViewBag.allstory = allstory;
             ViewBag.page = page;
