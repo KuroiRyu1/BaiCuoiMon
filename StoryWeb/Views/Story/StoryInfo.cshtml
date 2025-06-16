@@ -1,0 +1,401 @@
+﻿
+@{
+    ViewBag.Title = "StoryInfo";
+    Layout = "~/Views/Shared/_LayoutMember.cshtml";
+    StoryWeb.Models.ModelView.Story story = new StoryWeb.Models.ModelView.Story();
+    List<StoryWeb.Models.ModelView.Chapter> chapterList = new List<StoryWeb.Models.ModelView.Chapter>();
+    if (ViewBag.story != null)
+    {
+        story = (StoryWeb.Models.ModelView.Story)ViewBag.story;
+    }
+    if (ViewBag.chapterList != null)
+    {
+        chapterList = (List<StoryWeb.Models.ModelView.Chapter>)ViewBag.chapterList;
+    }
+
+}
+
+<main class="main">
+    <div class="main-wrap">
+        <div class="row mb-5">
+            <!-- Left Panel -->
+
+            <div class="col-md-4 col-lg-3 col-xl-2 col-12 w-100 p-12 border-box">
+                <div class="side-bar">
+                    <div class="side-bar-wrap m-auto relative">
+                        <div class="relative d-flex align-center">
+                            <div class="v-image mx-auto responsive rounded ele-2 theme-dark">
+                                <img class="image" src="@Url.Content("~/Content")/Image/@story.Title/@story.Image" title="@story.Title" alt="@story.Title" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-group mx-auto d-flex justify-space-around mt-5">
+                    <div title="Lượt đánh giá" class="rounded-sm he-4 zs-bg-1 d-flex flex-column align-center justify-center v-sheet theme-dark ele-2">
+                        <span class="v-icon notranslate theme-dark">
+                            <svg viewBox="0 0 24 24" class="v-icon-svg">
+                                <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+                            </svg>
+                        </span>
+                        <div class="text-caption">
+
+
+
+                            101
+                        </div>
+                    </div>
+                    <div title="Lượt xem" class="rounded-sm he-4 zs-bg-1 d-flex flex-column align-center justify-center v-sheet theme-dark ele-2">
+                        <span class="v-icon notranslate theme-dark">
+                            <svg viewBox="0 0 24 24" class="v-icon-svg">
+                                <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"></path>
+                            </svg>
+                        </span>
+                        <div class="text-caption px-1">
+                            @story.ViewNumber
+                        </div>
+                    </div>
+                    <div title="Lượt theo dõi" class="rounded-sm he-4 zs-bg-1 d-flex flex-column align-center justify-center v-sheet theme-dark ele-2">
+                        <span class="v-icon notranslate theme-dark">
+                            <svg viewBox="0 0 24 24" class="v-icon-svg">
+                                <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"></path>
+                            </svg>
+                        </span>
+                        <div class="text-caption px-1">
+                            @story.FollowNumber
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="rating mx-auto mt-3">
+                    <div class="d-flex mx-2 align-center zs-bg-1 rounded-sm ele-2">
+                        <div class="v-rating v-rating--dense">
+
+
+
+                            <div data-score="1" class="active">
+                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                </svg>
+                            </div>
+
+
+
+
+
+
+                            <div data-score="2" class="active">
+                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                </svg>
+                            </div>
+
+
+
+
+
+
+                            <div data-score="3" class="active">
+                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                </svg>
+                            </div>
+
+
+
+
+
+
+                            <div data-score="4" class="active">
+                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                </svg>
+                            </div>
+
+
+
+
+
+
+                            <div data-score="5" class="active">
+                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                </svg>
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="pr-3">
+                            <b class="text--disabled">5</b>
+                            <small class="text--disabled">/5</small>
+                        </div>
+                    </div>
+                </div>*@
+                <div class="follow-comic d-flex align-center mt-3">
+                    <a class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                        <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                        <span class="v-btn-content">
+                            <span class="text-capitalize">Theo dõi</span>
+                        </span>
+                    </a>
+                    <a class="btn-alert mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                        <svg class="v-icon-svg v-icon-alarm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="Notifications" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="Notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
+                        <span class="v-btn-content">
+                            <span class="text-capitalize">Thông Báo</span>
+                        </span>
+                    </a>
+                </div>
+                <div class="start-chapter d-flex align-center mt-3">
+                    <a href="@Url.Action("Read", "Chapter", new { id = story.Id, chapterIndex = 1 })" class="btn-start mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                        <span class="v-btn-content">
+                            <span class="text-capitalize">Đọc Từ Đầu</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <!-- Chapter -->
+
+
+
+
+
+
+            <div id="content" class="col-md-8 col-lg-9 col-xl-10 col-12 w-100 p-12 border-box">
+                <div>
+
+                    <div class="w-100 zs-bg-1 ele-2 rounded v-card v-sheet theme-dark">
+                        <div class="v-card-title text-responsive pb-0 font-weight-bold">@story.Title</div>
+                        <div class="px-4 py-0 v-item-group theme-dark v-slide-group v-chip-group v-chip-group-column">
+                            <div class="group-content-wrap">
+                                <div class="group-content">
+
+                                    <a href="../danh-sach9217.html?category=COM" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                        <div class="v-chip-content">
+                                            <span class="v-icon v-icon-left theme-dark">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
+                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
+                                                </svg>
+                                            </span>
+                                            <span>Hài Hước</span>
+                                        </div>
+                                    </a>
+
+                                    <a href="../danh-sachac57.html?category=MAW" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                        <div class="v-chip-content">
+                                            <span class="v-icon v-icon-left theme-dark">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
+                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
+                                                </svg>
+                                            </span>
+                                            <span>Manhwa</span>
+                                        </div>
+                                    </a>
+
+                                    <a href="../danh-sach61c4.html?category=MYS" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                        <div class="v-chip-content">
+                                            <span class="v-icon v-icon-left theme-dark">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
+                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
+                                                </svg>
+                                            </span>
+                                            <span>Huyền Bí</span>
+                                        </div>
+                                    </a>
+
+                                    <a href="../danh-sachcd5d.html?category=ACT" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                        <div class="v-chip-content">
+                                            <span class="v-icon v-icon-left theme-dark">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
+                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
+                                                </svg>
+                                            </span>
+                                            <span>Hành Động</span>
+                                        </div>
+                                    </a>
+
+                                    <a href="../danh-sach97ed.html?category=ADV" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                        <div class="v-chip-content">
+                                            <span class="v-icon v-icon-left theme-dark">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
+                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
+                                                </svg>
+                                            </span>
+                                            <span>Phiêu Lưu</span>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="v-card-text pt-1 px-4 pb-4 text-secondary font-weight-medium">@story.Introduction</div>
+                    </div>
+
+                    <div class="rounded w-100 mt-1">
+                        <div class="chapter-information zs-bg-1 ele-2 w-100 v-sheet theme-dark">
+                            <div class="d-flex align-center pl-4 pr-2 pt-2 g-10">
+                                <div class="sort">Thông Tin</div>
+                                <hr class="divider theme-dark">
+
+                            </div>
+                            <div class="information-section pa-4">
+                                <div class="row mb-1">
+                                    Tác giả:
+                                    <span>@story.AuthorName</span>
+                                </div>
+                                <div class="row mb-1">
+                                    Trạng thái:
+                                    <span>Đang thực hiện</span>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded w-100 mt-2 mb-3">
+                        <div class="chapter-list zs-bg-1 ele-2 w-100 v-sheet theme-dark">
+                            <div class="d-flex align-center pl-4 pr-2 pt-4 g-10">
+                                <div class="sort">Danh Sách</div>
+                                <hr class="divider theme-dark">
+                                <button class="btn-go mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                                    <span class="btn-default-icon-content">
+                                        <span>Đi tới</span>
+                                    </span>
+                                </button>
+                                <input maxlength="5" class="txt-go mx-1 rounded-sm zs-bg-3 btn-default btn-default-is-elevated theme-dark btn-size-default" type="text" placeholder="Chương" />
+                            </div>
+                            <div class="list row pa-4">
+                                @if (chapterList.Count != 0)
+                                {
+
+
+                                    if (chapterList.Count < 12)
+                                    {
+                                        foreach (StoryWeb.Models.ModelView.Chapter item in chapterList)
+                                        {
+                                            <div class="col-md-6 col-lg-4 col-sm-6 col-12 w-100 p-12 py-1 border-box">
+                                                <a href="@Url.Action("Read", "Chapter", new { id = item.StoryId,chapterIndex =item.ChapterIndex})" class="d-flex align-center zs-bg-3 pa-1 v-card v-card-flat v-card-link v-sheet theme-dark 152">
+                                                    <div class="c-icon d-flex align-center justify-center rounded icon_wrapper v-sheet theme-dark">
+
+
+
+                                                        <span class="v-icon notranslate theme-dark v-icon-svg-med" style="color: var(--primary); caret-color: var(--primary);">
+                                                            <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-med">
+                                                                <path d="M12 4.5A11.8 11.8 0 0 0 1 12A11.8 11.8 0 0 0 12 19.5H13.1A3.8 3.8 0 0 1 13 18.5A4.1 4.1 0 0 1 13.1 17.4H12A9.6 9.6 0 0 1 3.2 12A9.6 9.6 0 0 1 12 6.5A9.6 9.6 0 0 1 20.8 12L20.4 12.7A4.6 4.6 0 0 1 22.3 13.5A10.1 10.1 0 0 0 23 12A11.8 11.8 0 0 0 12 4.5M12 9A3 3 0 1 0 15 12A2.9 2.9 0 0 0 12 9M15 17.5V19.5H23V17.5Z"></path>
+                                                            </svg>
+                                                        </span>
+
+
+                                                    </div>
+                                                    <div class="d-flex justify-center flex-column w-100 py-1 px-2">
+                                                        <div class="chapter-info d-flex justify-space-between">
+                                                            <div><span>#@item.Title</span></div>
+                                                        </div>
+                                                        <div class="d-flex justify-space-between text--disabled text-caption">
+                                                            <div class="d-flex"><div>19 giờ trước</div></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < 12; i++)
+                                        {
+                                            <div class="col-md-6 col-lg-4 col-sm-6 col-12 w-100 p-12 py-1 border-box">
+                                                <a href="@Url.Action("Read", "Chapter", new { id = chapterList[i].StoryId,chapterIndex =i})" class="d-flex align-center zs-bg-3 pa-1 v-card v-card-flat v-card-link v-sheet theme-dark 152">
+                                                    <div class="c-icon d-flex align-center justify-center rounded icon_wrapper v-sheet theme-dark">
+
+
+
+                                                        <span class="v-icon notranslate theme-dark v-icon-svg-med" style="color: var(--primary); caret-color: var(--primary);">
+                                                            <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-med">
+                                                                <path d="M12 4.5A11.8 11.8 0 0 0 1 12A11.8 11.8 0 0 0 12 19.5H13.1A3.8 3.8 0 0 1 13 18.5A4.1 4.1 0 0 1 13.1 17.4H12A9.6 9.6 0 0 1 3.2 12A9.6 9.6 0 0 1 12 6.5A9.6 9.6 0 0 1 20.8 12L20.4 12.7A4.6 4.6 0 0 1 22.3 13.5A10.1 10.1 0 0 0 23 12A11.8 11.8 0 0 0 12 4.5M12 9A3 3 0 1 0 15 12A2.9 2.9 0 0 0 12 9M15 17.5V19.5H23V17.5Z"></path>
+                                                            </svg>
+                                                        </span>
+
+
+                                                    </div>
+                                                    <div class="d-flex justify-center flex-column w-100 py-1 px-2">
+                                                        <div class="chapter-info d-flex justify-space-between">
+                                                            <div><span>@chapterList[i].Title</span></div>
+                                                        </div>
+                                                        <div class="d-flex justify-space-between text--disabled text-caption">
+                                                            <div class="d-flex"><div>19 giờ trước</div></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        }
+                                    }
+                                }
+
+                            </div>
+
+                            <div class="load-all row px-4 pb-2">
+                                <button class="btn btn-load-more btn-style-dash mx-1 rounded-sm zs-bg-3 mr-4 btn-default theme-dark btn-size-default">Hiển thị tất cả</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <input type="hidden" id="comic-id-comment" data-commentId="" value="0000579493" data-number="" data-type="" />
+        <link rel="stylesheet" href="@Url.Content("~/content")/WebTruyen/v2/css/comment259b.css?v=51">
+        <script>
+            const commentMessages = {
+                requiredLogin: 'Bạn cần đăng nhập để dùng chức năng này.',
+                minLength: `Ý kiến của bạn cần phải có hơn 5 ký tự`,
+                username: `Bạn`,
+                datetime: `Bây giờ`,
+                deleteSuccess: `Bạn đã xóa bình luận này`,
+                hideSpoil: `Bạn đã ẩn bình luận này`,
+                attached: `Bạn đã thực hiện thành công`,
+                reportWarn: `Bạn muốn báo cáo nội dung không lành mạnh của bình luận này?`,
+                reportComment: `Bạn đã báo cáo bình luận này thành công`,
+                prefixChapter: `Chương`,
+                txtReply: `Trả lời`,
+                txtDelete: `Xóa`,
+                txtSpoil: `Spoil`,
+                txtAttach: `Ghim`,
+                txtReport: `Báo cáo`,
+                txtTag: `Tag Tên`,
+                txtSpoilContent: `<span class="comment-spoil">Bình luận có chứa spoil cốt truyện... <span class="view-comment-spoil" data-content="{0}">hiển thị</span></span>`,
+                txtPlaceHolder: `Người tiện tay vẽ hoa vẽ lá, Tôi đa tình tưởng đó là mùa xuân...`,
+                replyTo: `Trả lời {0}[Có Thể Tag Thêm]`,
+                txtBtnMore: `Xem Thêm`,
+                txtBtnSend: `Gửi`
+            };
+        </script>
+        <script type="text/javascript" src="../contents/v2/js/comment259b.js?v=51"></script>
+        <div id="comment-main-section" class="row container rounded mb-2 zs-bg-1 v-sheet theme-dark">
+            <div class="comment-section m-auto w-100 container-1200">
+                <p class="title">BÌNH LUẬN</p>
+                <div class="input">
+                    <textarea class="input-comment" placeholder='Người tiện tay vẽ hoa vẽ lá, Tôi đa tình tưởng đó là mùa xuân...' maxlength="500"></textarea>
+                    <button class="btn-comment mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">Gửi</button>
+                </div>
+                <div class="lds-loading">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+

@@ -44,13 +44,68 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.TimeProvider, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.TimeProvider.8.0.1\lib\net462\Microsoft.Bcl.TimeProvider.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.2.1.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=8.12.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.8.12.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=8.12.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.8.12.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=8.12.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.8.12.0\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=8.12.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.8.12.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.2\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=8.12.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.8.12.0\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=8.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.8.0.5\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -113,17 +168,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ChapterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\base_address.cs" />
+    <Compile Include="Models\AdminAuthorizeAttribute.cs" />
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelView\Category.cs" />
     <Compile Include="Models\ModelView\Chapter.cs" />
+    <Compile Include="Models\ModelView\ChapterImage.cs" />
     <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\User.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
+    <Compile Include="Models\Repositories\ChapterImageRes.cs" />
     <Compile Include="Models\Repositories\ChapterRep.cs" />
     <Compile Include="Models\Repositories\StoryRep.cs" />
     <Compile Include="Models\Repositories\UserRep.cs" />
@@ -182,6 +242,51 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Image\Wuwa\1\65512393-4a07-408c-adf4-546b2f2f3888.jpg" />
+    <Content Include="Content\Image\banner\14QPA6zED9tlyqt7cFqWEprVCoPeWvJQI62f6.jpg" />
+    <Content Include="Content\Image\banner\15C0fR2A1gvtrbPSWvjK84vhvVgpWXB6e.jpg" />
+    <Content Include="Content\Image\banner\15C0fR2A1gvtrbPSWvjK84vhvVgpWXB6e62f6.jpg" />
+    <Content Include="Content\Image\banner\1DVNZQ_j_uIEI22jWDT6NUwdL8wbI5Xak62f6.jpg" />
+    <Content Include="Content\Image\banner\1giLBZ5_erWMWoFlVtrO6G9z8V5rkkOQc62f6.jpg" />
+    <Content Include="Content\Image\banner\1iq7aHWEdlAysDFP1Nul3TdQQNQq518Cj62f6.jpg" />
+    <Content Include="Content\Image\banner\1jIZYRfOhND23Ztbw3n4bzGz9TFaJJax262f6.jpg" />
+    <Content Include="Content\Image\banner\1Kmij1D5f0IDmpFzRt2ASnDcOuxWQuLi262f6.jpg" />
+    <Content Include="Content\Image\banner\1Mz0O54RzA0rd9rk6yzoLMZCG7j6Sfh1q62f6.jpg" />
+    <Content Include="Content\Image\banner\1O-0my131hHVl7bk_JhCs0rVBJZjzqRrp62f6.jpg" />
+    <Content Include="Content\Image\banner\1q0rB30_xycQYP0R5v54Kz5QIOsAAGO2u62f6.jpg" />
+    <Content Include="Content\Image\banner\1Szb4DVnq8BgqdyUPY-vTPIACgogO_sFk62f6.jpg" />
+    <Content Include="Content\Image\banner\1WoOWwSFUntEjlMTqHUHWOuoYCCeshAPa62f6.jpg" />
+    <Content Include="Content\Image\banner\1_gbu3O1VVd9jsLMdumsWHWmHKBjs2mJr62f6.jpg" />
+    <Content Include="Content\Image\banner\1_oaRWcpbGymsdAgS6rHuhufeKbbDm-_M62f6.jpg" />
+    <Content Include="Content\Image\Wuwa\1.jpg" />
+    <Content Include="Content\WebTruyen\images\bg2.gif" />
+    <Content Include="Content\WebTruyen\images\favicon.ico" />
+    <Content Include="Content\WebTruyen\images\google_icon.png" />
+    <Content Include="Content\WebTruyen\images\logo.png" />
+    <Content Include="Content\WebTruyen\images\novel.png" />
+    <Content Include="Content\WebTruyen\images\star_active.png" />
+    <Content Include="Content\WebTruyen\js\lazy.js" />
+    <Content Include="Content\WebTruyen\js\push-init.js" />
+    <Content Include="Content\WebTruyen\js\slide.show.min.js" />
+    <Content Include="Content\WebTruyen\v2\css\comment259b.css" />
+    <Content Include="Content\WebTruyen\v2\css\common259b.css" />
+    <Content Include="Content\WebTruyen\v2\css\contact.css" />
+    <Content Include="Content\WebTruyen\v2\css\detail259b.css" />
+    <Content Include="Content\WebTruyen\v2\css\home259b.css" />
+    <Content Include="Content\WebTruyen\v2\css\homef413.css" />
+    <Content Include="Content\WebTruyen\v2\css\search259b.css" />
+    <Content Include="Content\WebTruyen\v2\css\view259b.css" />
+    <Content Include="Content\WebTruyen\v2\js\comment259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\common259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\detail259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\follow259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\home920b.js" />
+    <Content Include="Content\WebTruyen\v2\js\push-message.js" />
+    <Content Include="Content\WebTruyen\v2\js\recent259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\search259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\view259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\view_addition259b.js" />
+    <Content Include="Content\WebTruyen\webjars\jquery\3.5.1\jquery.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -191,6 +296,10 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\WebTruyen\v2\fonts\Catamaran-300.ttf" />
+    <Content Include="Content\WebTruyen\v2\fonts\Catamaran-400.ttf" />
+    <Content Include="Content\WebTruyen\v2\fonts\Catamaran-500.ttf" />
+    <Content Include="Content\WebTruyen\v2\fonts\Catamaran-700.ttf" />
     <Content Include="Content\Admin\css\.DS_Store" />
     <Content Include="Content\Admin\css\bootstrap-grid.css.map" />
     <Content Include="Content\Admin\css\bootstrap-grid.min.css.map" />
@@ -232,11 +341,16 @@
     <Content Include="Views\Category\Index.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\UserInfo.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Shared\_LayoutMember.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Story\StoryInfo.cshtml" />
+    <Content Include="Views\Chapter\Read.cshtml" />
+    <Content Include="Views\Story\StoryList.cshtml" />
+    <Content Include="Views\Category\CategoryList.cshtml" />
+    <Content Include="Views\User\FollowPage.cshtml" />
     <Content Include="Views\Admin\UserList.cshtml" />
     <Content Include="Views\Admin\StoryList.cshtml" />
     <Content Include="Views\Admin\StoryDetail.cshtml" />
@@ -246,6 +360,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

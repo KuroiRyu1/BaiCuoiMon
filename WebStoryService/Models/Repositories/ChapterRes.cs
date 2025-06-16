@@ -32,5 +32,30 @@ namespace WebStoryService.Models.Repositories
                 return new List<Chapter>();
             }
         }
+        public Chapter StoryRead(int storyId,int chapterIndex)
+        {
+            var story = new Chapter(); 
+            try
+            {
+                var item = _db.tbl_chapter.Where(d => d.C_story_id == storyId 
+                && d.C_chapter_index == chapterIndex).Select(d => new Chapter
+                {
+                    Id = d.C_id,
+                    Title = d.C_title,
+                    Content = d.C_content,
+                    StoryId = storyId,
+                    ChapterIndex = chapterIndex
+                }).FirstOrDefault();
+                if (item != null)
+                {
+                    story = item;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return story;
+        }
     }
+
 }

@@ -1,34 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
+
 
 namespace WebStoryService.Models.Repositories
 {
     public class UserRes
     {
+        private readonly DbEntities _db;
+
+        public UserRes()
+        {
+            _db = new DbEntities();
+        }
+
         public List<User> Gets()
         {
-            List<User> user = new List<User>();
-            try
+            return _db.tbl_user
+                  .Select(d => new User
+                  {
+                      Id = (int)d.C_id,
+                      FullName = d.C_fullname,
+                      Username = d.C_username,
+                      Email = d.C_email,
+                      Active = d.C_active ?? 0,
+                      role = d.C_role ?? 1
+                  })
+                  .ToList();
+        }
+        public User ValidateUser(string username, string plainTextPassword)
+        {
+            var userEntity = _db.tbl_user.FirstOrDefault(u => u.C_username == username);
+
+            if (userEntity == null)
             {
-                DbEntities en =new DbEntities();
-                user = en.tbl_user.Select(d => new User{
-                    Id =(int) d.C_id,
-                    FullName = d.C_fullname,
-                    Username = d.C_username,
-                    Active = d.C_active ?? 0,
-                    Password = d.C_password,
-                    Email =d.C_email,
-                    role = (int)d.C_role,
-                }).ToList();
+                return null; 
             }
-            catch (Exception ex)
+
+            if (BCrypt.Net.BCrypt.Verify(plainTextPassword, userEntity.C_password))
             {
+                return new User
+                {
+                    Id = (int)userEntity.C_id,
+                    FullName = userEntity.C_fullname,
+                    Username = userEntity.C_username,
+                    Email = userEntity.C_email,
+                    Active = userEntity.C_active ?? 0,
+                    role = userEntity.C_role ?? 1
+                };
             }
-            return user;
+
+            return null;
         }
         public User Login(string username, string password)
         {
@@ -53,31 +80,34 @@ namespace WebStoryService.Models.Repositories
             }
             return user;
         }
-        public int Register(User user)
+        public User Register(User user) 
         {
             try
             {
-                DbEntities en = new DbEntities();
-                tbl_user tbl = new tbl_user
+                var userEntity = new tbl_user
                 {
                     C_username = user.Username,
-                    C_password = user.Password,
+                    C_password = BCrypt.Net.BCrypt.HashPassword(user.Password),
                     C_fullname = user.FullName,
-                    C_role = 1,
-                    C_active = 1,
-                    C_token = user.token,
                     C_email = user.Email,
+                    C_role = user.role,
+                    C_active = 1
                 };
-                en.tbl_user.Add(tbl);
-                en.SaveChanges();
-                user.Id = (int)tbl.C_id;
-                return 1;
+
+                _db.tbl_user.Add(userEntity);
+                _db.SaveChanges();
+
+                user.Id = (int)userEntity.C_id;
+                user.Password = null;
+                return user; 
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.InnerException?.InnerException is SqlException sqlEx && (sqlEx.Number == 2627 || sqlEx.Number == 2601))
             {
+                return null;
             }
-            return 0;
         }
+
+
         public int checkUsername(string username)
         {
             int result = 0;
@@ -94,6 +124,24 @@ namespace WebStoryService.Models.Repositories
             }
             return result;
         }
-        
+        public User GetUserById(int id)
+        {
+            var userEntity = _db.tbl_user.FirstOrDefault(u => u.C_id == id);
+
+            if (userEntity == null)
+            {
+                return null;
+            }
+
+            return new User
+            {
+                Id = (int)userEntity.C_id,
+                FullName = userEntity.C_fullname,
+                Username = userEntity.C_username,
+                Email = userEntity.C_email,
+                Active = userEntity.C_active ?? 0,
+                role = userEntity.C_role ?? 1
+            };
+        }
     }
 }

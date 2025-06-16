@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -35,6 +36,25 @@ namespace WebStoryService.Areas.MyApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
+        }
+        [HttpGet]
+        [Route("getall")]
+        public List<Story> getAll()
+        {
+            var story = new List<Story>();
+            try
+            {
+                StoryRes storyRes = new StoryRes();
+                var item = storyRes.GetAll();
+                if (item != null)
+                {
+                    story = item;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return story;
         }
 
         [Route("get/{id}")]

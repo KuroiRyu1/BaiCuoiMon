@@ -21,30 +21,30 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             try
             {
-                var headerData = Request.Headers;
-                string username = string.Empty;
-                string password = string.Empty;
-                string token = string.Empty;
-                if (headerData.Contains("username"))
-                {
-                    {
-                        username = headerData.GetValues("username").First();
-                    }
-                    if (headerData.Contains("pwd"))
-                    {
-                        password = headerData.GetValues("pwd").First();
-                    }
-                    if (headerData.Contains("tk"))
-                    {
-                        token = headerData.GetValues("tk").First();
-                    }
-                    if (AccountRep.checkToken(username, password, token) == true)
-                    {
-                        CategoryRes res = new CategoryRes();
-                        return res.Gets();
-                    }
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
+                //if (headerData.Contains("username"))
+                //{
+                //    {
+                //        username = headerData.GetValues("username").First();
+                //    }
+                //    if (headerData.Contains("pwd"))
+                //    {
+                //        password = headerData.GetValues("pwd").First();
+                //    }
+                //    if (headerData.Contains("tk"))
+                //    {
+                //        token = headerData.GetValues("tk").First();
+                //    }
+                //    if (AccountRep.checkToken(username, password, token) == true)
+                //{
+                CategoryRes res = new CategoryRes();
+                return res.Gets();
+                //}
 
-                }
+                // }
             }
             catch (Exception ex)
             {
@@ -59,38 +59,37 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             try
             {
-                var headerData = Request.Headers;
-                string username = string.Empty;
-                string password = string.Empty;
-                string token = string.Empty;
-                if (headerData.Contains("username"))
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
+                //if (headerData.Contains("username"))
 
+                //{
+                //    username = headerData.GetValues("username").First();
+                //}
+                //if (headerData.Contains("pwd"))
+                //{
+                //    password = headerData.GetValues("pwd").First();
+                //}
+                //if (headerData.Contains("tk"))
+                //{
+                //    token = headerData.GetValues("tk").First();
+                //}
+                //if (AccountRep.checkToken(username, password, token) == true)
+                //{
+                if (value != null)
                 {
-                    username = headerData.GetValues("username").First();
-                }
-                if (headerData.Contains("pwd"))
-                {
-                    password = headerData.GetValues("pwd").First();
-                }
-                if (headerData.Contains("tk"))
-                {
-                    token = headerData.GetValues("tk").First();
-                }
-                if (AccountRep.checkToken(username, password, token) == true)
-                {
-                    if (value != null)
+                    CategoryRes res = new CategoryRes();
+
+                    if (res.Post(value) == 1)
                     {
-                        CategoryRes res = new CategoryRes();
-
-                        if (res.Post(value) == 1)
-                        {
-                            return 1;
-                        }
+                        return 1;
                     }
                 }
-            }
+            
+             } 
             catch (Exception ex) { 
-                Debug.WriteLine(ex);
             }
             return 0;
         }
@@ -101,25 +100,25 @@ namespace WebStoryService.Areas.MyApi.Controllers
             try
             {
                 CategoryRes res =new CategoryRes();
-                var headerData = Request.Headers;
-                string username = string.Empty;
-                string password = string.Empty;
-                string token = string.Empty;
-                if (headerData.Contains("username"))
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
+                //if (headerData.Contains("username"))
 
-                {
-                    username = headerData.GetValues("username").First();
-                }
-                if (headerData.Contains("pwd"))
-                {
-                    password = headerData.GetValues("pwd").First();
-                }
-                if (headerData.Contains("tk"))
-                {
-                    token = headerData.GetValues("tk").First();
-                }
-                if (AccountRep.checkToken(username, password, token) == true)
-                {
+                //{
+                //    username = headerData.GetValues("username").First();
+                //}
+                //if (headerData.Contains("pwd"))
+                //{
+                //    password = headerData.GetValues("pwd").First();
+                //}
+                //if (headerData.Contains("tk"))
+                //{
+                //    token = headerData.GetValues("tk").First();
+                //}
+                //if (AccountRep.checkToken(username, password, token) == true)
+                //{
                     if (value != null)
                     {
 
@@ -128,7 +127,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
                             return 1;
                         }
                     }
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -136,32 +135,32 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return 0;
         }
-        [Route("softd")]
+        [Route("soft")]
         [HttpPut]
-        public int soft_delete([FromBody]Category item)
+        public int soft([FromBody]Category item)
         {
             try
             {
                 CategoryRes res = new CategoryRes();
-                var headerData = Request.Headers;
-                string username = string.Empty;
-                string password = string.Empty;
-                string token = string.Empty;
-                if (headerData.Contains("username"))
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
+                //if (headerData.Contains("username"))
 
-                {
-                    username = headerData.GetValues("username").First();
-                }
-                if (headerData.Contains("pwd"))
-                {
-                    password = headerData.GetValues("pwd").First();
-                }
-                if (headerData.Contains("tk"))
-                {
-                    token = headerData.GetValues("tk").First();
-                }
-                if (AccountRep.checkToken(username, password, token) == true)
-                {
+                //{
+                //    username = headerData.GetValues("username").First();
+                //}
+                //if (headerData.Contains("pwd"))
+                //{
+                //    password = headerData.GetValues("pwd").First();
+                //}
+                //if (headerData.Contains("tk"))
+                //{
+                //    token = headerData.GetValues("tk").First();
+                //}
+                //if (AccountRep.checkToken(username, password, token) == true)
+                //{
                     if (item != null)
                     {
 
@@ -169,8 +168,8 @@ namespace WebStoryService.Areas.MyApi.Controllers
                         {
                             return 1;
                         }
-                    }
-                }
+                   }
+                //}
 
             }
             catch (Exception ex)

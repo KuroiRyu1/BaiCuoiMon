@@ -29,11 +29,8 @@ namespace StoryWeb.Models.Repositories
         {
             var cates = new List<Category>();
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
             HttpResponseMessage res = await client.GetAsync("category/get");
             if (res.IsSuccessStatusCode)
             {
@@ -45,11 +42,8 @@ namespace StoryWeb.Models.Repositories
         public async Task<string> addCates(Category item)
         {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078");
+            client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
             HttpContent content = new StringContent(JsonConvert.SerializeObject(item),Encoding.UTF8,"application/json");
             HttpResponseMessage res = await client.PostAsync("category/post",content);
             string a = JsonConvert.SerializeObject(item);

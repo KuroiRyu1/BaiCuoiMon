@@ -19,7 +19,7 @@
                     }
 
                     <form method="post" action="@Url.Action("Login", "User")">
-                        <div class="mb-3">
+                        <div class="mb-3 ">
                             <label for="username" class="form-label">
                                 <i class="fas fa-user"></i> Tên đăng nhập
                             </label>
@@ -70,5 +70,9 @@
         .form-control:focus {
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
+        input, select, textarea {
+             max-width: 500px; 
+        }
+
     </style>
 }

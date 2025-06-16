@@ -2,60 +2,107 @@
 using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace StoryWeb.Models.Repositories
 {
-    public class ChapterRep
+    public sealed class ChapterRep
     {
-        private static ChapterRep _instance;
         private ChapterRep() { }
-
-        public static ChapterRep Instance
-        {
-            get
-            {
+        private static ChapterRep _instance = null;
+        public static ChapterRep Instance {  
+            get {
                 if (_instance == null)
                 {
                     _instance = new ChapterRep();
                 }
-                return _instance;
-            }
+                return _instance; 
+            } 
         }
-
-        private HttpClient CreateHttpClient()
+        public async Task<Chapter> GetOneChapter(int id=0)
         {
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:8078/")
-            };
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            return client;
-        }
-
-        public async Task<List<Chapter>> GetChaptersByStoryId(int storyId)
-        {
+            var chapter = new Chapter();
             try
             {
-                using (var client = CreateHttpClient())
+                if (id != 0)
                 {
-                    var response = await client.GetAsync($"api/chapters/{storyId}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<List<Chapter>>(dataJson);
-                    }
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri(base_address.Address);
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    HttpResponseMessage res = await client.GetAsync($"chapter/single/{id}");
                 }
             }
-            catch (Exception)
-            {
-                return new List<Chapter>();
+            catch
+            (Exception ex){
             }
-            return new List<Chapter>();
+            return chapter;
         }
+        public async Task<Chapter> GetChapterDetail(string name)
+        {
+            Chapter chapter = new Chapter();
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync("chapter/get");
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    chapter = JsonConvert.DeserializeObject<Chapter>(dataJson);
+                }
+                return chapter;
+            }
+            catch (Exception ex)
+            {
+            }
+            return chapter;
+        }
+        public async Task<List<Chapter>> getListOfChapter(int storyId)
+        {
+            List<Chapter> chapters = new List<Chapter>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync($"api/chapters/{storyId}");
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    chapters = JsonConvert.DeserializeObject<List<Chapter>>(dataJson);
+                }
+                return chapters;
+            }
+            catch (Exception ex)
+            {
+            }
+            return chapters;
+        }
+        public async Task<Chapter> Read(int storyId,int chapterIndex)
+        {
+           var chapters = new Chapter();
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync($"api/chapters/{storyId}/{chapterIndex}");
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    chapters = JsonConvert.DeserializeObject<Chapter>(dataJson);
+                }
+                return chapters;
+            }
+            catch (Exception ex)
+            {
+            }
+            return chapters;
+        }
+
     }
 }
