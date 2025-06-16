@@ -1,0 +1,77 @@
+﻿@model StoryWeb.Models.ModelView.Story
+@{
+    ViewBag.Title = "Chi tiết truyện";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var story = ViewBag.Story as StoryWeb.Models.ModelView.Story;
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">Chi tiết truyện</h2>
+    <a href="@Url.Action("StoryList", "Admin")" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+    </a>
+
+    <!-- Thông tin truyện -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h4 class="card-title">@story.Title</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(story.Image) ? "/Content/images/default.jpg" : story.Image)" alt="Ảnh bìa" class="img-fluid">
+                </div>
+                <div class="col-md-8">
+                    <p><strong>Giới thiệu:</strong> @story.Introduction</p>
+                    <p><strong>Tác giả:</strong> @story.AuthorName</p>
+                    <p><strong>Danh mục:</strong> @story.CategoryName</p>
+                    <p><strong>Trạng thái:</strong> @(story.StatusId == 1 ? "Hoạt động" : "Ngừng hoạt động")</p>
+                    <p><strong>Loại truyện:</strong> @(story.StoryTypeId == 1 ? "Truyện chữ" : "Truyện hình")</p>
+                    <p><strong>Số chương:</strong> @story.ChapterNumber</p>
+                    <p><strong>Lượt thích:</strong> @story.LikeNumber</p>
+                    <p><strong>Lượt theo dõi:</strong> @story.FollowNumber</p>
+                    <p><strong>Lượt xem:</strong> @story.ViewNumber</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách chương -->
+    <h4>Danh sách chương</h4>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            @if (ViewBag.Chapters == null || !((System.Collections.Generic.List<StoryWeb.Models.ModelView.Chapter>)ViewBag.Chapters).Any())
+            {
+                <p class="text-center">Không có chương nào.</p>
+            }
+            else
+            {
+                foreach (var chapter in (System.Collections.Generic.List<StoryWeb.Models.ModelView.Chapter>)ViewBag.Chapters)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">@chapter.Title</h5>
+                            <p><strong>Ngày tạo:</strong> @chapter.DayCreate.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Loại nội dung:</strong> @(story.StoryTypeId == 1 ? "Văn bản" : "Hình ảnh")</p>
+                            @if (story.StoryTypeId == 1)
+                            {
+                                <p><strong>Nội dung mẫu:</strong> @(string.IsNullOrEmpty(chapter.Content) ? "Chưa có nội dung" : chapter.Content.Substring(0, Math.Min(chapter.Content.Length, 100)) + "...")</p>
+                            }
+                            else
+                            {
+                                <p><strong>Số ảnh:</strong> @chapter.ImageCount</p>
+                            }
+                            <a href="@Url.Action("ChapterDetail", "Admin", new { storyId = story.Id, chapterId = chapter.Id })" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i> Xem chi tiết
+                            </a>
+                            <a href="@Url.Action("ChapterEdit", "Admin", new { storyId = story.Id, chapterId = chapter.Id })" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Sửa
+                            </a>
+                            <a href="@Url.Action("ChapterDelete", "Admin", new { storyId = story.Id, chapterId = chapter.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                <i class="fas fa-trash"></i> Xóa
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace StoryWeb.Models.Repositories
 {
-    public class StoryRep
+    public class ChapterRep
     {
-        private static StoryRep _instance;
-        private StoryRep() { }
+        private static ChapterRep _instance;
+        private ChapterRep() { }
 
-        public static StoryRep Instance
+        public static ChapterRep Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new StoryRep();
+                    _instance = new ChapterRep();
                 }
                 return _instance;
             }
@@ -37,46 +37,25 @@ namespace StoryWeb.Models.Repositories
             return client;
         }
 
-        public async Task<List<Story>> GetAllStories()
+        public async Task<List<Chapter>> GetChaptersByStoryId(int storyId)
         {
             try
             {
                 using (var client = CreateHttpClient())
                 {
-                    var response = await client.GetAsync("story/getall");
+                    var response = await client.GetAsync($"api/chapters/{storyId}");
                     if (response.IsSuccessStatusCode)
                     {
                         var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<List<Story>>(dataJson);
+                        return JsonConvert.DeserializeObject<List<Chapter>>(dataJson);
                     }
                 }
             }
             catch (Exception)
             {
-                return new List<Story>();
+                return new List<Chapter>();
             }
-            return new List<Story>();
-        }
-
-        public async Task<Story> GetStoryById(int id)
-        {
-            try
-            {
-                using (var client = CreateHttpClient())
-                {
-                    var response = await client.GetAsync($"story/get/{id}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<Story>(dataJson);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            return null;
+            return new List<Chapter>();
         }
     }
 }
