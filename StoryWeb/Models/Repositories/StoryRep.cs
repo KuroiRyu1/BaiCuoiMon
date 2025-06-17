@@ -2,11 +2,8 @@
 using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -14,6 +11,7 @@ namespace StoryWeb.Models.Repositories
     {
         private static StoryRep _instance;
         private StoryRep() { }
+
         public static StoryRep Instance
         {
             get
@@ -26,31 +24,36 @@ namespace StoryWeb.Models.Repositories
             }
         }
 
-        public async Task<List<Story>> GetStories(int? categoryId = null, int page = 1, int pageSize = 10)
+        private HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:8078/")
+            };
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("username", "admin");
+            client.DefaultRequestHeaders.Add("pwd", "123");
+            client.DefaultRequestHeaders.Add("tk", "12345");
+            return client;
+        }
+
+        public async Task<List<Story>> GetAllStories()
         {
             try
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(base_address.Address);
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-                string url = $"story/get?page={page}&pageSize={pageSize}";
-                if (categoryId.HasValue && categoryId.Value != 0)
+                using (var client = CreateHttpClient())
                 {
-                    url += $"&categoryId={categoryId.Value}";
-                }
-                HttpResponseMessage res = await client.GetAsync(url);
-                if (res.IsSuccessStatusCode)
-                {
-                    var dataJson = await res.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Story>>(dataJson);
+                    var response = await client.GetAsync("story/getall");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<List<Story>>(dataJson);
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Log error if needed
+                return new List<Story>();
             }
             return new List<Story>();
         }
@@ -59,22 +62,19 @@ namespace StoryWeb.Models.Repositories
         {
             try
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(base_address.Address);
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-                HttpResponseMessage res = await client.GetAsync($"story/get/{id}");
-                if (res.IsSuccessStatusCode)
+                using (var client = CreateHttpClient())
                 {
-                    var dataJson = await res.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Story>(dataJson);
+                    var response = await client.GetAsync($"story/get/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<Story>(dataJson);
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Log error if needed
+                return null;
             }
             return null;
         }

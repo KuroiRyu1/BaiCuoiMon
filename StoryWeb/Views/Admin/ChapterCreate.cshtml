@@ -1,0 +1,78 @@
+﻿@model StoryWeb.Models.ModelView.Chapter
+@{
+    ViewBag.Title = "Thêm chương";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">Thêm chương mới</h2>
+    <a href="@Url.Action("StoryDetail", "Admin", new { id = Model.StoryId })" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @using (Html.BeginForm("ChapterCreateConfirm", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(m => m.StoryId)
+        <div class="form-group mb-3">
+            <label for="Title">Tiêu đề:</label>
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", required = "required" })
+            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group mb-3">
+            <label for="Content">Nội dung (cho truyện chữ):</label>
+            @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = "5" })
+            @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group mb-3">
+            <label>Ảnh (cho truyện hình, kéo thả hoặc chọn file):</label>
+            <div class="dropzone" id="imageDropzone">
+                <input type="file" name="images" class="form-control-file" multiple accept="image/*" />
+                <p>Kéo thả ảnh hoặc nhấp để chọn (JPG, PNG)</p>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Thêm chương</button>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
+    <script>
+        $(document).ready(function () {
+            Dropzone.autoDiscover = false;
+            $("#imageDropzone").dropzone({
+                url: "@Url.Action("ChapterCreateConfirm", "Admin")",
+                paramName: "images",
+                maxFilesize: 10, // MB
+                acceptedFiles: "image/jpeg,image/png",
+                autoProcessQueue: false,
+                uploadMultiple: true,
+                parallelUploads: 10,
+                init: function () {
+                    var myDropzone = this;
+                    $("#imageDropzone input").change(function (e) {
+                        myDropzone.processQueue();
+                    });
+                    this.on("successmultiple", function (files, response) {
+                        if (response.success) {
+                            alert("Upload thành công!");
+                            window.location.href = "@Url.Action("StoryDetail", "Admin", new { id = Model.StoryId })";
+                        } else {
+                            alert("Upload thất bại!");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

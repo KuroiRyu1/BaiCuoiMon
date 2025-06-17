@@ -1,0 +1,71 @@
+﻿@model System.Collections.Generic.List<StoryWeb.Models.ModelView.Story>
+@{
+    ViewBag.Title = "Danh sách truyện";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">Quản lý truyện</h2>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    <a href="@Url.Action("StoryCreate", "Admin")" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i> Thêm truyện mới
+    </a>
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tiêu đề</th>
+                        <th>Tác giả</th>
+                        <th>Danh mục</th>
+                        <th>Số chương</th>
+                        <th>Lượt thích</th>
+                        <th>Lượt theo dõi</th>
+                        <th>Lượt xem</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Stories)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Title</td>
+                            <td>@item.AuthorName</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.ChapterNumber</td>
+                            <td>@item.LikeNumber</td>
+                            <td>@item.FollowNumber</td>
+                            <td>@item.ViewNumber</td>
+                            <td>
+                                <a href="@Url.Action("StoryDetail", "Admin", new { id = item.Id })" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i> Chi tiết
+                                </a>
+                                <a href="@Url.Action("StoryEdit", "Admin", new { id = item.Id })" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a href="@Url.Action("StoryDelete", "Admin", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    @if (!ViewBag.Stories.Any())
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center">Không có truyện nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
