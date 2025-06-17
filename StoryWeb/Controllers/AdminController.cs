@@ -66,8 +66,6 @@ namespace StoryWeb.Controllers
                 return HttpNotFound();
             }
             ViewBag.Story = story;
-            var chapters = await ChapterRep.Instance.GetChaptersByStoryId(id);
-            ViewBag.Chapters = chapters ?? new System.Collections.Generic.List<Chapter>();
             return View();
         }
 
@@ -123,24 +121,7 @@ namespace StoryWeb.Controllers
             return View("ChapterCreate", chapter);
         }
 
-        public async Task<ActionResult> ChapterEdit(int storyId, int chapterId)
-        {
-            var chapters = await ChapterRep.Instance.GetChaptersByStoryId(storyId);
-            var chapter = chapters?.FirstOrDefault(c => c.Id == chapterId);
-            if (chapter == null) return HttpNotFound();
-
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.GetAsync($"api/chapter-images/{chapterId}");
-            if (response.IsSuccessStatusCode)
-            {
-                ViewBag.Images = await response.Content.ReadAsAsync<System.Collections.Generic.List<dynamic>>();
-            }
-            return View(chapter);
-        }
+      
 
         [HttpPost]
         public async Task<ActionResult> ChapterEditConfirm(Chapter chapter, HttpPostedFileBase[] images)
@@ -231,8 +212,7 @@ namespace StoryWeb.Controllers
             {
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("http://localhost:8078/");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("tk", "12345");
+              
 
                 using (var content = new MultipartFormDataContent())
                 {
@@ -258,20 +238,7 @@ namespace StoryWeb.Controllers
             return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
         }
 
-        public async Task<ActionResult> GetChapterImages(int chapterId)
-        {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.GetAsync($"api/chapter-images/{chapterId}");
-            if (response.IsSuccessStatusCode)
-            {
-                return Json(await response.Content.ReadAsAsync<System.Collections.Generic.List<dynamic>>(), JsonRequestBehavior.AllowGet);
-            }
-            return Json(new System.Collections.Generic.List<dynamic>(), JsonRequestBehavior.AllowGet);
-        }
+      
         public async Task<ActionResult> CategoryList(string name="")
         {
             var cateList = new List<Category>();
