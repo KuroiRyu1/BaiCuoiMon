@@ -180,10 +180,13 @@
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelView\Category.cs" />
     <Compile Include="Models\ModelView\Chapter.cs" />
+    <Compile Include="Models\ModelView\ChapterComment.cs" />
+    <Compile Include="Models\ModelView\StoryComment.cs" />
     <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\User.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
     <Compile Include="Models\Repositories\ChapterRep.cs" />
+    <Compile Include="Models\Repositories\CommentRep.cs" />
     <Compile Include="Models\Repositories\StoryRep.cs" />
     <Compile Include="Models\Repositories\UserRep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

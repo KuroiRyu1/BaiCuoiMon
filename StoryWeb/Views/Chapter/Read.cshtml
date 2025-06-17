@@ -176,7 +176,8 @@
 
 
         <div class="container mt-3 mb-3 text-center" style="margin: 12px auto;     text-align: center; }">
-        <script data-cfasync="false" type="text/javascript" src="../../../chaseherbalpasty.com/lv/esnk/2019937/code.js" async class="__clb-2019937"></script></div>
+            <script data-cfasync="false" type="text/javascript" src="../../../chaseherbalpasty.com/lv/esnk/2019937/code.js" async class="__clb-2019937"></script>
+        </div>
 
 
 
@@ -222,13 +223,66 @@
                     <textarea class="input-comment" placeholder='Người tiện tay vẽ hoa vẽ lá, Tôi đa tình tưởng đó là mùa xuân...' maxlength="500"></textarea>
                     <button class="btn-comment mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">Gửi</button>
                 </div>
-                <div class="lds-loading">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
+                @if (ViewBag.comments != null && ((List<StoryWeb.Models.ModelView.ChapterComment>)ViewBag.comments).Any())
+                    {
+                        var comments = (List<StoryWeb.Models.ModelView.ChapterComment>)ViewBag.comments;
+                        foreach (var comment in comments)
+                        {
+                            <div class="comment">
+                                <div class="user d-flex">
+                                    <p class="name">@comment.Fullname</p>
+
+                                </div>
+                                <div class="p-comment theme-dark zs-bg-3">
+
+                                    <div class="comment">
+                                        <p>@comment.Content</p>
+                                    </div>
+                                </div>
+                                <btn class="btn-tag">Báo cáo</btn>
+                                @*<btn class="btn-tag">tag</btn>
+                                <btn class="btn-tag">tag</btn>*@
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="mt-3 text-muted">Chưa có bình luận nào.</div>
+                    }
+
+
             </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const sendBtn = document.querySelector(".btn-comment");
+                const textarea = document.querySelector(".input-comment");
+                const storyId = @chapter.Id;
+
+                sendBtn.addEventListener("click", function () {
+                    const content = textarea.value.trim();
+
+                    fetch("/Story/PostStoryComment", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `storyId=${storyId}&content=${encodeURIComponent(content)}`
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) {
+                            textarea.value = "";
+                            // Optionally, reload comment list or append new comment
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Lỗi gửi bình luận:", err);
+                        alert("Không thể gửi bình luận. Thử lại sau.");
+                    });
+                });
+            });
+        </script>
 
     </div>
 </main>

@@ -16,22 +16,23 @@ namespace WebStoryService.Areas.MyApi.Controllers
     [RoutePrefix("api/comment")]
     public class CommentApiController : ApiController
     {
-        private readonly DbEntities _db = new DbEntities(); // Sử dụng DbEntities từ EDMX
+        private readonly DbEntities _db = new DbEntities();
 
         // Lấy tất cả bình luận của một chương
         [HttpGet]
         [Route("chapter/{chapterId}")]
         public IHttpActionResult GetByChapter(int chapterId)
         {
-            var comments = _db.tbl_chapter_comment
-                            .Where(c => c.C_chapter_id == chapterId && c.C_active == 1)
-                            .Select(c => new
+            var comments = (from c in _db.tbl_chapter_comment
+                            join u in _db.tbl_user on c.C_user_id equals u.C_id
+                            where c.C_chapter_id == chapterId && c.C_active == 1
+                            select new
                             {
                                 c.C_id,
                                 c.C_content,
-                                c.C_user_id
-                            })
-                            .ToList();
+                                c.C_user_id,
+                                UserFullname = u.C_fullname
+                            }).ToList();
 
             return Ok(comments);
         }
@@ -41,15 +42,16 @@ namespace WebStoryService.Areas.MyApi.Controllers
         [Route("story/{storyId}")]
         public IHttpActionResult GetByStory(int storyId)
         {
-            var comments = _db.tbl_story_comment
-                            .Where(c => c.C_story_id == storyId && c.C_active == 1)
-                            .Select(c => new
+            var comments = (from c in _db.tbl_story_comment
+                            join u in _db.tbl_user on c.C_user_id equals u.C_id
+                            where c.C_story_id == storyId && c.C_active == 1
+                            select new
                             {
                                 c.C_id,
                                 c.C_content,
-                                c.C_user_id
-                            })
-                            .ToList();
+                                c.C_user_id,
+                                UserFullname = u.C_fullname
+                            }).ToList();
 
             return Ok(comments);
         }

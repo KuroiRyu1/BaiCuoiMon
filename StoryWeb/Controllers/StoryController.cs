@@ -1,12 +1,15 @@
-﻿using StoryWeb.Models.ModelView;
-using StoryWeb.Models.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using StoryWeb.Models;
+using StoryWeb.Models.ModelView;
+using StoryWeb.Models.Repositories;
 
 namespace StoryWeb.Controllers
 {
@@ -25,6 +28,8 @@ namespace StoryWeb.Controllers
             ViewBag.stories = stories ?? new List<Story>();
             return View();
         }
+
+
         [Route("thongtintruyen/{id}")]
         public async Task<ActionResult> StoryInfo(int id)
         {
@@ -36,7 +41,9 @@ namespace StoryWeb.Controllers
             {
                 isFollowing = await StoryRep.Instance.CheckIsFollowingAsync(user.Id, id);
             }
+            var commentList = await CommentRep.Instance.GetStoryCommentsAsync(id);
 
+            ViewBag.comments = commentList;
             ViewBag.IsFollowing = isFollowing;
             ViewBag.story = story;
             ViewBag.chapterList = chapterList;  
@@ -150,5 +157,34 @@ namespace StoryWeb.Controllers
 
             return Json(new { success = false, message = "Không thể theo dõi truyện." });
         }
+
+        
+
+
+        [HttpPost]
+        public async Task<JsonResult> PostStoryComment(int storyId, string content)
+        {
+            var user = Session["user"] as User;
+            if (user == null)
+                return Json(new { success = false, message = "Bạn cần đăng nhập để bình luận." });
+
+            if (string.IsNullOrWhiteSpace(content))
+                return Json(new { success = false, message = "Bình luận không được để trống." });
+
+            var comment = new StoryComment
+            {
+                StoryId = storyId,
+                UserId = user.Id,
+                Content = content,
+                Active = 1
+            };
+
+            int result = await CommentRep.Instance.AddStoryCommentAsync(comment);
+            if (result == 1)
+                return Json(new { success = true, message = "Bình luận đã được gửi." });
+
+            return Json(new { success = false, message = "Không thể gửi bình luận." });
+        }
+
     }
 }
