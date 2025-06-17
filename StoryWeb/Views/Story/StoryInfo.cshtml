@@ -12,7 +12,10 @@
     {
         chapterList = (List<StoryWeb.Models.ModelView.Chapter>)ViewBag.chapterList;
     }
-
+    var user = Session["user"];
+    var isLoggedIn = user != null;
+    var isFollowing = ViewBag.IsFollowing;
+    var url = isFollowing ? "/Story/Unfollow" : "/Story/Follow";
 }
 
 <main class="main">
@@ -134,12 +137,22 @@
                     </div>
                 </div>*@
                 <div class="follow-comic d-flex align-center mt-3">
-                    <a class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                        <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+
+                    <a class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default"
+                       data-story-id="@story.Id"
+                       data-logged-in="@(isLoggedIn ? "true" : "false")"
+                       data-following="@(isFollowing ? "true" : "false")"
+                       id="btn-follow">
+                        <svg class="v-icon-svg mr-1 icon-heart" viewBox="0 0 24 24">
+                            <use xlink:href="#@(isFollowing ? "icon-heart-filled" : "icon-heart-outline")"></use>
+                        </svg>
                         <span class="v-btn-content">
-                            <span class="text-capitalize">Theo dõi</span>
+                            <span class="text-capitalize">
+                                @(isFollowing ? "Hủy theo dõi" : "Theo dõi")
+                            </span>
                         </span>
                     </a>
+
                     <a class="btn-alert mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
                         <svg class="v-icon-svg v-icon-alarm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="Notifications" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="Notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
                         <span class="v-btn-content">
@@ -281,24 +294,24 @@
 
 
 
-                                                        <span class="v-icon notranslate theme-dark v-icon-svg-med" style="color: var(--primary); caret-color: var(--primary);">
-                                                            <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-med">
-                                                                <path d="M12 4.5A11.8 11.8 0 0 0 1 12A11.8 11.8 0 0 0 12 19.5H13.1A3.8 3.8 0 0 1 13 18.5A4.1 4.1 0 0 1 13.1 17.4H12A9.6 9.6 0 0 1 3.2 12A9.6 9.6 0 0 1 12 6.5A9.6 9.6 0 0 1 20.8 12L20.4 12.7A4.6 4.6 0 0 1 22.3 13.5A10.1 10.1 0 0 0 23 12A11.8 11.8 0 0 0 12 4.5M12 9A3 3 0 1 0 15 12A2.9 2.9 0 0 0 12 9M15 17.5V19.5H23V17.5Z"></path>
-                                                            </svg>
-                                                        </span>
+                                            <span class="v-icon notranslate theme-dark v-icon-svg-med" style="color: var(--primary); caret-color: var(--primary);">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-med">
+                                                    <path d="M12 4.5A11.8 11.8 0 0 0 1 12A11.8 11.8 0 0 0 12 19.5H13.1A3.8 3.8 0 0 1 13 18.5A4.1 4.1 0 0 1 13.1 17.4H12A9.6 9.6 0 0 1 3.2 12A9.6 9.6 0 0 1 12 6.5A9.6 9.6 0 0 1 20.8 12L20.4 12.7A4.6 4.6 0 0 1 22.3 13.5A10.1 10.1 0 0 0 23 12A11.8 11.8 0 0 0 12 4.5M12 9A3 3 0 1 0 15 12A2.9 2.9 0 0 0 12 9M15 17.5V19.5H23V17.5Z"></path>
+                                                </svg>
+                                            </span>
 
 
-                                                    </div>
-                                                    <div class="d-flex justify-center flex-column w-100 py-1 px-2">
-                                                        <div class="chapter-info d-flex justify-space-between">
-                                                            <div><span>#@item.Title</span></div>
-                                                        </div>
-                                                        <div class="d-flex justify-space-between text--disabled text-caption">
-                                                            <div class="d-flex"><div>19 giờ trước</div></div>
-                                                        </div>
-                                                    </div>
-                                                </a>
+                                        </div>
+                                        <div class="d-flex justify-center flex-column w-100 py-1 px-2">
+                                            <div class="chapter-info d-flex justify-space-between">
+                                                <div><span>#@item.Title</span></div>
                                             </div>
+                                            <div class="d-flex justify-space-between text--disabled text-caption">
+                                                <div class="d-flex"><div>19 giờ trước</div></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
                                         }
                                     }
                                     else
@@ -311,24 +324,24 @@
 
 
 
-                                                        <span class="v-icon notranslate theme-dark v-icon-svg-med" style="color: var(--primary); caret-color: var(--primary);">
-                                                            <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-med">
-                                                                <path d="M12 4.5A11.8 11.8 0 0 0 1 12A11.8 11.8 0 0 0 12 19.5H13.1A3.8 3.8 0 0 1 13 18.5A4.1 4.1 0 0 1 13.1 17.4H12A9.6 9.6 0 0 1 3.2 12A9.6 9.6 0 0 1 12 6.5A9.6 9.6 0 0 1 20.8 12L20.4 12.7A4.6 4.6 0 0 1 22.3 13.5A10.1 10.1 0 0 0 23 12A11.8 11.8 0 0 0 12 4.5M12 9A3 3 0 1 0 15 12A2.9 2.9 0 0 0 12 9M15 17.5V19.5H23V17.5Z"></path>
-                                                            </svg>
-                                                        </span>
+                                            <span class="v-icon notranslate theme-dark v-icon-svg-med" style="color: var(--primary); caret-color: var(--primary);">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-med">
+                                                    <path d="M12 4.5A11.8 11.8 0 0 0 1 12A11.8 11.8 0 0 0 12 19.5H13.1A3.8 3.8 0 0 1 13 18.5A4.1 4.1 0 0 1 13.1 17.4H12A9.6 9.6 0 0 1 3.2 12A9.6 9.6 0 0 1 12 6.5A9.6 9.6 0 0 1 20.8 12L20.4 12.7A4.6 4.6 0 0 1 22.3 13.5A10.1 10.1 0 0 0 23 12A11.8 11.8 0 0 0 12 4.5M12 9A3 3 0 1 0 15 12A2.9 2.9 0 0 0 12 9M15 17.5V19.5H23V17.5Z"></path>
+                                                </svg>
+                                            </span>
 
 
-                                                    </div>
-                                                    <div class="d-flex justify-center flex-column w-100 py-1 px-2">
-                                                        <div class="chapter-info d-flex justify-space-between">
-                                                            <div><span>@chapterList[i].Title</span></div>
-                                                        </div>
-                                                        <div class="d-flex justify-space-between text--disabled text-caption">
-                                                            <div class="d-flex"><div>19 giờ trước</div></div>
-                                                        </div>
-                                                    </div>
-                                                </a>
+                                        </div>
+                                        <div class="d-flex justify-center flex-column w-100 py-1 px-2">
+                                            <div class="chapter-info d-flex justify-space-between">
+                                                <div><span>@chapterList[i].Title</span></div>
                                             </div>
+                                            <div class="d-flex justify-space-between text--disabled text-caption">
+                                                <div class="d-flex"><div>19 giờ trước</div></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
                                         }
                                     }
                                 }
@@ -381,21 +394,139 @@
             };
         </script>
         <script type="text/javascript" src="../contents/v2/js/comment259b.js?v=51"></script>
+
+
+
+
         <div id="comment-main-section" class="row container rounded mb-2 zs-bg-1 v-sheet theme-dark">
             <div class="comment-section m-auto w-100 container-1200">
                 <p class="title">BÌNH LUẬN</p>
                 <div class="input">
-                    <textarea class="input-comment" placeholder='Người tiện tay vẽ hoa vẽ lá, Tôi đa tình tưởng đó là mùa xuân...' maxlength="500"></textarea>
+                    <textarea class="input-comment" placeholder='Bình luận ở đây ...' maxlength="500"></textarea>
                     <button class="btn-comment mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">Gửi</button>
                 </div>
-                <div class="lds-loading">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
+
+                @if (ViewBag.comments != null && ((List<StoryWeb.Models.ModelView.StoryComment>)ViewBag.comments).Any())
+                    {
+                        var comments = (List<StoryWeb.Models.ModelView.StoryComment>)ViewBag.comments;
+                                    foreach (var comment in comments)
+                            {
+                                    <div class="comment">
+                                        <div class="user d-flex">
+                                            <p class="name">@comment.Fullname</p>
+
+                                        </div>
+                                        <div class="p-comment theme-dark zs-bg-3">
+
+                                            <div class="comment">
+                                                <p>@comment.Content</p>
+                                            </div>
+                                        </div>
+                                        <btn class="btn-tag">Báo cáo</btn>
+                                        @*<btn class="btn-tag">tag</btn>
+                                        <btn class="btn-tag">tag</btn>*@
+                                    </div>
+                            }
+                    }
+                    else
+                    {
+                                <div class="mt-3 text-muted">Chưa có bình luận nào.</div>
+                    }
+
+                
             </div>
         </div>
+            
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const sendBtn = document.querySelector(".btn-comment");
+                const textarea = document.querySelector(".input-comment");
+                const storyId = @story.Id;
 
+                sendBtn.addEventListener("click", function () {
+                    const content = textarea.value.trim();
+
+                    fetch("/Story/PostStoryComment", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `storyId=${storyId}&content=${encodeURIComponent(content)}`
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) {
+                            textarea.value = "";
+                            // Optionally, reload comment list or append new comment
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Lỗi gửi bình luận:", err);
+                        alert("Không thể gửi bình luận. Thử lại sau.");
+                    });
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const followBtn = document.getElementById("btn-follow");
+                if (!followBtn) return;
+
+                const textSpan = followBtn.querySelector(".text-capitalize");
+                const iconUse = followBtn.querySelector("use"); // SVG <use> element
+
+                const isLoggedIn = followBtn.getAttribute("data-logged-in") === "true";
+                let isFollowing = followBtn.getAttribute("data-following") === "true";
+
+                followBtn.addEventListener("click", function () {
+                    if (!isLoggedIn) {
+                        alert("Bạn cần đăng nhập để theo dõi truyện.");
+                        return;
+                    }
+
+                    const storyId = this.getAttribute("data-story-id");
+                    const url = isFollowing ? "/Story/Unfollow" : "/Story/Follow";
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `storyId=${encodeURIComponent(storyId)}`
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            alert(data.message);
+                            if (data.success) {
+                                isFollowing = !isFollowing;
+                                textSpan.innerText = isFollowing ? "Hủy theo dõi" : "Theo dõi";
+                                followBtn.setAttribute("data-following", isFollowing.toString());
+                                iconUse.setAttribute("xlink:href", isFollowing ? "#icon-heart-filled" : "#icon-heart-outline");
+                                followBtn.classList.toggle("followed", isFollowing);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Lỗi toggle theo dõi:", err);
+                            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+                        });
+                });
+            });
+        </script>
+
+
+        <svg style="display: none;">
+            <symbol id="icon-heart-outline" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+                     C13.09 3.81 14.76 3 16.5 3
+                     19.58 3 22 5.42 22 8.5
+                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </symbol>
+                        <symbol id="icon-heart-filled" viewBox="0 0 24 24">
+                            <path fill="red" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+                     C13.09 3.81 14.76 3 16.5 3
+                     19.58 3 22 5.42 22 8.5
+                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </symbol>
+        </svg>
     </div>
 </main>
 
