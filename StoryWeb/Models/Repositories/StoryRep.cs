@@ -31,9 +31,6 @@ namespace StoryWeb.Models.Repositories
                 BaseAddress = new Uri("http://localhost:8078/")
             };
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
             return client;
         }
 
@@ -56,27 +53,6 @@ namespace StoryWeb.Models.Repositories
                 return new List<Story>();
             }
             return new List<Story>();
-        }
-
-        public async Task<Story> GetStoryById(int id)
-        {
-            try
-            {
-                using (var client = CreateHttpClient())
-                {
-                    var response = await client.GetAsync($"story/get/{id}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<Story>(dataJson);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            return null;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -19,17 +18,8 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             try
             {
-                var headerData = Request.Headers;
-                string username = headerData.Contains("username") ? headerData.GetValues("username").First() : "";
-                string password = headerData.Contains("pwd") ? headerData.GetValues("pwd").First() : "";
-                string token = headerData.Contains("tk") ? headerData.GetValues("tk").First() : "";
-
-                if (AccountRep.CheckToken(username, password, token))
-                {
-                    var stories = _storyRes.GetAll();
-                    return Request.CreateResponse(HttpStatusCode.OK, stories);
-                }
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
+                var stories = _storyRes.GetAll();
+                return Request.CreateResponse(HttpStatusCode.OK, stories);
             }
             catch (Exception ex)
             {
@@ -37,31 +27,28 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
         }
 
-        [Route("get/{id}")]
-        [HttpGet]
-        public HttpResponseMessage GetById(int id)
+        [Route("delete")]
+        [HttpPost]
+        public HttpResponseMessage Delete([FromBody] Story item)
         {
             try
             {
-                var headerData = Request.Headers;
-                string username = headerData.Contains("username") ? headerData.GetValues("username").First() : "";
-                string password = headerData.Contains("pwd") ? headerData.GetValues("pwd").First() : "";
-                string token = headerData.Contains("tk") ? headerData.GetValues("tk").First() : "";
-
-                if (AccountRep.CheckToken(username, password, token))
+                if (item == null || item.Id == 0)
                 {
-                    var story = _storyRes.GetById(id);
-                    if (story == null)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound, "Story not found");
-                    }
-                    return Request.CreateResponse(HttpStatusCode.OK, story);
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
                 }
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
+                System.Diagnostics.Debug.WriteLine($"Received delete request for Story ID: {item.Id}");
+                var result = _storyRes.Delete(item.Id);
+                if (result)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Truyện đã được xóa thành công." });
+                }
+                return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error in Delete: {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new { Message = $"Error: {ex.Message}" });
             }
         }
     }

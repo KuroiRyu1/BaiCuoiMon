@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace StoryWeb.Models.ModelView
 {
@@ -19,6 +18,5 @@ namespace StoryWeb.Models.ModelView
         public int StoryTypeId { get; set; } = 0;
         public string AuthorName { get; set; } = "";
         public string CategoryName { get; set; } = "";
-        public List<Chapter> Chapters { get; set; } = new List<Chapter>();
     }
 }

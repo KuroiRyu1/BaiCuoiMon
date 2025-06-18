@@ -22,255 +22,67 @@ namespace StoryWeb.Controllers
             var user = await UserRep.Instance.GetUser();
             ViewBag.user = user ?? new List<User>();
             return View();
-
         }
         public async Task<ActionResult> StoryList()
         {
-            var stories = await StoryRep.Instance.GetAllStories();
-            ViewBag.Stories = stories ?? new System.Collections.Generic.List<Story>();
-            return View();
-        }
-
-        public ActionResult StoryCreate()
-        {
-            return View(new Story());
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> StoryCreateConfirm(Story item)
-        {
-            return View("StoryCreate", item);
-        }
-
-        public async Task<ActionResult> StoryEdit(int id)
-        {
-            return View();
+            try
+            {
+                var stories = await StoryRep.Instance.GetAllStories();
+                if (stories == null || !stories.Any())
+                {
+                    TempData["Error"] = "Không thể tải danh sách truyện. Vui lòng kiểm tra kết nối API.";
+                }
+                return View(stories);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi tải danh sách truyện: {ex.Message}";
+                return View(new List<Story>());
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult> StoryEditConfirm(Story item)
-        {
-            return View("StoryEdit", item);
-        }
-
         public async Task<ActionResult> StoryDelete(int id)
         {
-            return RedirectToAction("StoryList");
-        }
-
-        public async Task<ActionResult> StoryDetail(int id)
-        {
-            var story = await StoryRep.Instance.GetStoryById(id);
-            if (story == null)
+            try
             {
-                return HttpNotFound();
-            }
-            ViewBag.Story = story;
-            var chapters = await ChapterRep.Instance.GetChaptersByStoryId(id);
-            ViewBag.Chapters = chapters ?? new System.Collections.Generic.List<Chapter>();
-            return View();
-        }
-
-        public ActionResult ChapterCreate(int storyId)
-        {
-            return View(new Chapter { StoryId = storyId });
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> ChapterCreateConfirm(Chapter chapter, HttpPostedFileBase[] images)
-        {
-            if (ModelState.IsValid)
-            {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078/");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-
-                using (var content = new MultipartFormDataContent())
+                using (var client = new HttpClient())
                 {
-                    content.Add(new StringContent(chapter.Title), "title");
-                    content.Add(new StringContent(chapter.Content), "content");
-                    content.Add(new StringContent(chapter.StoryId.ToString()), "storyId");
-
-                    if (images != null && images.Length > 0)
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    var content = new FormUrlEncodedContent(new[]
                     {
-                        foreach (var image in images)
-                        {
-                            if (image != null && image.ContentLength > 0)
-                            {
-                                var streamContent = new StreamContent(image.InputStream);
-                                streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                                {
-                                    Name = "images",
-                                    FileName = image.FileName
-                                };
-                                content.Add(streamContent);
-                            }
-                        }
-                    }
-
-                    var response = await client.PostAsync("api/chapters", content);
-                    var uploadResponse = await client.PostAsync($"api/chapter-images/upload?ChapterId={chapter.StoryId}", content);
-                    if (response.IsSuccessStatusCode && uploadResponse.IsSuccessStatusCode)
-                    {
-                        TempData["Success"] = "Thêm chương thành công!";
-                        return RedirectToAction("StoryDetail", new { id = chapter.StoryId });
-                    }
-                }
-            }
-            TempData["Error"] = "Thêm chương thất bại!";
-            return View("ChapterCreate", chapter);
-        }
-
-        public async Task<ActionResult> ChapterEdit(int storyId, int chapterId)
-        {
-            var chapters = await ChapterRep.Instance.GetChaptersByStoryId(storyId);
-            var chapter = chapters?.FirstOrDefault(c => c.Id == chapterId);
-            if (chapter == null) return HttpNotFound();
-
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.GetAsync($"api/chapter-images/{chapterId}");
-            if (response.IsSuccessStatusCode)
-            {
-                ViewBag.Images = await response.Content.ReadAsAsync<System.Collections.Generic.List<dynamic>>();
-            }
-            return View(chapter);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> ChapterEditConfirm(Chapter chapter, HttpPostedFileBase[] images)
-        {
-            if (ModelState.IsValid)
-            {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078/");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-
-                using (var content = new MultipartFormDataContent())
-                {
-                    content.Add(new StringContent(chapter.Id.ToString()), "id");
-                    content.Add(new StringContent(chapter.Title), "title");
-                    content.Add(new StringContent(chapter.Content), "content");
-
-                    if (images != null && images.Length > 0)
-                    {
-                        foreach (var image in images)
-                        {
-                            if (image != null && image.ContentLength > 0)
-                            {
-                                var streamContent = new StreamContent(image.InputStream);
-                                streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                                {
-                                    Name = "images",
-                                    FileName = image.FileName
-                                };
-                                content.Add(streamContent);
-                            }
-                        }
-                    }
-
-                    var response = await client.PutAsync($"api/chapters/{chapter.Id}", content);
-                    var uploadResponse = await client.PostAsync($"api/chapter-images/upload?ChapterId={chapter.Id}", content);
-                    if (response.IsSuccessStatusCode && uploadResponse.IsSuccessStatusCode)
-                    {
-                        TempData["Success"] = "Cập nhật chương thành công!";
-                        return RedirectToAction("StoryDetail", new { id = chapter.StoryId });
-                    }
-                }
-            }
-            TempData["Error"] = "Cập nhật chương thất bại!";
-            return View("ChapterEdit", chapter);
-        }
-
-        public async Task<ActionResult> ChapterDelete(int storyId, int chapterId)
-        {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.DeleteAsync($"api/chapters/{chapterId}");
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["Success"] = "Xóa chương thành công!";
-            }
-            else
-            {
-                TempData["Error"] = "Xóa chương thất bại!";
-            }
-            return RedirectToAction("StoryDetail", new { id = storyId });
-        }
-
-        public async Task<ActionResult> DeleteImage(int chapterId, long imageId)
-        {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.DeleteAsync($"api/chapter-images/{imageId}");
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["Success"] = "Xóa ảnh thành công!";
-            }
-            else
-            {
-                TempData["Error"] = "Xóa ảnh thất bại!";
-            }
-            return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
-        }
-
-        public async Task<ActionResult> UpdateImage(int chapterId, long imageId, HttpPostedFileBase image)
-        {
-            if (image != null && image.ContentLength > 0)
-            {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078/");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-
-                using (var content = new MultipartFormDataContent())
-                {
-                    var streamContent = new StreamContent(image.InputStream);
-                    streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                    {
-                        Name = "image",
-                        FileName = image.FileName
-                    };
-                    content.Add(streamContent);
-
-                    var response = await client.PutAsync($"api/chapter-images/{imageId}", content);
+                        new KeyValuePair<string, string>("id", id.ToString()),
+                        new KeyValuePair<string, string>("Title", ""), // Gửi các trường để khớp với Story object
+                        new KeyValuePair<string, string>("ChapterNumber", "0"),
+                        new KeyValuePair<string, string>("Introduction", ""),
+                        new KeyValuePair<string, string>("Image", "default.jpg"),
+                        new KeyValuePair<string, string>("LikeNumber", "0"),
+                        new KeyValuePair<string, string>("FollowNumber", "0"),
+                        new KeyValuePair<string, string>("ViewNumber", "0"),
+                        new KeyValuePair<string, string>("AuthorId", "0"),
+                        new KeyValuePair<string, string>("StatusId", "0"),
+                        new KeyValuePair<string, string>("CategoryId", "0"),
+                        new KeyValuePair<string, string>("StoryTypeId", "0"),
+                        new KeyValuePair<string, string>("AuthorName", ""),
+                        new KeyValuePair<string, string>("CategoryName", "")
+                    });
+                    var response = await client.PostAsync("story/delete", content);
+                    string responseContent = await response.Content.ReadAsStringAsync();
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData["Success"] = "Cập nhật ảnh thành công!";
+                        TempData["Success"] = "Truyện đã được xóa mềm thành công.";
                     }
                     else
                     {
-                        TempData["Error"] = "Cập nhật ảnh thất bại!";
+                        TempData["Error"] = $"Xóa truyện thất bại. Mã lỗi: {response.StatusCode}, Chi tiết: {responseContent}";
                     }
                 }
             }
-            return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
-        }
-
-        public async Task<ActionResult> GetChapterImages(int chapterId)
-        {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("pwd", "123");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.GetAsync($"api/chapter-images/{chapterId}");
-            if (response.IsSuccessStatusCode)
+            catch (Exception ex)
             {
-                return Json(await response.Content.ReadAsAsync<System.Collections.Generic.List<dynamic>>(), JsonRequestBehavior.AllowGet);
+                TempData["Error"] = $"Lỗi khi xóa truyện: {ex.Message}";
             }
-            return Json(new System.Collections.Generic.List<dynamic>(), JsonRequestBehavior.AllowGet);
+            return RedirectToAction("StoryList");
         }
     }
 }
