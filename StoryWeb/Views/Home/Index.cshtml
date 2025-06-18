@@ -8,7 +8,17 @@
     }
 }
 <div class="container mt-5 border-box">
-
+    <script src="@Url.Content("~/Content/")/WebTruyen/js/slide.show.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            jQuery('#slideshow').fadeSlideShow({
+                width: "100%",
+                height: "320px",
+                allowKeyboardCtrl: false,
+                interval: 5000
+            });
+        });
+    </script>
     <div class="row">
         <div class="col-12 w-100 m-auto border-box container-1200">
             <section class="main-banner-comic rounded relative">
@@ -16,10 +26,10 @@
 
                     @foreach (StoryWeb.Models.ModelView.Story item in story)
                     {
-                        <div class="background-banner" style="background-image: url(image/banner/1O-0my131hHVl7bk_JhCs0rVBJZjzqRrp62f6.jpg?code=gtt-yes); background-size: cover;">
+                        <div class="background-banner" style="background-image: url(@Url.Content("~/Content/")/Image/@item.Id/@item.Image); background-size: cover;">
                             <div class="each-fade">
-                                <a href="truyen/tai-thiet-ham-nguc.html">
-                                    <img src="@Url.Content("~/Content")/Image/banner/1Mz0O54RzA0rd9rk6yzoLMZCG7j6Sfh1q62f6.jpg?code=gtt-yes" alt="/image/banner/1Mz0O54RzA0rd9rk6yzoLMZCG7j6Sfh1q?code=gtt-yes" />
+                                <a href='@Url.Action("StoryInfo", "Story", new { id = item.Id })'>
+                                    <img src="@Url.Content("~/Content/")/Image/@item.Id/@item.Image" />
                                 </a>
                             </div>
                         </div>
@@ -111,7 +121,7 @@
                                                                 {
                                                                     chapNum = 2;
                                                                 }
-                                                                for (int i = 0; i <chapNum; i++)
+                                                                for (int i = 0; i < chapNum; i++)
                                                                 {
                                                                     int itemDisplay = item.ChapterNumber - i;
                                                                     <a href='@Url.Action("Read", "Chapter", new {id=item.Id,chapterIndex = itemDisplay})' title="Chương @itemDisplay" class="tu-tien-tro-ve-tai-vuon-truong---phan-2-177 timeline-item mt-2 font-sans-serif">
@@ -190,5 +200,5 @@
             </div>
 
         </div>
-        </div>
     </div>
+</div>
