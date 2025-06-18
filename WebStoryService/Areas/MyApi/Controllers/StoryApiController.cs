@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -14,29 +15,6 @@ namespace WebStoryService.Areas.MyApi.Controllers
     {
         private readonly StoryRes _storyRes = new StoryRes();
 
-        [Route("getall")]
-        [HttpGet]
-        public HttpResponseMessage GetAll()
-        {
-            try
-            {
-                var headerData = Request.Headers;
-                string username = headerData.Contains("username") ? headerData.GetValues("username").First() : "";
-                string password = headerData.Contains("pwd") ? headerData.GetValues("pwd").First() : "";
-                string token = headerData.Contains("tk") ? headerData.GetValues("tk").First() : "";
-
-                if (AccountRep.CheckToken(username, password, token))
-                {
-                    var stories = _storyRes.GetAll();
-                    return Request.CreateResponse(HttpStatusCode.OK, stories);
-                }
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
-            }
-        }
         [HttpGet]
         [Route("getall")]
         public List<Story> getAll()
