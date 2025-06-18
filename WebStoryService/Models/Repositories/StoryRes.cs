@@ -52,7 +52,7 @@ namespace WebStoryService.Models.Repositories
             }
             return list;
         }
-        public List<Story> GetAll()
+        public List<Story> GetAll(int? categoryId=null)
         {
             List<Story> list = new List<Story>();
             try

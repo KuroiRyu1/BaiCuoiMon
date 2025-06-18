@@ -15,6 +15,20 @@ namespace WebStoryService.Areas.MyApi.Controllers
     {
         private readonly StoryRes _storyRes = new StoryRes();
 
+        [Route("get")]
+        [HttpGet]
+        public IEnumerable<Story> Get(int? categoryId = null, int page = 1, int pageSize = 10)
+        {
+            try
+            {
+                return _storyRes.Gets(categoryId, page, pageSize);
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return new List<Story>();
+        }
         [HttpGet]
         [Route("getall")]
         public List<Story> getAll(int? cateId=null)

@@ -23,7 +23,7 @@ namespace StoryWeb.Models.Repositories
                 return _instance;
             }
         }
-        public async Task<List<Story>> GetAllStories(int? cateId=null)
+        public async Task<List<Story>> GetAllStories(int? cateId = null)
         {
             try
             {
@@ -78,15 +78,16 @@ namespace StoryWeb.Models.Repositories
         {
             try
             {
-                using (var client = CreateHttpClient())
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var response = await client.GetAsync($"story/get/{id}");
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await client.GetAsync($"story/get/{id}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<Story>(dataJson);
-                    }
+                    var dataJson = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<Story>(dataJson);
                 }
+
             }
             catch (Exception)
             {
