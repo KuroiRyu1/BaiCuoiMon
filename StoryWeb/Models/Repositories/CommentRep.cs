@@ -76,5 +76,31 @@ namespace StoryWeb.Models.Repositories
 
             return new List<StoryComment>();
         }
+
+        public async Task<int> AddChapterCommentAsync(ChapterComment comment)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+
+                var content = new StringContent(JsonConvert.SerializeObject(comment), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage res = await client.PostAsync("api/comment/chapter", content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return 1; // Gửi thành công
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log nếu cần
+            }
+            return 0;
+        }
     }
 }

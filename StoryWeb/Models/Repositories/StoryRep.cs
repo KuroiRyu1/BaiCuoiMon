@@ -2,8 +2,11 @@
 using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -11,7 +14,6 @@ namespace StoryWeb.Models.Repositories
     {
         private static StoryRep _instance;
         private StoryRep() { }
-
         public static StoryRep Instance
         {
             get
@@ -24,36 +26,6 @@ namespace StoryWeb.Models.Repositories
             }
         }
 
-        private HttpClient CreateHttpClient()
-        {
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:8078/")
-            };
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            return client;
-        }
-
-        public async Task<List<Story>> GetAllStories(int? categoryId = null)
-        {
-            try
-            {
-                using (var client = CreateHttpClient())
-                {
-                    var response = await client.GetAsync("story/getall");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<List<Story>>(dataJson);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return new List<Story>();
-            }
-            return new List<Story>();
-        }
         public async Task<List<Story>> GetStories(int? categoryId = null, int page = 1, int pageSize = 10)
         {
             try
@@ -61,6 +33,9 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
                 string url = $"story/get?page={page}&pageSize={pageSize}";
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
@@ -80,24 +55,26 @@ namespace StoryWeb.Models.Repositories
             return new List<Story>();
         }
 
-
         public async Task<Story> GetStoryById(int id)
         {
             try
             {
-                using (var client = CreateHttpClient())
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
+                HttpResponseMessage res = await client.GetAsync($"story/get/{id}");
+                if (res.IsSuccessStatusCode)
                 {
-                    var response = await client.GetAsync($"story/get/{id}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var dataJson = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<Story>(dataJson);
-                    }
+                    var dataJson = await res.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<Story>(dataJson);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                // Log error if needed
             }
             return null;
         }

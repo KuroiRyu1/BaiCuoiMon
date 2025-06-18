@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using WebStoryService.Models.Entities;
 
 namespace WebStoryService.Models.Repositories
 {
@@ -23,26 +22,6 @@ namespace WebStoryService.Models.Repositories
 
             }
             return false;
-        }
-
-     public static bool CheckToken(string username, string password, string token)
-        {
-            try
-            {
-                using (var db = new DbEntities())
-                {
-                    var user = db.tbl_user
-                        .FirstOrDefault(u => u.C_username == username &&
-                                             u.C_password == password &&
-                                             u.C_token == token &&
-                                             u.C_role == 0); // Only admin
-                    return user != null;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
     }
 }

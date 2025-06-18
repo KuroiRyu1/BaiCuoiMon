@@ -2,21 +2,6 @@
 @{
     ViewBag.Title = "Read";
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
-    StoryWeb.Models.ModelView.Chapter chapter = new StoryWeb.Models.ModelView.Chapter();
-    StoryWeb.Models.ModelView.Story story = new StoryWeb.Models.ModelView.Story();
-    List<StoryWeb.Models.ModelView.ChapterImage> chapterImage = new List<StoryWeb.Models.ModelView.ChapterImage>();
-    if (ViewBag.chapter != null)
-    {
-        chapter = (StoryWeb.Models.ModelView.Chapter)ViewBag.chapter;
-    }
-    if (ViewBag.story != null)
-    {
-        story = (StoryWeb.Models.ModelView.Story)ViewBag.story;
-    }
-    if (ViewBag.chapterImage != null)
-    {
-        chapterImage = (List<StoryWeb.Models.ModelView.ChapterImage>)ViewBag.chapterImage;
-    }
 }
 
 <main class="main">
@@ -31,7 +16,7 @@
                     <div class="row">
                         <div class="d-flex align-center justify-center col-12 w-100">
                             <ul class="v-breadcrumbs pa-1 align-center justify-center d-flex text-truncate theme-dark">
-                                <a href="@Url.Action("Index","Home")" class="breadcrumb text-truncate">Trang Chủ</a>
+                                <a href="../../trang-chu.html" class="breadcrumb text-truncate">Trang Chủ</a>
                                 <li class="v-breadcrumbs-divider">
                                     <span aria-hidden="true" class="v-icon notranslate theme-dark">
                                         <svg viewBox="0 0 24 24" class="v-icon-svg">
@@ -39,7 +24,7 @@
                                         </svg>
                                     </span>
                                 </li>
-                                <a href="@Url.Action("StoryInfo","Story",new {id = chapter.StoryId})" class="breadcrumb text-truncate">@story.Title</a>
+                                <a href="../ngoi-nha-an-ngay-tan-the.html" class="breadcrumb text-truncate">Ngôi Nhà Ẩn Ngày Tận Thế</a>
                                 <li class="v-breadcrumbs-divider">
                                     <span aria-hidden="true" class="v-icon notranslate theme-dark">
                                         <svg viewBox="0 0 24 24" class="v-icon-svg">
@@ -48,7 +33,7 @@
                                     </span>
                                 </li>
                                 <a href="#" onclick="return false;" class="breadcrumb text-truncate">
-                                    <span class="d-650-none">Chương</span> #@chapter.ChapterIndex
+                                    <span class="d-650-none">Chương</span> #48
                                 </a>
                             </ul>
                         </div>
@@ -66,40 +51,18 @@
 
 
 
-                                @{
-                                    if (chapter.ChapterIndex == 1)
-                                    {
-                                        <a type="button" class="nav-prev nav-btn btn-default-icon">
-                                            <span class="btn-default-icon-content">
-                                                <div class="d-flex align-center justify-center flex-column">
-                                                    <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                                        <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                                            <path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path>
-                                                        </svg>
-                                                    </span>
-                                                    <small>Trước</small>
-                                                </div>
+                                <button data-href="/truyen/ngoi-nha-an-ngay-tan-the/chuong-47" type="button" class="nav-prev nav-btn btn-default-icon">
+                                    <span class="btn-default-icon-content">
+                                        <div class="d-flex align-center justify-center flex-column">
+                                            <span class="v-icon notranslate theme-dark v-icon-svg-big">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
+                                                    <path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path>
+                                                </svg>
                                             </span>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a href="@Url.Action("Read", "Chapter", new {id=story.Id,chapterIndex=chapter.ChapterIndex-1})" type="button" class="nav-prev nav-btn btn-default-icon">
-                                            <span class="btn-default-icon-content">
-                                                <div class="d-flex align-center justify-center flex-column">
-                                                    <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                                        <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                                            <path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path>
-                                                        </svg>
-                                                    </span>
-                                                    <small>Trước</small>
-                                                </div>
-                                            </span>
-                                        </a>
-                                    }
-
-
-                                }
+                                            <small>Trước</small>
+                                        </div>
+                                    </span>
+                                </button>
 
 
                                 <button type="button" class="nav-list nav-btn btn-default-icon">
@@ -114,37 +77,21 @@
                                         </div>
                                     </span>
                                 </button>
-                                @if (chapter.ChapterIndex < story.ChapterNumber)
-                                {
-                                    int chapternum = chapter.ChapterIndex + 1;
-                                    <a href="@Url.Action("Read", "Chapter", new {id=story.Id,chapterIndex=chapternum})" type="button" class="nav-next nav-btn btn-default-icon">
-                                        <span class="btn-default-icon-content">
-                                            <div class="d-flex align-center justify-center flex-column">
-                                                <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                                    <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                                        <path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path>
-                                                    </svg>
-                                                </span>
-                                                <small>Sau</small>
-                                            </div>
-                                        </span>
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a type="button" class="nav-next nav-btn btn-default-icon">
-                                        <span class="btn-default-icon-content">
-                                            <div class="d-flex align-center justify-center flex-column">
-                                                <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                                    <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                                        <path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path>
-                                                    </svg>
-                                                </span>
-                                                <small>Sau</small>
-                                            </div>
-                                        </span>
-                                    </a>
-                                }
+
+
+
+                                <button data-href="/truyen/ngoi-nha-an-ngay-tan-the/chuong-49" type="button" class="nav-next nav-btn btn-default-icon">
+                                    <span class="btn-default-icon-content">
+                                        <div class="d-flex align-center justify-center flex-column">
+                                            <span class="v-icon notranslate theme-dark v-icon-svg-big">
+                                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
+                                                    <path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path>
+                                                </svg>
+                                            </span>
+                                            <small>Sau</small>
+                                        </div>
+                                    </span>
+                                </button>
 
 
                             </div>
@@ -161,27 +108,12 @@
         <div class="main-images container border-box">
             <div class="image-section">
                 <div class="warning-level">
-                    @{
-                        int a = 1;
-                        if (a == 0)
-                        {
-                            <div class="white-color mx-auto text-capitalize font-sans-serif">Đang kiểm tra trạng thái tài khoản...</div>
-                            <div class="lds-loading">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                        }
-                        foreach (StoryWeb.Models.ModelView.ChapterImage image in chapterImage)
-                        {
-                            <div>
-                                <img src="@Url.Content("~/Content")/Image/@story.Title/@chapter.ChapterIndex/@image.ImagePath" />
-                            </div>
-                        }
-
-
-                    }
-
+                    <div class="white-color mx-auto text-capitalize font-sans-serif">Đang kiểm tra trạng thái tài khoản...</div>
+                    <div class="lds-loading">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -194,36 +126,18 @@
 
 
 
-            @if (chapter.ChapterIndex != 1)
-            {
-                <a href="@Url.Action("Read","Chapter",new {id = chapter.StoryId, chapterIndex = chapter.ChapterIndex-1 })" type="button" class="ml-2 btn-default">
-                    <span class="btn-default-icon-content">
-                        <div class="d-flex align-center justify-center flex-column">
-                            <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                    <path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path>
-                                </svg>
-                            </span>
-                            <small>Trước</small>
-                        </div>
-                    </span>
-                </a>
-            }
-            else
-            {
-                <a href="" type="button" class="ml-2 btn-default">
-                    <span class="btn-default-icon-content">
-                        <div class="d-flex align-center justify-center flex-column">
-                            <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                    <path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path>
-                                </svg>
-                            </span>
-                            <small>Trước</small>
-                        </div>
-                    </span>
-                </a>
-            }
+            <a href="chuong-47.html" type="button" class="ml-2 btn-default">
+                <span class="btn-default-icon-content">
+                    <div class="d-flex align-center justify-center flex-column">
+                        <span class="v-icon notranslate theme-dark v-icon-svg-big">
+                            <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
+                                <path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path>
+                            </svg>
+                        </span>
+                        <small>Trước</small>
+                    </div>
+                </span>
+            </a>
 
 
             <button type="button" class="btn-default">
@@ -241,36 +155,18 @@
 
 
 
-            @if (chapter.ChapterIndex < story.ChapterNumber)
-            {
-                <a href="@Url.Action("Read","Chapter",new {id = chapter.StoryId, chapterIndex = chapter.ChapterIndex+1 })" type="button" class="mr-2 btn-default">
-                    <span class="btn-default-icon-content">
-                        <div class="d-flex align-center justify-center flex-column">
-                            <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                    <path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path>
-                                </svg>
-                            </span>
-                            <small>Sau</small>
-                        </div>
-                    </span>
-                </a>
-            }
-            else
-            {
-                <a href="" type="button" class="mr-2 btn-default">
-                    <span class="btn-default-icon-content">
-                        <div class="d-flex align-center justify-center flex-column">
-                            <span class="v-icon notranslate theme-dark v-icon-svg-big">
-                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                                    <path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path>
-                                </svg>
-                            </span>
-                            <small>Sau</small>
-                        </div>
-                    </span>
-                </a>
-            }
+            <a href="chuong-49.html" type="button" class="mr-2 btn-default">
+                <span class="btn-default-icon-content">
+                    <div class="d-flex align-center justify-center flex-column">
+                        <span class="v-icon notranslate theme-dark v-icon-svg-big">
+                            <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
+                                <path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path>
+                            </svg>
+                        </span>
+                        <small>Sau</small>
+                    </div>
+                </span>
+            </a>
 
 
         </div>

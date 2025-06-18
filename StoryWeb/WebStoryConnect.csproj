@@ -182,11 +182,9 @@
     <Compile Include="Models\ModelView\Chapter.cs" />
     <Compile Include="Models\ModelView\ChapterComment.cs" />
     <Compile Include="Models\ModelView\StoryComment.cs" />
-    <Compile Include="Models\ModelView\ChapterImage.cs" />
     <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\User.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
-    <Compile Include="Models\Repositories\ChapterImageRes.cs" />
     <Compile Include="Models\Repositories\ChapterRep.cs" />
     <Compile Include="Models\Repositories\CommentRep.cs" />
     <Compile Include="Models\Repositories\StoryRep.cs" />
@@ -246,7 +244,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Content\Image\Wuwa\1\65512393-4a07-408c-adf4-546b2f2f3888.jpg" />
     <Content Include="Content\Image\banner\14QPA6zED9tlyqt7cFqWEprVCoPeWvJQI62f6.jpg" />
     <Content Include="Content\Image\banner\15C0fR2A1gvtrbPSWvjK84vhvVgpWXB6e.jpg" />
     <Content Include="Content\Image\banner\15C0fR2A1gvtrbPSWvjK84vhvVgpWXB6e62f6.jpg" />
@@ -271,7 +268,6 @@
     <Content Include="Content\WebTruyen\css\homef413.css" />
     <Content Include="Content\WebTruyen\css\search259b.css" />
     <Content Include="Content\WebTruyen\css\view259b.css" />
-    <Content Include="Content\Image\Wuwa\1.jpg" />
     <Content Include="Content\WebTruyen\images\bg2.gif" />
     <Content Include="Content\WebTruyen\images\favicon.ico" />
     <Content Include="Content\WebTruyen\images\google_icon.png" />
@@ -339,7 +335,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\css\.DS_Store" />

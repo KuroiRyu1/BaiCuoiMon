@@ -224,7 +224,6 @@
       <DependentUpon>DbEntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_author.cs">
-    <Compile Include="Models\Entities\sysdiagrams.cs">
       <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_banned_word.cs">

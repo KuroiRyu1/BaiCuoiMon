@@ -20,6 +20,9 @@ namespace StoryWeb.Models.ModelView
         [JsonProperty("C_user_id")]
         public int UserId { get; set; }
 
+        [JsonProperty("ChapterIndex")]
+        public int ChapterIndex { get; set; }
+
         [JsonProperty("UserFullname")]
         public string Fullname { get; set; }
 

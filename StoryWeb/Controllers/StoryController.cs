@@ -158,9 +158,6 @@ namespace StoryWeb.Controllers
             return Json(new { success = false, message = "Không thể theo dõi truyện." });
         }
 
-        
-
-
         [HttpPost]
         public async Task<JsonResult> PostStoryComment(int storyId, string content)
         {
