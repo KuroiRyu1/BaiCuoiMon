@@ -175,6 +175,24 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return user;
         }
+        [HttpPut]
+        [Route("changerole")]
+        public int EditUser(User user = null)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return 0;
+                }
+                UserRes res = new UserRes();
+                return res.EditUser(user);
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
 
     }
 }
