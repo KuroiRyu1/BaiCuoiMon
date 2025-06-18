@@ -17,12 +17,14 @@ namespace StoryWeb.Controllers
         {
             return View();
         }
+
         public async Task<ActionResult> UserList()
         {
             var user = await UserRep.Instance.GetUser();
             ViewBag.user = user ?? new List<User>();
             return View();
         }
+
         public async Task<ActionResult> StoryList()
         {
             try
@@ -52,10 +54,10 @@ namespace StoryWeb.Controllers
                     var content = new FormUrlEncodedContent(new[]
                     {
                         new KeyValuePair<string, string>("id", id.ToString()),
-                        new KeyValuePair<string, string>("Title", ""), // Gửi các trường để khớp với Story object
+                        new KeyValuePair<string, string>("Title", ""),
                         new KeyValuePair<string, string>("ChapterNumber", "0"),
                         new KeyValuePair<string, string>("Introduction", ""),
-                        new KeyValuePair<string, string>("Image", "default.jpg"),
+                        new KeyValuePair<string, string>("Image", ""),
                         new KeyValuePair<string, string>("LikeNumber", "0"),
                         new KeyValuePair<string, string>("FollowNumber", "0"),
                         new KeyValuePair<string, string>("ViewNumber", "0"),
@@ -83,6 +85,53 @@ namespace StoryWeb.Controllers
                 TempData["Error"] = $"Lỗi khi xóa truyện: {ex.Message}";
             }
             return RedirectToAction("StoryList");
+        }
+
+        public async Task<ActionResult> StoryDetail(int id)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+                    // Lấy thông tin truyện
+                    var storyResponse = await client.GetAsync($"story/get/{id}");
+                    if (!storyResponse.IsSuccessStatusCode)
+                    {
+                        TempData["Error"] = $"Không thể tải thông tin truyện. Mã lỗi: {storyResponse.StatusCode}";
+                        return RedirectToAction("StoryList");
+                    }
+                    var story = await storyResponse.Content.ReadAsAsync<Story>();
+                    if (story == null)
+                    {
+                        TempData["Error"] = "Không tìm thấy thông tin truyện.";
+                        return RedirectToAction("StoryList");
+                    }
+
+                    // Lấy danh sách chapter
+                    var chapterResponse = await client.GetAsync($"api/chapters/{id}");
+                    List<Chapter> chapters = new List<Chapter>();
+                    if (chapterResponse.IsSuccessStatusCode)
+                    {
+                        chapters = await chapterResponse.Content.ReadAsAsync<List<Chapter>>();
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Chapter API failed: {chapterResponse.StatusCode} - {await chapterResponse.Content.ReadAsStringAsync()}");
+                    }
+
+                    ViewBag.Story = story;
+                    ViewBag.Chapters = chapters;
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi tải thông tin truyện: {ex.Message}";
+                return RedirectToAction("StoryList");
+            }
         }
     }
 }

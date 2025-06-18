@@ -27,6 +27,25 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
         }
 
+        [Route("get/{id}")]
+        [HttpGet]
+        public HttpResponseMessage GetById(int id)
+        {
+            try
+            {
+                var story = _storyRes.GetById(id);
+                if (story != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, story);
+                }
+                return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
+            }
+        }
+
         [Route("delete")]
         [HttpPost]
         public HttpResponseMessage Delete([FromBody] Story item)
@@ -41,7 +60,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 var result = _storyRes.Delete(item.Id);
                 if (result)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Truyện đã được xóa thành công." });
+                    return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Truyện đã được xóa mềm thành công." });
                 }
                 return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
             }

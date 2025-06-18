@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Chi tiết truyện";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var story = ViewBag.Story as StoryWeb.Models.ModelView.Story;
+    var chapters = ViewBag.Chapters as List<StoryWeb.Models.ModelView.Chapter> ?? new List<StoryWeb.Models.ModelView.Chapter>();
+}
+
+<main class="container-fluid pt-4">
+    <h2 class="mb-4">Chi tiết truyện: @(story?.Title ?? "Không tìm thấy")</h2>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (story != null)
+    {
+        <div class="row">
+            <!-- Ảnh bìa truyện -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        @if (!string.IsNullOrEmpty(story.Image))
+                        {
+                            var imageFolder = $"{story.Id}";
+                            var imagePath = $"~/Content/Image/{imageFolder}/{story.Image}";
+                            var absolutePath = Server.MapPath($"~/Content/Image/{imageFolder}/{story.Image}");
+                            if (System.IO.Directory.Exists(Server.MapPath($"~/Content/Image/{imageFolder}")) && System.IO.File.Exists(absolutePath))
+                            {
+                                <img src="@Url.Content(imagePath)" alt="Ảnh bìa của @story.Title" class="img-fluid" style="max-height: 300px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="border p-3" style="height: 300px; background-color: #f8f9fa; width: 100%;">
+                                    <p class="text-muted text-center">Không tìm thấy ảnh. <a href="#" class="text-primary">Thêm ảnh</a></p>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="border p-3" style="height: 300px; background-color: #f8f9fa; width: 100%;">
+                                <p class="text-muted text-center">Không có ảnh. <a href="#" class="text-primary">Thêm ảnh</a></p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin truyện -->
+            <div class="col-md-8">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <p><strong>Tác giả:</strong> @story.AuthorName</p>
+                                <p><strong>Tình trạng:</strong> @(story.StatusId == 1 ? "Đang cập nhật" : "Hoàn thành")</p>
+                                <p><strong>Thể loại:</strong> @story.CategoryName</p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Lượt thích:</strong> @story.LikeNumber</p>
+                                <p><strong>Lượt theo dõi:</strong> @story.FollowNumber</p>
+                                <p><strong>Lượt xem:</strong> @story.ViewNumber</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách chapter -->
+        <div class="mt-4">
+            <h4>Danh sách chương</h4>
+            <div class="card shadow">
+                <div class="card-body">
+                    @if (chapters.Any())
+                    {
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Số chương</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Cập nhật</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var chapter in chapters)
+                                {
+                                    <tr>
+                                        <td>Chapter @chapter.Id</td>
+                                        <td>@chapter.Title</td>
+                                        <td>@chapter.DayCreate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <a href="#" class="btn btn-info btn-sm me-2">
+                                                <i class="fas fa-eye"></i> Xem chi tiết
+                                            </a>
+                                            <form action="@Url.Action("ChapterDelete", "Admin")" method="post" style="display:inline-block;">
+                                                @Html.Hidden("Id", chapter.Id)
+                                                @Html.Hidden("Title", chapter.Title)
+                                                @Html.Hidden("DayCreate", chapter.DayCreate.ToString())
+                                                @Html.Hidden("StoryId", chapter.StoryId)
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa chương này?')">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center" role="alert">
+                            Không có chương nào.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">Không tìm thấy thông tin truyện.</div>
+    }
+</main>
