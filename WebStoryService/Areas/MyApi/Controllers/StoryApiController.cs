@@ -56,25 +56,24 @@ namespace WebStoryService.Areas.MyApi.Controllers
             try
             {
                 var headerData = Request.Headers;
-                string username = headerData.Contains("username") ? headerData.GetValues("username").First() : "";
-                string password = headerData.Contains("pwd") ? headerData.GetValues("pwd").First() : "";
-                string token = headerData.Contains("tk") ? headerData.GetValues("tk").First() : "";
-
-                if (AccountRep.CheckToken(username, password, token))
+                string username = string.Empty;
+                string password = string.Empty;
+                string token = string.Empty;
                 {
                     var story = _storyRes.GetById(id);
                     if (story == null)
                     {
-                        return Request.CreateResponse(HttpStatusCode.NotFound, "Story not found");
+                        return Request.CreateResponse(HttpStatusCode.NotFound);
                     }
                     return Request.CreateResponse(HttpStatusCode.OK, story);
                 }
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
+
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
+
     }
 }

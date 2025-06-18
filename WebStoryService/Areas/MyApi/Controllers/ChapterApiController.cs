@@ -18,31 +18,27 @@ namespace WebStoryService.Areas.MyApi.Controllers
         [Route("{storyId}")]
         public IHttpActionResult GetByStory(int storyId)
         {
-            try
-            {
-                if (!_db.tbl_story.Any(s => s.C_id == storyId))
-                {
-                    return NotFound();
-                }
-
-                var chapters = _db.tbl_chapter
-                    .Where(c => c.C_story_id == storyId)
-                    .Select(c => new
-                    {
-                        c.C_id,
-                        c.C_title,
-                        c.C_content,
-                        c.C_day_create,
-                        ImageCount = _db.tbl_chapter_image.Count(i => i.C_chapter_id == c.C_id)
-                    })
-                    .ToList();
-
-                return Ok(chapters);
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            var chapters = _db.tbl_chapter
+                            .Where(c => c.C_story_id == storyId)
+                            .Select(c => new Chapter
+                            {
+                                Id = c.C_id,
+                                Title = c.C_title,
+                                Content = c.C_content,
+                                StoryId = storyId,
+                                ChapterIndex = (int)c.C_chapter_index,
+                            })
+                            .ToList();
+            return Ok(chapters);
+        }
+        [HttpGet]
+        [Route("{storyId}/{chapterIndex}")]
+        public IHttpActionResult ReadStory(int storyId, int chapterIndex)
+        {
+            var chapters = new Chapter();
+            ChapterRes res = new ChapterRes();
+            chapters = res.StoryRead(storyId, chapterIndex);
+            return Ok(chapters);
         }
 
         [HttpGet]

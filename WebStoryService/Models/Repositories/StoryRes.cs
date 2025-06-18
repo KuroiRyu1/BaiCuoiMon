@@ -96,19 +96,22 @@ namespace WebStoryService.Models.Repositories
 
         public Story GetById(int id)
         {
+            Story story = new Story();
             try
             {
-                using (var db = new DbEntities())
+                using (var en = new DbEntities())
                 {
-                    return db.tbl_story
+                    story = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
                         .Where(s => s.C_id == id)
                         .Select(s => new Story
                         {
                             Id = s.C_id,
-                            Title = s.C_title ?? "",
-                            ChapterNumber = s.C_chapter_number ?? 0,
-                            Introduction = s.C_introduction ?? "",
-                            Image = s.C_image ?? "default.jpg",
+                            Title = s.C_title,
+                            ChapterNumber = s.C_chapter_number ?? 1,
+                            Introduction = s.C_introduction,
+                            Image = s.C_image,
                             LikeNumber = s.C_like_number ?? 0,
                             FollowNumber = s.C_follow_number ?? 0,
                             ViewNumber = s.C_view_number ?? 0,
@@ -118,14 +121,14 @@ namespace WebStoryService.Models.Repositories
                             StoryTypeId = s.C_story_type_id ?? 0,
                             AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
                             CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
-                        })
-                        .FirstOrDefault();
+                        }).FirstOrDefault();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                // Log error if needed
             }
+            return story;
         }
     }
 }
