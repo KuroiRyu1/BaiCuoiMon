@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Web;
 using System.Web.Helpers;
+using System.Web.Http;
 using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
 
@@ -123,6 +125,28 @@ namespace WebStoryService.Models.Repositories
             catch (Exception ex) {
             }
             return result;
+        }
+        public int EditUser(User user)
+        {
+            try
+            {
+                DbEntities en = new DbEntities();
+                if (user == null)
+                {
+                    return 0;
+                }
+                var item = en.tbl_user.Find(user.Id);
+                if (item != null)
+                {
+                    item.C_role = user.role;
+                    en.SaveChanges();
+                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
         }
         public User GetUserById(int id)
         {

@@ -254,5 +254,9 @@ namespace StoryWeb.Controllers
             ViewBag.cateList = cateList;
             return View();
         }
+        public async Task<ActionResult> ChangeUserRole()
+        {
+            return RedirectToAction("UserList", "Admin");
+        }
     }
 }

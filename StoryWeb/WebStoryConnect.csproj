@@ -341,7 +341,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
-    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\Story\Index.cshtml" />
+    <Content Include="Views\Story\Create.cshtml" />
     <Content Include="Views\User\UserInfo.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
@@ -353,6 +354,8 @@
     <Content Include="Views\Category\CategoryList.cshtml" />
     <Content Include="Views\User\FollowPage.cshtml" />
     <Content Include="Views\Admin\UserList.cshtml" />
+    <Content Include="Views\Admin\CategoryList.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Admin\StoryList.cshtml" />
     <Content Include="Views\Admin\StoryDetail.cshtml" />
     <Content Include="Views\Admin\ChapterCreate.cshtml" />

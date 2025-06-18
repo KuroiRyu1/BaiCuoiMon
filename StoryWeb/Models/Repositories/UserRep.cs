@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -159,6 +160,31 @@ namespace StoryWeb.Models.Repositories
                 // Log error if needed
             }
             return new List<User>();
+        }
+        public async Task<int> ChangeUserRole(User user)
+        {
+            try
+            {
+               if(user != null)
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri("http://localhost:8078");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    string url = $"user/list";
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+                    HttpResponseMessage res = await client.PostAsync($"user/changerole", content);
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var dataJson = await res.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<int>(dataJson);
+                    }
+                }
+               
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
         }
 
     }

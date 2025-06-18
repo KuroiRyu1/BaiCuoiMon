@@ -8,13 +8,65 @@ namespace WebStoryService.Models.Repositories
 {
     public class StoryRes
     {
-        public List<Story> GetAll()
+        public List<Story> Gets(int? categoryId = null, int page = 1, int pageSize = 10)
+        {
+            List<Story> list = new List<Story>();
+            try
+            {
+                using (var en = new DbEntities())
+                {
+                    var query = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
+                        .AsQueryable();
+                    if (categoryId.HasValue && categoryId.Value != 0)
+                    {
+                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value);
+                    }
+                    list = query
+                        .OrderBy(s => s.C_id)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .Select(s => new Story
+                        {
+                            Id = s.C_id,
+                            Title = s.C_title,
+                            ChapterNumber = s.C_chapter_number ?? 1,
+                            Introduction = s.C_introduction,
+                            Image = s.C_image,
+                            LikeNumber = s.C_like_number ?? 0,
+                            FollowNumber = s.C_follow_number ?? 0,
+                            ViewNumber = s.C_view_number ?? 0,
+                            AuthorId = s.C_author_id ?? 0,
+                            StatusId = s.C_status_id ?? 0,
+                            CategoryId = s.C_category_id ?? 0,
+                            StoryTypeId = s.C_story_type_id ?? 0,
+                            AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
+                            CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
+                        }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+            }
+            return list;
+        }
+        public List<Story> GetAll(int? categoryId=null)
         {
             List<Story> list = new List<Story>();
             try
             {
                 var en = new DbEntities();
-                var item = en.tbl_story.Select(s=>new Story
+                var query = en.tbl_story
+                       .Include("tbl_author")
+                       .Include("tbl_category")
+                       .AsQueryable();
+                if (categoryId.HasValue && categoryId.Value != 0)
+                {
+                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value);
+                }
+                var item = query.Select(s=>new Story
                 {
                     Id = s.C_id,
                     Title = s.C_title,
@@ -44,19 +96,22 @@ namespace WebStoryService.Models.Repositories
 
         public Story GetById(int id)
         {
+            Story story = new Story();
             try
             {
-                using (var db = new DbEntities())
+                using (var en = new DbEntities())
                 {
-                    return db.tbl_story
+                    story = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
                         .Where(s => s.C_id == id)
                         .Select(s => new Story
                         {
                             Id = s.C_id,
-                            Title = s.C_title ?? "",
-                            ChapterNumber = s.C_chapter_number ?? 0,
-                            Introduction = s.C_introduction ?? "",
-                            Image = s.C_image ?? "default.jpg",
+                            Title = s.C_title,
+                            ChapterNumber = s.C_chapter_number ?? 1,
+                            Introduction = s.C_introduction,
+                            Image = s.C_image,
                             LikeNumber = s.C_like_number ?? 0,
                             FollowNumber = s.C_follow_number ?? 0,
                             ViewNumber = s.C_view_number ?? 0,
@@ -66,14 +121,14 @@ namespace WebStoryService.Models.Repositories
                             StoryTypeId = s.C_story_type_id ?? 0,
                             AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
                             CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
-                        })
-                        .FirstOrDefault();
+                        }).FirstOrDefault();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                // Log error if needed
             }
+            return story;
         }
     }
 }
