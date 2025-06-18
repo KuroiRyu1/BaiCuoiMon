@@ -345,8 +345,6 @@
     <Content Include="Views\Story\Create.cshtml" />
     <Content Include="Views\User\UserInfo.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
-    <Content Include="Views\Story\Edit.cshtml" />
-    <Content Include="Views\Story\Delete.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Shared\_LayoutMember.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
@@ -358,6 +356,11 @@
     <Content Include="Views\Admin\UserList.cshtml" />
     <Content Include="Views\Admin\CategoryList.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\Admin\StoryList.cshtml" />
+    <Content Include="Views\Admin\StoryDetail.cshtml" />
+    <Content Include="Views\Admin\ChapterCreate.cshtml" />
+    <Content Include="Views\Admin\ChapterEdit.cshtml" />
+    <Content Include="Views\Admin\ChapterDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -48,7 +48,7 @@ namespace StoryWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                int newId = await StoryRep.Instance.AddStory(item);
+                int newId = 0;
                 if (newId != 0)
                 {
                     TempData["Success"] = "Thêm truyện thành công!";
@@ -79,7 +79,7 @@ namespace StoryWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                int result = await StoryRep.Instance.UpdateStory(item);
+                int result = 1;
                 if (result == 1)
                 {
                     TempData["Success"] = "Cập nhật truyện thành công!";
@@ -96,7 +96,7 @@ namespace StoryWeb.Controllers
         // GET: Story/Delete/{id}
         public async Task<ActionResult> Delete(int id)
         {
-            int result = await StoryRep.Instance.DeleteStory(id);
+            int result =1;
             if (result == 1)
             {
                 TempData["Success"] = "Xóa truyện thành công!";

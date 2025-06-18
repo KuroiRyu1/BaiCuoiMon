@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WebStoryService.Models.ModelData
 {
@@ -21,5 +19,6 @@ namespace WebStoryService.Models.ModelData
         public int StoryTypeId { get; set; } = 0;
         public string AuthorName { get; set; } = "";
         public string CategoryName { get; set; } = "";
+        public List<Chapter> Chapters { get; set; } = new List<Chapter>();
     }
 }
