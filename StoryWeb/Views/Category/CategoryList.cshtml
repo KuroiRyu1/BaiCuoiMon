@@ -2,11 +2,6 @@
 @{
     ViewBag.Title = "CategoryList";
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
-    List<StoryWeb.Models.ModelView.Category> cateList = new List<StoryWeb.Models.ModelView.Category>();
-    if (ViewBag.cate != null)
-    {
-        cateList = ViewBag.cate;
-    }
 }
 <main class="main">
     <div class="main-wrap">
@@ -15,91 +10,91 @@
 
 
         <div class="container-1200 pa-2 mt-2 border-box zs-bg-1-variant rounded mb-3 mx-auto">
-                <form method="get" action="@Url.Action("CategoryList", "Category")" class="input-search-comic ma-3">
-                    <button class="btn-search-action mx-1 rounded-sm mt-2 zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                        <span class="btn-default-icon-content">
-                            <span>Tìm Kiếm</span>
-                        </span>
-                    </button>
-                    <input name="name" maxlength="30" class="search-value mx-1 mt-2 rounded-sm zs-bg-3 btn-default btn-default-is-elevated theme-dark btn-size-default" type="text" placeholder="Nhập từ khóa">
-            </form>
-            @*<fieldset class="block-status row block-item d-flex border-box zs-bg-3 rounded-sm">
-                    <legend class="pl-2 d-flex">
-                        <span>Trạng thái</span>
-                        <svg class="v-icon-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M7 10l5 5 5-5z"></path>
+            <div class="input-search-comic ma-3">
+                <button class="btn-search-action mx-1 rounded-sm mt-2 zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                    <span class="btn-default-icon-content">
+                        <span>Tìm Kiếm</span>
+                    </span>
+                </button>
+                <input maxlength="30" class="search-value mx-1 mt-2 rounded-sm zs-bg-3 btn-default btn-default-is-elevated theme-dark btn-size-default" type="text" placeholder="Nhập từ khóa">
+            </div>
+            <fieldset class="block-status row block-item d-flex border-box zs-bg-3 rounded-sm">
+                <legend class="pl-2 d-flex">
+                    <span>Trạng thái</span>
+                    <svg class="v-icon-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 10l5 5 5-5z"></path>
+                    </svg>
+                </legend>
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="STA">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
                         </svg>
-                    </legend>
-
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <div class="cbox" data-code="STA">
-                            <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                            </svg>
-                        </div>
-                        <span class="txt pl-1">
-                            Chưa bắt đầu
-                        </span>
                     </div>
+                    <span class="txt pl-1">
+                        Chưa bắt đầu
+                    </span>
+                </div>
 
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <div class="cbox" data-code="STO">
-                            <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                            </svg>
-                        </div>
-                        <span class="txt pl-1">
-                            Đã dừng
-                        </span>
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="STO">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
                     </div>
+                    <span class="txt pl-1">
+                        Đã dừng
+                    </span>
+                </div>
 
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <div class="cbox" data-code="PDG">
-                            <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                            </svg>
-                        </div>
-                        <span class="txt pl-1">
-                            Hoãn lại
-                        </span>
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="PDG">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
                     </div>
+                    <span class="txt pl-1">
+                        Hoãn lại
+                    </span>
+                </div>
 
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <div class="cbox" data-code="PRG">
-                            <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                            </svg>
-                        </div>
-                        <span class="txt pl-1">
-                            Đang thực hiện
-                        </span>
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="PRG">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
                     </div>
+                    <span class="txt pl-1">
+                        Đang thực hiện
+                    </span>
+                </div>
 
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <div class="cbox" data-code="END">
-                            <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                            </svg>
-                        </div>
-                        <span class="txt pl-1">
-                            Hoàn thành
-                        </span>
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="END">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
                     </div>
+                    <span class="txt pl-1">
+                        Hoàn thành
+                    </span>
+                </div>
 
 
 
 
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <div class="cbox" data-code="novel">
-                            <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                            </svg>
-                        </div>
-                        <span class="txt pl-1">Có Truyện Chữ</span>
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="novel">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
                     </div>
+                    <span class="txt pl-1">Có Truyện Chữ</span>
+                </div>
 
 
-                </fieldset>*@
+            </fieldset>
 
             <fieldset class="block-category row block-item mt-5 d-flex border-box zs-bg-3 rounded-sm">
                 <legend class="pl-2 d-flex">
@@ -109,26 +104,684 @@
                     </svg>
                 </legend>
 
-                @foreach (var item in cateList)
-                {
-                    <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
-                        <a href="@Url.Action("StoryList", "Story", new {page=1,categoryId=item.Id})">
-                            <div class="cbox" data-code="COO">
-                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
-                                    <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
-                                </svg>
-                            </div>
-                            <span class="txt pl-1">@item.Name</span>
-                        </a>
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ANI">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
                     </div>
-                }
+                    <span class="txt pl-1">Anime</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="DRA">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Drama</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="JOS">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Josei</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MAW">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Manhwa</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="OSH">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">One Shot</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SHO">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Shounen</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="WEB">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Webtoons</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SHJ">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Shoujo</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="HAR">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Harem</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ECC">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Ecchi</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MAT">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Mature</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SOL">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Slice of life</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ISE">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Isekai</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MAG">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Manga</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MAU">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Manhua</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ACT">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Hành Động</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ADV">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Phiêu Lưu</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="COM">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Hài Hước</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MAA">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Võ Thuật</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MYS">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Huyền Bí</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ROM">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Lãng Mạn</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SPO">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Thể Thao</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SCL">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Học Đường</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="HIS">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Lịch Sử</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="HOR">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Kinh Dị</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SUN">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Siêu Nhiên</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="TRA">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Bi Kịch</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="RED">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Trùng Sinh</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="GAM">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Game</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="FTS">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Viễn Tưởng</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="SCF">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Khoa Học</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="COI">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Truyện Màu</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="ADU">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Người Lớn</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="BBL">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">BoyLove</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="DUN">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Hầm Ngục</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="HUNT">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Săn Bắn</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="NTNC">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Ngôn Từ Nhạy Cảm</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="DOU">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Doujinshi</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="BLM">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Bạo Lực</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="NTT">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Ngôn Tình</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="NCT">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Nữ Cường</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="GDB">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Gender Bender</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="MRR">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Murim</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="LTT">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Leo Tháp</span>
+                </div>
+
+
+
+
+
+
+
+                <div class="item-status d-flex pa-1 pl-2 pr-2 rounded ma-1">
+                    <div class="cbox" data-code="COO">
+                        <svg viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon-svg">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"></path>
+                        </svg>
+                    </div>
+                    <span class="txt pl-1">Nấu Ăn</span>
+                </div>
 
 
 
 
             </fieldset>
 
-            @*<fieldset class="block-order row block-item mt-5 d-flex border-box zs-bg-3 rounded-sm">
+            <fieldset class="block-order row block-item mt-5 d-flex border-box zs-bg-3 rounded-sm">
                 <legend class="pl-2 d-flex">
                     <span>Sắp Xếp</span>
                     <svg class="v-icon-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
@@ -190,12 +843,12 @@
                 </div>
 
 
-            </fieldset>*@
+            </fieldset>
         </div>
 
 
 
-        @*<div class="search-comic search-section container-1200 mt-2 mb-3 mx-auto">
+        <div class="search-comic search-section container-1200 mt-2 mb-3 mx-auto">
             <div class="topic border-box d-flex pr-3 w-100 mb-1 flex-column">
                 <div class="items-title d-flex align-center">
                     <div class="title-line text-h5 font-weight-medium px-4">Nội Dung</div>
@@ -247,7 +900,7 @@
                     <hr class="divider theme-dark">
                 </div>
             </div>
-        </div>*@
+        </div>
     </div>
 </main>
 

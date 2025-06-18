@@ -5,12 +5,12 @@ using System.Web;
 
 namespace WebStoryService.Models.ModelData
 {
-    public class Chapter
+    public class StoryComment
     {
-        public int Id { get; set; } = 0;
-        public string Title { get; set; } = "";
+        public long Id { get; set; } = 0;
         public string Content { get; set; } = "";
         public int StoryId { get; set; } = 0;
-
+        public int UserId { get; set; } = 0;
+        public int Active { get; set; } = 0;
     }
 }

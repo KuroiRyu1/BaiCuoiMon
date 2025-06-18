@@ -81,13 +81,12 @@
                             <div class="row item-card">
                                 @foreach (StoryWeb.Models.ModelView.Story item in story)
                                 {
-                                    var Chapter = StoryWeb.Models.Repositories.ChapterRep.Instance.getListOfChapter(item.Id);
                                     <div class="col-md-2 col-lg-2 col-xl-2 col-sm-3 col-4 col-mb w-100 p-6 border-box card-reader" data-card="tu-tien-tro-ve-tai-vuon-truong---phan-2" title="@item.Title">
                                         <div class="card ele-2 zs-bg-3 d-flex flex-column elevation-2">
                                             <a href='@Url.Action("StoryInfo", "Story", new { id = item.Id })' class="card-block card-flat theme-dark">
                                                 <div class="card-image v-responsive theme-dark">
 
-                                                    <img class="v-image lazy" src="@Url.Content("~/Content/")/Image/@item.Title/@item.Image" alt="@item.Title">
+                                                    <img class="v-image lazy" src="contents/images/bg2.gif" data-original="/image/tu-tien-tro-ve-tai-vuon-truong---phan-2-0000883136-18-01-2025/1Syrui5eRMDSLEsO8KIuTEm1pSk2pDp4A?code=gtt-yes" alt="@item.Title">
                                                     <div class="info-comic">
                                                         <span class="item-info">
                                                             <svg class="svg-icon-size" focusable="false" viewBox="0 0 24 24" data-testid="RemoveRedEyeIcon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>
@@ -106,15 +105,15 @@
                                                     <div class="card-timeline">
                                                         <div class="timeline theme-dark">
                                                             @{
-                                                                int chapNum = 1;
+                                                                int chapNumber = 0;
                                                                 if (item.ChapterNumber > 1)
                                                                 {
-                                                                    chapNum = 2;
+                                                                    chapNumber = 1;
                                                                 }
-                                                                for (int i = 0; i <chapNum; i++)
+                                                                for (int i = 0; i <= chapNumber; i++)
                                                                 {
                                                                     int itemDisplay = item.ChapterNumber - i;
-                                                                    <a href='@Url.Action("Read", "Chapter", new {id=item.Id,chapterIndex = itemDisplay})' title="Chương @itemDisplay" class="tu-tien-tro-ve-tai-vuon-truong---phan-2-177 timeline-item mt-2 font-sans-serif">
+                                                                    <a href='@Url.Action("Read","Chapter")' title="Chương @item.ChapterNumber-i" class="tu-tien-tro-ve-tai-vuon-truong---phan-2-177 timeline-item mt-2 font-sans-serif">
                                                                         <div class="timeline-divider">
                                                                             <div class="timeline-item-dot">
                                                                                 <div class="timeline-item-dot-inner new">

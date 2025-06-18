@@ -21,7 +21,6 @@ namespace WebStoryService
             // Tắt proxy creation để tránh circular reference
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
                 = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            // Hoặc dùng DTO thay vì entity trực tiếp
         }
     }
 }
