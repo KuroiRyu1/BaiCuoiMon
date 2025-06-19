@@ -379,6 +379,5 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("StoryList", "Admin");
         }
-        }
     }
 }
