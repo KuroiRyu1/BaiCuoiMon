@@ -830,7 +830,6 @@ const headers = {
     classNotiReminderTxt: "#dialog-noti-reminder .dialog-body .reminder-noti-msg .num-msg",
     classUserReminder: "#dialog-user .msg-reminder",
     initState: () => {
-        headers.verifyLogin();
         headers.checkMessageAll();
         commonJS.checkReportFixed();
         UserAction.checkingReminderUser();
