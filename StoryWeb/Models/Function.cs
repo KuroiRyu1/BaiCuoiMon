@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace StoryWeb.Models
@@ -13,7 +14,16 @@ namespace StoryWeb.Models
     {
         private static readonly char[] tokenChars =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
-
+        static Regex ConvertToUnsign_rg = null;
+        public static string ConvertToUnsign(string strInput)
+        {
+            if (ReferenceEquals(ConvertToUnsign_rg, null))
+            {
+                ConvertToUnsign_rg = new Regex("p{IsCombiningDiacriticalMarks}+");
+            }
+            var temp = strInput.Normalize(NormalizationForm.FormD);
+            return ConvertToUnsign_rg.Replace(temp, string.Empty).Replace("đ", "d").Replace("Đ", "D").ToLower();
+        }
         public static string GenerateToken(int length = 20)
         {
             var random = new Random();

@@ -3,6 +3,7 @@ using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace StoryWeb.Models.Repositories
@@ -125,11 +126,19 @@ namespace StoryWeb.Models.Repositories
             }
             return null;
         }
-        public async Task<int> AddStory()
+        public async Task<int> AddStory(Story story)
         {
             try
             {
-
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(story), Encoding.UTF8, "application/json");
+                HttpResponseMessage res = await client.PostAsync("story/post", content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return 1;
+                }
             }
             catch (Exception ex)
             {

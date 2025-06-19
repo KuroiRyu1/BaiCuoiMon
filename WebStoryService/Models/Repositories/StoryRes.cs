@@ -130,7 +130,33 @@ namespace WebStoryService.Models.Repositories
                 return null;
             }
         }
-
+        public int Create(Story story)
+        {
+            try
+            {
+                DbEntities db = new DbEntities();
+                if (story != null)
+                {
+                    var tbl_story = new tbl_story
+                    {
+                        C_title = story.Title,
+                        C_status_id = story.StatusId,
+                        C_category_id = story.CategoryId,
+                        C_story_type_id = story.StoryTypeId,
+                        C_image = story.Image,
+                        C_introduction = story.Introduction,
+                        C_active = story.Active,
+                    };
+                    db.tbl_story.Add(tbl_story);
+                    db.SaveChanges();
+                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
         public bool Delete(int id)
         {
             try

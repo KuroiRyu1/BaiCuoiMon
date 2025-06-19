@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -79,6 +80,26 @@ namespace WebStoryService.Areas.MyApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
+        }
+        [Route("post")]
+        [HttpPost]
+        public HttpResponseMessage Post(Story story)
+        {
+            try
+            {
+                if (story != null)
+                {
+                    var result = _storyRes.Create(story);
+                    if (result != 0)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Truyện đã được thêm thành công." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
         }
 
         [Route("delete")]

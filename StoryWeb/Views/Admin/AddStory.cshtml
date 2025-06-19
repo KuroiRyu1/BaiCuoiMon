@@ -3,20 +3,25 @@
     ViewBag.Title = "CateCreate";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     List<StoryWeb.Models.ModelView.Category> cate = new List<StoryWeb.Models.ModelView.Category>();
+    List<StoryWeb.Models.ModelView.Status> status = new List<StoryWeb.Models.ModelView.Status>();
     if (ViewBag.cate != null)
     {
         cate = (List<StoryWeb.Models.ModelView.Category>)ViewBag.cate;
+    }
+    if (ViewBag.status != null)
+    {
+        status = (List<StoryWeb.Models.ModelView.Status>)ViewBag.status;
     }
 }
 
 <h2 class="text-center">Thêm Truyện</h2>
 <div class="container">
-    <form class="form" method="post" action="@Url.Action("CateCreateConfirm","Admin")">
+    <form class="form" method="post" enctype="multipart/form-data" action="@Url.Action("AddStoryConfirm","Admin")">
         <div class="row">
             <div class="col-sm"></div>
             <div class="col-sm">
                 <Label for="name" class="">Tên Truyện</Label>
-                <input class="form-control" id="name" type="text" name="Name" />
+                <input class="form-control" id="name" type="text" name="Title" />
             </div>
             <div class="col-sm"></div>
         </div>
@@ -31,8 +36,8 @@
         <div class="row">
             <div class="col-sm"></div>
             <div class="col-sm">
-                <Label for="name" class="">danh mục</Label>
-                <select name="category">
+                <Label for="CategoryId" class="">danh mục</Label>
+                <select name="CategoryId" id="CategoryId">
                     @foreach (var item in cate)
                     {
                         <option value="@item.Id">@item.Name</option>
@@ -45,8 +50,22 @@
         <div class="row">
             <div class="col-sm"></div>
             <div class="col-sm">
-                <Label for="name" class="">Loại truyện</Label>
-                <select name="category">
+                <Label for="StatusId" class="">Trạng thái</Label>
+                <select name="StatusId" id="StatusId">
+                    @foreach (var item in status)
+                    {
+                        <option value="@item.Id">@item.Title</option>
+                    }
+                </select>
+
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="StoryTypeId" class="">Loại truyện</Label>
+                <select name="StoryTypeId" id="StoryTypeId">
                     <option value="1">
                         Truyện Tranh
                     </option>
@@ -58,16 +77,8 @@
         <div class="row">
             <div class="col-sm"></div>
             <div class="col-sm">
-                <Label for="name" class="Image">Ảnh bìa</Label>
-                <input class="form-control" id="name" type="file" name="Name" />
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="name" class="">Trạng thái</Label>
-                <input class="" id="active" type="checkbox" name="Active" value="1" />
+                <Label for="Img" class="Image">Ảnh bìa</Label>
+                <input class="form-control" id="Img" type="file" name="Img" />
             </div>
             <div class="col-sm"></div>
         </div>

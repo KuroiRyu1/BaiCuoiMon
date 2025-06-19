@@ -1,7 +1,9 @@
-﻿using StoryWeb.Models.ModelView;
+﻿using StoryWeb.Models;
+using StoryWeb.Models.ModelView;
 using StoryWeb.Models.Repositories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -345,11 +347,36 @@ namespace StoryWeb.Controllers
         public async Task<ActionResult> AddStory()
         {
             var cate = await CategoryRep.Instance.getCates();
+            var status = await StatusRep.Instance.getAllStatus();
             ViewBag.cate = cate;
+            ViewBag.status = status;
             return View();
         }
         public async Task<ActionResult> AddStoryConfirm(HttpPostedFileBase Img, Story story)
         {
+            if (story != null)
+            {
+                string name = Function.ConvertToUnsign(story.Title);
+                try
+                {
+                    if (Img != null)
+                    {
+                        string newFileName = $"{name.Trim()}{Img.FileName}";
+                        string fullPathSave = $"{Server.MapPath(Url.Content($"~/content/Image/{name.Trim()}"))}\\{newFileName}";
+                        string createFolder = Server.MapPath(Url.Content($"~/content/Image/{name.Trim()}"));
+                        if (!Directory.Exists(createFolder))
+                        {
+                            Directory.CreateDirectory(createFolder);
+                        }
+                        Img.SaveAs(fullPathSave);
+                        story.Image = newFileName;
+                        var result = await StoryRep.Instance.AddStory(story);
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
             return RedirectToAction("StoryList", "Admin");
         }
     }

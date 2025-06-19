@@ -161,6 +161,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\MyApi\Controllers\CategoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\StatusController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterImageApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
@@ -222,11 +223,13 @@
     </Compile>
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelData\Category.cs" />
+    <Compile Include="Models\ModelData\Status.cs" />
     <Compile Include="Models\ModelData\Story.cs" />
     <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />
     <Compile Include="Models\Repositories\LoginRequest.cs" />
+    <Compile Include="Models\Repositories\StatusRep.cs" />
     <Compile Include="Models\Repositories\StoryRes.cs" />
     <Compile Include="Models\Repositories\UserRes.cs" />
     <Compile Include="Models\ModelData\Chapter.cs" />

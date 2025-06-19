@@ -24,5 +24,6 @@ namespace StoryWeb.Models.ModelView
         public string AuthorName { get; set; } = "";
         public string CategoryName { get; set; } = "";
         public List<Chapter> Chapters { get; set; } = new List<Chapter>();
+        public int Active { get; set; } = 1;
     }
 }
