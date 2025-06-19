@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "CateEdit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    StoryWeb.Models.ModelView.Category item = new StoryWeb.Models.ModelView.Category();
+    if (ViewBag.cate != null)
+    {
+        item = (StoryWeb.Models.ModelView.Category)ViewBag.cate;
+    }
+}
+
+<h2 class="text-center">Sửa danh mục</h2>
+<div class="container">
+    <form class="form" method="post" action="@Url.Action("CateEditConfirm","Admin")">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Tên danh mục</Label>
+                <input class="form-control" id="name" type="text" name="Name" value="@item.Name" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Trạng thái</Label>
+                @if (item.Active == 0)
+                {
+                    <input class="" id="active" type="checkbox" name="Active" value="1" />
+                }
+                else
+                {
+                    <input class="" id="active" type="checkbox" name="Active" checked value="1" />
+                }
+
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <input type="hidden" value="@item.Id" name="Id"/>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+               <button class="btn btn-primary" type="submit">Sửa</button>
+               <button class="btn btn-secondary" type="reset">Hủy</button>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+    </form>
+</div>
+

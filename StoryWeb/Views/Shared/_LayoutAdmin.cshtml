@@ -65,9 +65,10 @@
         <div id="sidebar-wrapper">
             <div class="sidebar-heading">Admin Panel</div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action bg-light"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                <a href="@Url.Action("Index")" class="list-group-item list-group-item-action bg-light"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                 <a href="@Url.Action("StoryList", "Admin")" class="list-group-item list-group-item-action bg-light"><i class="fas fa-book-open me-2"></i>Stories</a>
                 <a href="/admin/UserList" class="list-group-item list-group-item-action bg-light"><i class="fas fa-users me-2"></i>Users</a>
+                <a href="@Url.Action("CategoryList","Admin")" class="list-group-item list-group-item-action bg-light"><i class="fa-solid fa-book me-2"></i>Category</a>
             </div>
         </div>
         <div id="page-content-wrapper">

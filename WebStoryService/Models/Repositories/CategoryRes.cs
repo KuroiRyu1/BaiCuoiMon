@@ -109,5 +109,24 @@ namespace WebStoryService.Models.Repositories
             }
             return category;
         }
+        public Category getById(int id)
+        {
+            try
+            {
+                DbEntities en = new DbEntities();
+                var item = en.tbl_category.Where(d => d.C_id == id).Select(d => new Category
+                {
+                    Id=d.C_id,
+                    Name = d.C_name,
+                    Active = d.C_active??1
+                }).FirstOrDefault();
+                return item;
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return new Category(); 
+        }
     }
 }

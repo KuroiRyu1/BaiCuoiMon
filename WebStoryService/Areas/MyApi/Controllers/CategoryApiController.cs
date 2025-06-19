@@ -87,57 +87,16 @@ namespace WebStoryService.Areas.MyApi.Controllers
                         return 1;
                     }
                 }
-            
-             } 
-            catch (Exception ex) { 
+
+            }
+            catch (Exception ex)
+            {
             }
             return 0;
         }
         [Route("put")]
         [HttpPut]
         public int Put([FromBody] Category value)
-        {
-            try
-            {
-                CategoryRes res =new CategoryRes();
-                //var headerData = Request.Headers;
-                //string username = string.Empty;
-                //string password = string.Empty;
-                //string token = string.Empty;
-                //if (headerData.Contains("username"))
-
-                //{
-                //    username = headerData.GetValues("username").First();
-                //}
-                //if (headerData.Contains("pwd"))
-                //{
-                //    password = headerData.GetValues("pwd").First();
-                //}
-                //if (headerData.Contains("tk"))
-                //{
-                //    token = headerData.GetValues("tk").First();
-                //}
-                //if (AccountRep.checkToken(username, password, token) == true)
-                //{
-                    if (value != null)
-                    {
-
-                        if (res.Put(value) == 1)
-                        {
-                            return 1;
-                        }
-                    }
-                //}
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            return 0;
-        }
-        [Route("soft")]
-        [HttpPut]
-        public int soft([FromBody]Category item)
         {
             try
             {
@@ -161,14 +120,56 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 //}
                 //if (AccountRep.checkToken(username, password, token) == true)
                 //{
-                    if (item != null)
-                    {
+                if (value != null)
+                {
 
-                        if (res.Soft_Delete(item) == 1)
-                        {
-                            return 1;
-                        }
-                   }
+                    if (res.Put(value) == 1)
+                    {
+                        return 1;
+                    }
+                }
+                //}
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            return 0;
+        }
+        [Route("soft")]
+        [HttpPut]
+        public int soft([FromBody] Category item)
+        {
+            try
+            {
+                CategoryRes res = new CategoryRes();
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
+                //if (headerData.Contains("username"))
+
+                //{
+                //    username = headerData.GetValues("username").First();
+                //}
+                //if (headerData.Contains("pwd"))
+                //{
+                //    password = headerData.GetValues("pwd").First();
+                //}
+                //if (headerData.Contains("tk"))
+                //{
+                //    token = headerData.GetValues("tk").First();
+                //}
+                //if (AccountRep.checkToken(username, password, token) == true)
+                //{
+                if (item != null)
+                {
+
+                    if (res.Soft_Delete(item) == 1)
+                    {
+                        return 1;
+                    }
+                }
                 //}
 
             }
@@ -183,10 +184,10 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             try
             {
-                CategoryRes res= new CategoryRes();
+                CategoryRes res = new CategoryRes();
                 if (!string.IsNullOrEmpty(name))
                 {
-                   return res.findByName(name);
+                    return res.findByName(name);
                 }
             }
             catch (Exception ex)
@@ -194,6 +195,24 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 Debug.WriteLine(ex.ToString());
             }
             return new List<Category>();
+        }
+        [Route("{id}")]
+        [HttpGet]
+        public Category getById(int id = 0)
+        {
+            try
+            {
+                CategoryRes res = new CategoryRes();
+                if (id != 0)
+                {
+                    return res.getById(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new Category();
         }
     }
 }

@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "CateCreate";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center">Thêm danh mục</h2>
+<div class="container">
+    <form class="form" method="post" action="@Url.Action("CateCreateConfirm","Admin")">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Tên danh mục</Label>
+                <input class="form-control" id="name" type="text" name="Name" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Trạng thái</Label>
+                <input class="" id="active" type="checkbox" name="Active" value="1" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <input type="hidden" name="Id" />
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <button class="btn btn-primary" type="submit">Thêm</button>
+                <button class="btn btn-secondary" type="reset">Hủy</button>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+    </form>
+</div>
+

@@ -3,17 +3,16 @@
     ViewBag.Title = "CategoryList";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     List<StoryWeb.Models.ModelView.Category> cateList = new List<StoryWeb.Models.ModelView.Category>();
-    if (ViewBag.cateLis!=null)
+    if (ViewBag.cateList != null)
     {
         cateList = ViewBag.cateList;
     }
+    string key = "";
 }
-
-<h2>CategoryList</h2>
 
 <div class="fashion_section">
     <div class="container">
-        <h2 class="text-center mb-4">Quản lý người dùng</h2>
+        <h2 class="text-center mb-4">Quản lý Danh Mục</h2>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -28,9 +27,22 @@
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.Name</td>
-                        <td>@item.Active</td>
+                        @switch (item.Active)
+                        {
+                            case 0:
+                                <td> Đã xóa  </td>
+                                ; break;
+                            case 1:
+                                <td> Đang hoạt động </td>
+                                ; break;
+                            case 2:
+                                <td> @item.Active </td>
+                                ; break;
+
+
+                        }
                         <td>
-                            <a href="@Url.Action("Edit", "Story", new { id = item.Id })" class="btn btn-primary btn-sm">Sửa</a>
+                            <a href="@Url.Action("CateEdit", "Admin", new { id = item.Id })" class="btn btn-primary btn-sm">Sửa</a>
                             <a href="@Url.Action("Delete", "Story", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
                         </td>
                     </tr>

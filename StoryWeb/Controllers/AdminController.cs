@@ -254,6 +254,41 @@ namespace StoryWeb.Controllers
             ViewBag.cateList = cateList;
             return View();
         }
+        public ActionResult CateCreate()
+        {
+            return View();
+        }
+        public async Task<ActionResult> cateCreateConfirm(Category cate)
+        {
+            if (cate != null)
+            {
+                await CategoryRep.Instance.addCates(cate);
+            }
+            return RedirectToAction("CategoryList", "Admin");
+        }
+        public async Task<ActionResult> CateEdit(int id)
+        {
+            var item = await CategoryRep.Instance.getById(id);
+            ViewBag.cate = item;
+            return View();
+
+        }
+        public async Task<ActionResult> CateEditConfirm(Category cate)
+        {
+            if (cate != null)
+            {
+                int result = await CategoryRep.Instance.Edit(cate);
+                if (result == 1)
+                {
+                    TempData["Success"] = "Thay đổi thành công";
+                }
+                else
+                {
+                    TempData["Error"] = "Thay đổi thất bại";
+                }
+            }
+            return RedirectToAction("CategoryList","Admin");
+        }
         public async Task<ActionResult> ChangeUserRole()
         {
             return RedirectToAction("UserList", "Admin");

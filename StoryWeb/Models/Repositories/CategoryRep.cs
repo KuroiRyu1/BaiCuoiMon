@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
+using System.Xml.Linq;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -60,11 +61,11 @@ namespace StoryWeb.Models.Repositories
             client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             HttpContent content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
-            HttpResponseMessage res = await client.PostAsync("category/put", content);
+            HttpResponseMessage res = await client.PutAsync("category/put", content);
             string a = JsonConvert.SerializeObject(item);
             if (res.IsSuccessStatusCode)
             {
-                return int.Parse(content.ToString());
+                return 1;
             }
             return 0;
         }
@@ -74,7 +75,7 @@ namespace StoryWeb.Models.Repositories
             client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             HttpContent content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
-            HttpResponseMessage res = await client.PostAsync("category/soft", content);
+            HttpResponseMessage res = await client.PutAsync("category/soft", content);
             string a = JsonConvert.SerializeObject(item);
             if (res.IsSuccessStatusCode)
             {
@@ -96,6 +97,19 @@ namespace StoryWeb.Models.Repositories
                 return JsonConvert.DeserializeObject<List<Category>>(dataJson);
             }
             return new List<Category>();
+        }
+        public async Task<Category> getById(int id)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(base_address.Address);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpResponseMessage res = await client.GetAsync($"category/{id}");
+            if (res.IsSuccessStatusCode)
+            {
+                var dataJson = res.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<Category>(dataJson);
+            }
+            return new Category();
         }
     }
 }

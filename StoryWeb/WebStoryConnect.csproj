@@ -243,7 +243,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Content\Image\Wuwa\1\65512393-4a07-408c-adf4-546b2f2f3888.jpg" />
+    <Content Include="Content\Image\8\1\1.jpg" />
+    <Content Include="Content\Image\9\1.jpg" />
     <Content Include="Content\Image\banner\14QPA6zED9tlyqt7cFqWEprVCoPeWvJQI62f6.jpg" />
     <Content Include="Content\Image\banner\15C0fR2A1gvtrbPSWvjK84vhvVgpWXB6e.jpg" />
     <Content Include="Content\Image\banner\15C0fR2A1gvtrbPSWvjK84vhvVgpWXB6e62f6.jpg" />
@@ -259,7 +260,7 @@
     <Content Include="Content\Image\banner\1WoOWwSFUntEjlMTqHUHWOuoYCCeshAPa62f6.jpg" />
     <Content Include="Content\Image\banner\1_gbu3O1VVd9jsLMdumsWHWmHKBjs2mJr62f6.jpg" />
     <Content Include="Content\Image\banner\1_oaRWcpbGymsdAgS6rHuhufeKbbDm-_M62f6.jpg" />
-    <Content Include="Content\Image\Wuwa\1.jpg" />
+    <Content Include="Content\Image\8\1.jpg" />
     <Content Include="Content\WebTruyen\images\bg2.gif" />
     <Content Include="Content\WebTruyen\images\favicon.ico" />
     <Content Include="Content\WebTruyen\images\google_icon.png" />
@@ -361,10 +362,14 @@
     <Content Include="Views\Admin\ChapterCreate.cshtml" />
     <Content Include="Views\Admin\ChapterEdit.cshtml" />
     <Content Include="Views\Admin\ChapterDelete.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\CateEdit.cshtml" />
+    <Content Include="Views\Admin\CateCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

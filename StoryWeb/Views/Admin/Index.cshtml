@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .dashboard {
+    }
+    .dashboard-title{
+        color:gray
+    }
+
+    .db-info {
+        border: 1px solid none;
+        color:white;
+        background-color:gray;
+        border-radius:5px;
+        margin:20px 5px;
+    }
+</style>
+
+
+<div class="container dashboard">
+    <h2 class="dashboard-title">DashBoard</h2>
+    <div class="row ">
+        <div class="col-sm db-info  ">
+            <div>
+                <p>Thành viên</p>
+            </div>
+        </div>
+        <div class="col-sm border-1 db-info ">
+            <div>
+                <p>Truyện</p>
+            </div>
+        </div>
+        <div class="col-sm db-info ">
+            Lượt xem
+        </div>
+        <div class="col-sm db-info ">
+            Lượt thích
+        </div>
+    </div>
+</div>
+
