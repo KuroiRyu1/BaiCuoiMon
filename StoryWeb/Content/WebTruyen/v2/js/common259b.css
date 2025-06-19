@@ -1604,6 +1604,7 @@ header > .tool-bar > .logo > img {
 /*Header*/
 header .btn-menu-user,
 header .btn-menu-login{
+    display: none;
 }
 
 header .btn-menu-user.show-tag,

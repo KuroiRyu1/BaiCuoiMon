@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "CateCreate";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    List<StoryWeb.Models.ModelView.Category> cate = new List<StoryWeb.Models.ModelView.Category>();
+    if (ViewBag.cate != null)
+    {
+        cate = (List<StoryWeb.Models.ModelView.Category>)ViewBag.cate;
+    }
+}
+
+<h2 class="text-center">Thêm Truyện</h2>
+<div class="container">
+    <form class="form" method="post" action="@Url.Action("CateCreateConfirm","Admin")">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Tên Truyện</Label>
+                <input class="form-control" id="name" type="text" name="Name" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Giới thiệu</Label>
+                <input class="form-control" id="name" type="text" name="Introduction" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">danh mục</Label>
+                <select name="category">
+                    @foreach (var item in cate)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Loại truyện</Label>
+                <select name="category">
+                    <option value="1">
+                        Truyện Tranh
+                    </option>
+                    <option value="2">Truyện Chữ</option>
+                </select>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="Image">Ảnh bìa</Label>
+                <input class="form-control" id="name" type="file" name="Name" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="name" class="">Trạng thái</Label>
+                <input class="" id="active" type="checkbox" name="Active" value="1" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <input type="hidden" name="Id" />
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <button class="btn btn-primary" type="submit">Thêm</button>
+                <button class="btn btn-secondary" type="reset">Hủy</button>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+    </form>
+</div>
+

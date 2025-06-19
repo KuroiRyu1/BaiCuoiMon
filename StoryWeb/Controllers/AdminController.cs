@@ -170,7 +170,7 @@ namespace StoryWeb.Controllers
             return View("ChapterCreate", chapter);
         }
 
-      
+
 
         [HttpPost]
         public async Task<ActionResult> ChapterEditConfirm(Chapter chapter, HttpPostedFileBase[] images)
@@ -261,7 +261,7 @@ namespace StoryWeb.Controllers
             {
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("http://localhost:8078/");
-              
+
 
                 using (var content = new MultipartFormDataContent())
                 {
@@ -287,19 +287,19 @@ namespace StoryWeb.Controllers
             return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
         }
 
-      
-        public async Task<ActionResult> CategoryList(string name="")
+
+        public async Task<ActionResult> CategoryList(string name = "")
         {
             var cateList = new List<Category>();
             if (string.IsNullOrEmpty(name))
             {
-               cateList = await CategoryRep.Instance.getCates();
+                cateList = await CategoryRep.Instance.getCates();
             }
             else
             {
-                cateList =await CategoryRep.Instance.Search(name);
+                cateList = await CategoryRep.Instance.Search(name);
             }
-            
+
             ViewBag.cateList = cateList;
             return View();
         }
@@ -336,11 +336,21 @@ namespace StoryWeb.Controllers
                     TempData["Error"] = "Thay đổi thất bại";
                 }
             }
-            return RedirectToAction("CategoryList","Admin");
+            return RedirectToAction("CategoryList", "Admin");
         }
         public async Task<ActionResult> ChangeUserRole()
         {
             return RedirectToAction("UserList", "Admin");
+        }
+        public async Task<ActionResult> AddStory()
+        {
+            var cate = await CategoryRep.Instance.getCates();
+            ViewBag.cate = cate;
+            return View();
+        }
+        public async Task<ActionResult> AddStoryConfirm(HttpPostedFileBase Img, Story story)
+        {
+            return RedirectToAction("StoryList", "Admin");
         }
     }
 }

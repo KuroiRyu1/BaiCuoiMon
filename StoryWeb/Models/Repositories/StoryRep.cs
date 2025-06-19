@@ -125,5 +125,16 @@ namespace StoryWeb.Models.Repositories
             }
             return null;
         }
+        public async Task<int> AddStory()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        } 
     }
 }

@@ -279,16 +279,14 @@
     <Content Include="Content\WebTruyen\v2\css\homef413.css" />
     <Content Include="Content\WebTruyen\v2\css\search259b.css" />
     <Content Include="Content\WebTruyen\v2\css\view259b.css" />
-    <Content Include="Content\WebTruyen\v2\js\comment259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\common259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\detail259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\follow259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\home920b.js" />
-    <Content Include="Content\WebTruyen\v2\js\push-message.js" />
-    <Content Include="Content\WebTruyen\v2\js\recent259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\search259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\view259b.js" />
-    <Content Include="Content\WebTruyen\v2\js\view_addition259b.js" />
+    <Content Include="Content\WebTruyen\v2\js\comment259b.css" />
+    <Content Include="Content\WebTruyen\v2\js\common259b.css" />
+    <Content Include="Content\WebTruyen\v2\js\contact.css" />
+    <Content Include="Content\WebTruyen\v2\js\detail259b.css" />
+    <Content Include="Content\WebTruyen\v2\js\home259b.css" />
+    <Content Include="Content\WebTruyen\v2\js\homef413.css" />
+    <Content Include="Content\WebTruyen\v2\js\search259b.css" />
+    <Content Include="Content\WebTruyen\v2\js\view259b.css" />
     <Content Include="Content\WebTruyen\webjars\jquery\3.5.1\jquery.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -366,6 +364,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\CateEdit.cshtml" />
     <Content Include="Views\Admin\CateCreate.cshtml" />
+    <Content Include="Views\Admin\AddStory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

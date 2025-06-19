@@ -123,9 +123,15 @@
     <link rel="stylesheet" href="@Url.Content("~/Content")/WebTruyen/v2/css/detail259b.css" />
     <link rel="stylesheet" href="@Url.Content("~/Content")/WebTruyen/v2/css/view259b.css?v=51" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
 </head>
+
 <body>
+    @{StoryWeb.Models.ModelView.User user = null;
+        if (Session["user"] != null)
+        {
+            user = (StoryWeb.Models.ModelView.User)Session["user"];
+        }}
     <input id="home-filter-config" data-limit="30" type="hidden" data-all="0" data-follow="0" data-history="0" value="all" />
     <input id="home-recommend-config" type="hidden" data-recommend="0" data-favorite="0" value="recommend" />
     <input id="home-new-config" type="hidden" data-new="0" value="new" />
@@ -148,18 +154,29 @@
                     </span>
                 </span>
             </button>
-            <button class="btn-menu-login btn-default-icon v-icon-bg mr-3">
-                <span class="btn-default-icon-content">
-                    <span class="v-icon">
-                        <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
-                            <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"></path>
-                        </svg>
-                    </span>
-                </span>
-            </button>
-            <div class="btn-menu-user btn-default-icon v-icon-bg mr-3">
-                <img title="Click to open menu" alt="Click to open menu">
-            </div>
+            @{
+                if (Session["user"] == null)
+                {
+                    <button class="btn-menu-login btn-default-icon v-icon-bg mr-3">
+                        <span class="btn-default-icon-content">
+                            <span class="v-icon">
+                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
+                                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"></path>
+                                </svg>
+                            </span>
+                        </span>
+                    </button>
+                }
+                else
+                {
+                    <div class="btn-menu-user btn-default-icon v-icon-bg mr-3">
+                        <img title="Click to open menu" alt="Click to open menu">
+                    </div>
+                }
+
+
+            }
+
         </div>
     </header>
 
@@ -199,7 +216,7 @@
 
 
     <!-- MODEL User Information -->
-    <div id="dialog-user" class="dialog-popup  dialog-on-top dialog-backdrop">
+    <div id="dialog-user" class="dialog-popup dialog-on-top dialog-backdrop">
         <div class="parent-user dialog-parent box-shadow-blur max-w300 zs-bg-4 v-sheet theme-dark">
             <div class="dialog-header">
                 <div class="header-content">
@@ -218,23 +235,31 @@
             </div>
             <div class="dialog-body pa-0">
                 <div class="body-content d-flex border-box pt-3 pb-2 pr-2 pl-2 justify-center-start">
-                    <a href="@Url.Action("Login","User")" class="item-user mb-2 menu-user-name" data-action="login">
-                        <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
-                        </svg>
-                        <span>Đăng nhập</span>
-                    </a>
+                    @{
+                        if (user == null)
+                        {
+                            <a href="@Url.Action("Login","User")" class="item-user mb-2 menu-user-name" data-action="login">
+                                <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                                </svg>
+                                <span>Đăng nhập</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="item-user mb-2 menu-user-rank">
+                                <svg viewBox="0 0 24 24" class="v-icon-svg v-icon-svg-big">
+                                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"></path>
+                                </svg>
+                                <span>@user.FullName </span>
+                            </div>
+                        }
+                    }
                     <div class="item-user mb-2 menu-user-rank">
                         <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
                             <path d="M17 10.43V2H7v8.43c0 .35.18.68.49.86l4.18 2.51-.99 2.34-3.41.29 2.59 2.24L9.07 22 12 20.23 14.93 22l-.78-3.33 2.59-2.24-3.41-.29-.99-2.34 4.18-2.51c.3-.18.48-.5.48-.86zm-4 1.8-1 .6-1-.6V3h2v9.23z"></path>
                         </svg>
                         <span>Cấp Độ: </span>
-                    </div>
-                    <div class="item-user mb-2 menu-user-action" data-action="reminder">
-                        <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"></path>
-                        </svg>
-                        <span class="msg-reminder">Thông Báo</span>
                     </div>
                     <div class="item-user mb-2 menu-user-action menu-user-block-reminder" data-action="block-reminder">
                         <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
@@ -262,12 +287,6 @@
                         </svg>
                         <span>Yêu Cầu Thăng Cấp</span>
                     </div>
-                    <div class="item-user menu-user-action group-user" data-action="ads">
-                        <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
-                            <path d="M19,3c0,2.2-4.3,6-9,6v6c4.7,0,9,3.6,9,6h2v-7.3c0.6-0.3,1-1,1-1.7s-0.4-1.4-1-1.7V3H19z M5,9c-0.8,0-1.5,0.5-1.8,1.2   C2.5,10.5,2,11.2,2,12s0.5,1.5,1.2,1.8C3.5,14.5,4.2,15,5,15h0.2l2.2,7l3.5-1.1L9,15V9H5z" />
-                        </svg>
-                        <span>Tắt Quảng Cáo</span>
-                    </div>
                     <hr class="divider mt-2 mb-2 theme-dark" style="border-width: thin 3px 3px !important;">
                     <a href="@Url.Action("Index","Home")" class="item-user mb-2 menu-user-home">
                         <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
@@ -287,22 +306,24 @@
                         </svg>
                         <span>Danh Sách</span>
                     </a>
-                    <div class="item-user menu-user-action btn-change-design" data-action="change-design">
-                        <svg class="v-icon v-icon-svg-big" enable-background="new 0 0 32 32" viewBox="0 0 32 32"><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="2 8 10 3 18 8"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="4 7 4 15 16 15 16 7"></polyline><rect width="4" height="6" x="8" y="9" fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" class="colorStroke000 svgStroke"></rect><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="14 22 22 17 30 22"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="16 21 16 29 28 29 28 21"></polyline><rect width="4" height="6" x="20" y="23" fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" class="colorStroke000 svgStroke"></rect><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="7.68 20.406 4.46 18.946 3 22.166"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="25.043 13.805 27.964 15.798 29.957 12.878"></polyline><path fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="M12 27c-3.787-.913-6.747-4.05-7.521-8.007M18.999 4c5.08 1.351 8.859 6.053 8.997 11.69" class="colorStroke000 svgStroke"></path></svg>
-                        <span>Chuyển Đổi Giao Diện</span>
-                    </div>
+                    @{
+                        if (user.Role == 0)
+                        {
+                            <div class="item-user menu-user-action btn-change-design" data-action="change-design">
+                                <svg class="v-icon v-icon-svg-big" enable-background="new 0 0 32 32" viewBox="0 0 32 32"><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="2 8 10 3 18 8"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="4 7 4 15 16 15 16 7"></polyline><rect width="4" height="6" x="8" y="9" fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" class="colorStroke000 svgStroke"></rect><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="14 22 22 17 30 22"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="16 21 16 29 28 29 28 21"></polyline><rect width="4" height="6" x="20" y="23" fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" class="colorStroke000 svgStroke"></rect><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="7.68 20.406 4.46 18.946 3 22.166"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="25.043 13.805 27.964 15.798 29.957 12.878"></polyline><path fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="M12 27c-3.787-.913-6.747-4.05-7.521-8.007M18.999 4c5.08 1.351 8.859 6.053 8.997 11.69" class="colorStroke000 svgStroke"></path></svg>
+                                <span>Chuyển Đổi Giao Diện</span>
+                            </div>
+                        }
+                    }
                     <hr class="divider mt-2 mb-2 theme-dark" style="border-width: thin 3px 3px !important;">
-                    <a href="management.html" class="item-user menu-user-management menu-user-management-disabled mb-2 ">
-                        <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
-                            <path d="M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z"></path>
-                        </svg>
-                        <span>Quản Lý</span>
-                    </a>
+
                     <div class="item-user menu-user-action" data-action="sign-out">
-                        <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
-                            <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
-                        </svg>
-                        <span>Đăng Xuất</span>
+                        <form action="/" method="post">
+                            <svg class="v-icon v-icon-svg-big" focusable="false" viewBox="0 0 24 24">
+                                <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+                            </svg>
+                            <span>Đăng Xuất</span>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -476,7 +497,7 @@
                     allowKeyboardCtrl: false,
                     interval: 5000
                 });
-});
+            });
         </script>
         <div class="main-wrap">
             @RenderBody()
