@@ -93,25 +93,21 @@ namespace WebStoryService.Models.Repositories
             }
             return list;
         }
-
         public Story GetById(int id)
         {
-            Story story = new Story();
             try
             {
-                using (var en = new DbEntities())
+                using (var db = new DbEntities())
                 {
-                    story = en.tbl_story
-                        .Include("tbl_author")
-                        .Include("tbl_category")
-                        .Where(s => s.C_id == id)
+                    var story = db.tbl_story
+                        .Where(s => s.C_active == 1 && s.C_id == id)
                         .Select(s => new Story
                         {
                             Id = s.C_id,
-                            Title = s.C_title,
-                            ChapterNumber = s.C_chapter_number ?? 1,
-                            Introduction = s.C_introduction,
-                            Image = s.C_image,
+                            Title = s.C_title ?? "",
+                            ChapterNumber = s.C_chapter_number ?? 0,
+                            Introduction = s.C_introduction ?? "",
+                            Image = s.C_image ?? "default.jpg",
                             LikeNumber = s.C_like_number ?? 0,
                             FollowNumber = s.C_follow_number ?? 0,
                             ViewNumber = s.C_view_number ?? 0,
@@ -121,14 +117,43 @@ namespace WebStoryService.Models.Repositories
                             StoryTypeId = s.C_story_type_id ?? 0,
                             AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
                             CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
-                        }).FirstOrDefault();
+                        })
+                        .FirstOrDefault();
+
+                    System.Diagnostics.Debug.WriteLine($"Retrieved story ID {id}: {(story != null ? "Found" : "Not Found")}");
+                    return story;
                 }
             }
             catch (Exception ex)
             {
-                // Log error if needed
+                System.Diagnostics.Debug.WriteLine($"Error in GetById: {ex.Message}");
+                return null;
             }
-            return story;
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                using (var db = new DbEntities())
+                {
+                    var story = db.tbl_story.FirstOrDefault(s => s.C_id == id);
+                    if (story != null)
+                    {
+                        story.C_active = 0; // Xóa mềm bằng cách đặt _active = 0
+                        db.SaveChanges();
+                        System.Diagnostics.Debug.WriteLine($"Successfully soft-deleted story ID {id}.");
+                        return true;
+                    }
+                    System.Diagnostics.Debug.WriteLine($"Story ID {id} not found in database.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in Delete: {ex.Message}");
+                return false;
+            }
         }
     }
 }

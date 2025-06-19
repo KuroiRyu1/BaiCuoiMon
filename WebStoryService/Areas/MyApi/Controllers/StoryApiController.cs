@@ -29,8 +29,22 @@ namespace WebStoryService.Areas.MyApi.Controllers
 
             return new List<Story>();
         }
-        [HttpGet]
         [Route("getall")]
+        [HttpGet]
+        public HttpResponseMessage GetAll()
+        {
+            try
+            {
+                var stories = _storyRes.GetAll();
+                return Request.CreateResponse(HttpStatusCode.OK, stories);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
+            }
+        }
+        [HttpGet]
+        [Route("getall/cate")]
         public List<Story> getAll(int? cateId=null)
         {
             var story = new List<Story>();
@@ -48,31 +62,48 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return story;
         }
-
         [Route("get/{id}")]
         [HttpGet]
         public HttpResponseMessage GetById(int id)
         {
             try
             {
-                var headerData = Request.Headers;
-                string username = string.Empty;
-                string password = string.Empty;
-                string token = string.Empty;
+                var story = _storyRes.GetById(id);
+                if (story != null)
                 {
-                    var story = _storyRes.GetById(id);
-                    if (story == null)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound);
-                    }
                     return Request.CreateResponse(HttpStatusCode.OK, story);
                 }
+                return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
             }
             catch (Exception ex)
             {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
+        }
 
-            return Request.CreateResponse(HttpStatusCode.Unauthorized);
+        [Route("delete")]
+        [HttpPost]
+        public HttpResponseMessage Delete([FromBody] Story item)
+        {
+            try
+            {
+                if (item == null || item.Id == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
+                }
+                System.Diagnostics.Debug.WriteLine($"Received delete request for Story ID: {item.Id}");
+                var result = _storyRes.Delete(item.Id);
+                if (result)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Truyện đã được xóa mềm thành công." });
+                }
+                return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in Delete: {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new { Message = $"Error: {ex.Message}" });
+            }
         }
 
     }

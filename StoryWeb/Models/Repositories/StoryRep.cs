@@ -23,6 +23,36 @@ namespace StoryWeb.Models.Repositories
                 return _instance;
             }
         }
+        private HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:8078/")
+            };
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            return client;
+        }
+
+        public async Task<List<Story>> GetAllStories()
+        {
+            try
+            {
+                using (var client = CreateHttpClient())
+                {
+                    var response = await client.GetAsync("story/getall");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<List<Story>>(dataJson);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return new List<Story>();
+            }
+            return new List<Story>();
+        }
         public async Task<List<Story>> GetAllStories(int? cateId = null)
         {
             try
@@ -30,7 +60,7 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpResponseMessage res = await client.GetAsync($"story/getall?cateId={cateId}");
+                HttpResponseMessage res = await client.GetAsync($"story/getall/cate?cateId={cateId}");
                 if (res.IsSuccessStatusCode)
                 {
                     var response = await client.GetAsync("story/getall");

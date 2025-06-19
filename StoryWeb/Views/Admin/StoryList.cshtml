@@ -4,17 +4,17 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<div class="container-fluid">
+<main class="container-fluid pt-4">
     <h2 class="mb-4">Quản lý truyện</h2>
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
     }
-    <a href="@Url.Action("StoryCreate", "Admin")" class="btn btn-success mb-3">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    <a href="#" class="btn btn-success mb-3">
         <i class="fas fa-plus"></i> Thêm truyện mới
     </a>
     <div class="card shadow">
@@ -34,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in ViewBag.Stories)
+                    @foreach (var item in Model)
                     {
                         <tr>
                             <td>@item.Id</td>
@@ -49,16 +49,29 @@
                                 <a href="@Url.Action("StoryDetail", "Admin", new { id = item.Id })" class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i> Chi tiết
                                 </a>
-                                <a href="@Url.Action("StoryEdit", "Admin", new { id = item.Id })" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-edit"></i> Sửa
-                                </a>
-                                <a href="@Url.Action("StoryDelete", "Admin", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                    <i class="fas fa-trash"></i> Xóa
-                                </a>
+                                <form action="@Url.Action("StoryDelete", "Admin")" method="post" style="display:inline;">
+                                    @Html.Hidden("Id", item.Id)
+                                    @Html.Hidden("Title", item.Title)
+                                    @Html.Hidden("ChapterNumber", item.ChapterNumber)
+                                    @Html.Hidden("Introduction", item.Introduction)
+                                    @Html.Hidden("Image", item.Image)
+                                    @Html.Hidden("LikeNumber", item.LikeNumber)
+                                    @Html.Hidden("FollowNumber", item.FollowNumber)
+                                    @Html.Hidden("ViewNumber", item.ViewNumber)
+                                    @Html.Hidden("AuthorId", item.AuthorId)
+                                    @Html.Hidden("StatusId", item.StatusId)
+                                    @Html.Hidden("CategoryId", item.CategoryId)
+                                    @Html.Hidden("StoryTypeId", item.StoryTypeId)
+                                    @Html.Hidden("AuthorName", item.AuthorName)
+                                    @Html.Hidden("CategoryName", item.CategoryName)
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa truyện này?')">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }
-                    @if (!ViewBag.Stories.Any())
+                    @if (!Model.Any())
                     {
                         <tr>
                             <td colspan="9" class="text-center">Không có truyện nào.</td>
@@ -68,4 +81,4 @@
             </table>
         </div>
     </div>
-</div>
+</main>
