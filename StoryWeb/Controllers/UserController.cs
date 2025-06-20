@@ -84,8 +84,6 @@ namespace StoryWeb.Controllers
                 return RedirectToAction("Login");
             }
 
-         
-
         }
         public ActionResult Logout()
         {
@@ -97,7 +95,7 @@ namespace StoryWeb.Controllers
         {
             try
             {
-                
+
             }
             catch (Exception ex)
             {

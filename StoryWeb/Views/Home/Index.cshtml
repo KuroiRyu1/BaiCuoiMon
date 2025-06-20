@@ -118,15 +118,15 @@
                                                     <div class="card-timeline">
                                                         <div class="timeline theme-dark">
                                                             @{
-                                                                int chapNum = 1;
+                                                                int chapNumber = 0;
                                                                 if (item.ChapterNumber > 1)
                                                                 {
-                                                                    chapNum = 2;
+                                                                    chapNumber = 1;
                                                                 }
                                                                 for (int i = 0; i < chapNum; i++)
                                                                 {
                                                                     int itemDisplay = item.ChapterNumber - i;
-                                                                    <a href='@Url.Action("Read", "Chapter", new {id=item.Id,chapterIndex = itemDisplay})' title="Chương @itemDisplay" class="tu-tien-tro-ve-tai-vuon-truong---phan-2-177 timeline-item mt-2 font-sans-serif">
+                                                                    <a href='@Url.Action("Read","Chapter")' title="Chương @item.ChapterNumber-i" class="tu-tien-tro-ve-tai-vuon-truong---phan-2-177 timeline-item mt-2 font-sans-serif">
                                                                         <div class="timeline-divider">
                                                                             <div class="timeline-item-dot">
                                                                                 <div class="timeline-item-dot-inner new">

@@ -3,14 +3,9 @@
     ViewBag.Title = "StoryList";
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
     List<StoryWeb.Models.ModelView.Story> story = new List<StoryWeb.Models.ModelView.Story>();
-    List<StoryWeb.Models.ModelView.Story> allStory = new List<StoryWeb.Models.ModelView.Story>();
     if (ViewBag.storyList != null)
     {
         story = ViewBag.storyList;
-    }
-    if (ViewBag.allstory != null)
-    {
-        allStory = (List<StoryWeb.Models.ModelView.Story>)ViewBag.allstory;
     }
     int activePage = 1;
     if (ViewBag.page != null)
@@ -25,9 +20,9 @@
     float FLoat = (float)count / 6;
     if (FLoat > PageMax)
     {
-        PageMax++;
+        PageNum = activePage;
     }
-    if (PageMax > 5)
+    else if (activePage == 2)
     {
         if (PageNum < PageMax)
         {
@@ -108,6 +103,7 @@
                             {
                                 <a class="page-item" title="Page" href="@Url.Action("StoryList", "Story", new { page = PageMax })">&gt;&gt;</a>
                             }
+
                         }
 
                     </div>
@@ -165,9 +161,9 @@
                                                                         int chapNumber = 0;
                                                                         if (item.ChapterNumber > 1)
                                                                         {
-                                                                            chapNumber = 1;
+                                                                            chapNumber=1;
                                                                         }
-                                                                        for (int i = 0; i <= chapNumber; i++)
+                                                                        for(int i = 0;i<=chapNumber;i++)
                                                                         {
                                                                             int itemDisplay = item.ChapterNumber - i;
                                                                             <a href='@Url.Action("Read", "Chapter")' title="Chương @item.ChapterNumber-i" class=" timeline-item mt-2 font-sans-serif">
@@ -279,12 +275,12 @@
                             {
                                 <a class="page-item" title="Page" href="@Url.Action("StoryList", "Story", new {page =PageMax,categoryId = cateId})">&gt;&gt;</a>
                             }
+
                         }
 
 
 
-
-
+                        <a class="page-item" title="Page 20" href="truyen-cap-nhat341b.html?p=20">&gt;&gt;</a>
 
                     </div>
                 </div>

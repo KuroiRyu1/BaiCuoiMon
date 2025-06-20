@@ -2,9 +2,11 @@
 using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -12,7 +14,6 @@ namespace StoryWeb.Models.Repositories
     {
         private static StoryRep _instance;
         private StoryRep() { }
-
         public static StoryRep Instance
         {
             get
@@ -85,6 +86,9 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("username", "admin");
+                client.DefaultRequestHeaders.Add("pwd", "123");
+                client.DefaultRequestHeaders.Add("tk", "12345");
                 string url = $"story/get?page={page}&pageSize={pageSize}";
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
@@ -104,7 +108,6 @@ namespace StoryWeb.Models.Repositories
             return new List<Story>();
         }
 
-
         public async Task<Story> GetStoryById(int id)
         {
             try
@@ -120,9 +123,9 @@ namespace StoryWeb.Models.Repositories
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                // Log error if needed
             }
             return null;
         }

@@ -5,14 +5,13 @@ using System.Linq;
 using System.Web.Http;
 using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
-using WebStoryService.Models.Repositories;
 
 namespace WebStoryService.Areas.MyApi.Controllers
 {
     [RoutePrefix("api/chapters")]
     public class ChapterApiController : ApiController
     {
-        private readonly DbEntities _db = new DbEntities();
+        private readonly DbEntities _db = new DbEntities(); // Sử dụng DbEntities từ EDMX
 
         [HttpGet]
         [Route("{storyId}")]
@@ -41,6 +40,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             return Ok(chapters);
         }
 
+        // GET api/chapters/single/{chapterId}
         [HttpGet]
         [Route("single/{chapterId}")]
         public IHttpActionResult GetSingle(int chapterId)
@@ -57,17 +57,15 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
         }
 
+        // POST api/chapters
         [HttpPost]
         [Route("")]
         public IHttpActionResult Create([FromBody] tbl_chapter chapter)
         {
             try
             {
-                if (!ModelState.IsValid || chapter.C_story_id == 0)
+                if (!ModelState.IsValid)
                     return BadRequest(ModelState);
-
-                if (!_db.tbl_story.Any(s => s.C_id == chapter.C_story_id))
-                    return NotFound();
 
                 chapter.C_day_create = DateTime.Now;
                 _db.tbl_chapter.Add(chapter);
@@ -81,6 +79,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
         }
 
+        // PUT api/chapters/{chapterId}
         [HttpPut]
         [Route("{chapterId}")]
         public IHttpActionResult Update(int chapterId, [FromBody] tbl_chapter data)
@@ -102,6 +101,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
         }
 
+        // DELETE api/chapters/{chapterId}
         [HttpDelete]
         [Route("{chapterId}")]
         public IHttpActionResult Delete(int chapterId)
@@ -111,6 +111,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 var chapter = _db.tbl_chapter.Find(chapterId);
                 if (chapter == null) return NotFound();
 
+                // Xóa tất cả ảnh liên quan trước
                 var images = _db.tbl_chapter_image
                                .Where(i => i.C_chapter_id == chapterId)
                                .ToList();

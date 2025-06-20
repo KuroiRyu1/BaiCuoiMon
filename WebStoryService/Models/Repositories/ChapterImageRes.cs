@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebStoryService.Models.Entities;
-using WebStoryService.Models.ModelData;
 
 namespace WebStoryService.Models.Repositories
 {
@@ -14,31 +13,6 @@ namespace WebStoryService.Models.Repositories
         public ChapterImageRes(DbEntities db)
         {
             _db = db;
-        }
-        public ChapterImageRes() { }
-        public List<ChapterImage> getImage(int chapterId) 
-        {
-            DbEntities _db = new DbEntities();
-            List<ChapterImage> res = new List<ChapterImage>();
-            try
-            {
-                var item = _db.tbl_chapter_image.Where(d=>d.C_chapter_id==chapterId)
-                    .Select(d=> new ChapterImage
-                    {
-                        Id = d.C_id,
-                        ChapterId = chapterId,
-                        ImagePath = d.C_image,
-                    })
-                    .ToList();
-                if (item != null)
-                {
-                    res = item;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return res;
         }
 
         public void ShiftIndexesForInsert(int chapterId, int targetIndex)

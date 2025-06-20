@@ -15,14 +15,14 @@ namespace StoryWeb
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}/{chapterIndex}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, chapterIndex = UrlParameter.Optional }
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
             routes.MapRoute(
-               name: "Default2",
-               url: "{controller}/{action}/{storyId}/{chapterIndex}",
-               defaults: new { controller = "Home", action = "Index", storyId = UrlParameter.Optional, chapterIndex = UrlParameter.Optional }
-           );
+                name:"Truyen",
+                url:"truyen/thongtintruyen/{name}",
+                defaults: new {controller= "Story", action ="StoryInfo",name = UrlParameter.Optional}
+                );
         }
     }
 }

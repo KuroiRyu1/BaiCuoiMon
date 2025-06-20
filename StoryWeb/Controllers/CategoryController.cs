@@ -27,7 +27,7 @@ namespace StoryWeb.Controllers
             string a = await CategoryRep.Instance.addCates(item);
             if (item != null)
             {
-                if (a != "")
+                if(a!="")
                 {
                     Console.WriteLine(a);
                     return RedirectToAction("index");
@@ -38,14 +38,8 @@ namespace StoryWeb.Controllers
         }
         public async Task<ActionResult> CategoryList(string name = "")
         {
-
-            var cateList = await CategoryRep.Instance.getCates(); ;
-            if (!string.IsNullOrEmpty(name))
-            {
-                cateList = await CategoryRep.Instance.Search(name);
-
-            }
-            ViewBag.cate = cateList;
+            var cate = await CategoryRep.Instance.getCates();
+            ViewBag.cate = cate;
             return View();
         }
 

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -33,6 +32,9 @@ namespace StoryWeb.Models.Repositories
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("username", "admin");
+            client.DefaultRequestHeaders.Add("pwd", "123");
+            client.DefaultRequestHeaders.Add("tk", "12345");
             HttpResponseMessage res = await client.GetAsync("category/get");
             if (res.IsSuccessStatusCode)
             {
@@ -60,6 +62,9 @@ namespace StoryWeb.Models.Repositories
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(base_address.Address);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("username", "admin");
+            client.DefaultRequestHeaders.Add("pwd", "123");
+            client.DefaultRequestHeaders.Add("tk", "12345");
             HttpContent content = new StringContent(JsonConvert.SerializeObject(item),Encoding.UTF8,"application/json");
             HttpResponseMessage res = await client.PostAsync("category/post",content);
             string a = JsonConvert.SerializeObject(item);
