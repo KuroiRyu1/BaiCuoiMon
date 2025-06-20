@@ -126,6 +126,5 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new { Message = $"Error: {ex.Message}" });
             }
         }
-
     }
 }
