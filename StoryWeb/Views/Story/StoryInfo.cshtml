@@ -12,7 +12,7 @@
     {
         chapterList = (List<StoryWeb.Models.ModelView.Chapter>)ViewBag.chapterList;
     }
-
+    string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
 }
 
 <main class="main">
@@ -25,7 +25,7 @@
                     <div class="side-bar-wrap m-auto relative">
                         <div class="relative d-flex align-center">
                             <div class="v-image mx-auto responsive rounded ele-2 theme-dark">
-                                <img class="image" src="@Url.Content("~/Content")/Image/@story.Id/@story.Image" title="@story.Title" alt="@story.Title" />
+                                <img class="image" src="@Url.Content("~/Content")/Image/@name/@story.Image" title="@story.Title" alt="@story.Title" />
                             </div>
                         </div>
                     </div>

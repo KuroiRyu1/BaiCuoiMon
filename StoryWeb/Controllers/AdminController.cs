@@ -295,7 +295,7 @@ namespace StoryWeb.Controllers
             var cateList = new List<Category>();
             if (string.IsNullOrEmpty(name))
             {
-                cateList = await CategoryRep.Instance.getCates();
+                cateList = await CategoryRep.Instance.getCatesAdmin();
             }
             else
             {

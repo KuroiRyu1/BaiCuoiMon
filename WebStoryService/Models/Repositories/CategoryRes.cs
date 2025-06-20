@@ -28,6 +28,24 @@ namespace WebStoryService.Models.Repositories
             }
             return list;
         }
+        public List<Category> GetAdmin()
+        {
+            List<Category> list = new List<Category>();
+            try
+            {
+                DbEntities en = new DbEntities();
+                list = en.tbl_category.Select(d => new Category
+                {
+                    Id = d.C_id,
+                    Name = d.C_name,
+                    Active = d.C_active ?? 0,
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            return list;
+        }
         public int Post(Category item)
         {
             try

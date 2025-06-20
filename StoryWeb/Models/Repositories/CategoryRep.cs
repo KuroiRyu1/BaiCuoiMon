@@ -41,6 +41,20 @@ namespace StoryWeb.Models.Repositories
             }
             return cates;
         }
+        public async Task<List<Category>> getCatesAdmin()
+        {
+            var cates = new List<Category>();
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(base_address.Address);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpResponseMessage res = await client.GetAsync("category/getadmin");
+            if (res.IsSuccessStatusCode)
+            {
+                var dataJson = res.Content.ReadAsStringAsync().Result;
+                cates = JsonConvert.DeserializeObject<List<Category>>(dataJson);
+            }
+            return cates;
+        }
         public async Task<string> addCates(Category item)
         {
             HttpClient client = new HttpClient();

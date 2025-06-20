@@ -53,6 +53,45 @@ namespace WebStoryService.Areas.MyApi.Controllers
 
             return new List<Category>();
         }
+
+        [Route("getadmin")]
+        [HttpGet]
+        public IEnumerable<Category> GetAdmin()
+        {
+            try
+            {
+                //var headerData = Request.Headers;
+                //string username = string.Empty;
+                //string password = string.Empty;
+                //string token = string.Empty;
+                //if (headerData.Contains("username"))
+                //{
+                //    {
+                //        username = headerData.GetValues("username").First();
+                //    }
+                //    if (headerData.Contains("pwd"))
+                //    {
+                //        password = headerData.GetValues("pwd").First();
+                //    }
+                //    if (headerData.Contains("tk"))
+                //    {
+                //        token = headerData.GetValues("tk").First();
+                //    }
+                //    if (AccountRep.checkToken(username, password, token) == true)
+                //{
+                CategoryRes res = new CategoryRes();
+                return res.GetAdmin();
+                //}
+
+                // }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return new List<Category>();
+        }
         [Route("post")]
         [HttpPost]
         public int Post([FromBody] Category value)

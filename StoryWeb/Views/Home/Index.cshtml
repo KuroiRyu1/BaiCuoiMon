@@ -26,7 +26,8 @@
 
                     @foreach (StoryWeb.Models.ModelView.Story item in story)
                     {
-                        <div class="background-banner" style="background-image: url(@Url.Content("~/Content/")/Image/@item.Id/@item.Image); background-size: cover;">
+                        string name = StoryWeb.Models.Function.ConvertToUnsign(item.Title);
+                        <div class="background-banner" style="background-image: url(@Url.Content("~/Content/")/Image/@name/@item.Image); background-size: cover;">
                             <div class="each-fade">
                                 <a href='@Url.Action("StoryInfo", "Story", new { id = item.Id })'>
                                     <img src="@Url.Content("~/Content/")/Image/@item.Id/@item.Image" />
@@ -91,13 +92,14 @@
                             <div class="row item-card">
                                 @foreach (StoryWeb.Models.ModelView.Story item in story)
                                 {
+                                    string name = StoryWeb.Models.Function.ConvertToUnsign(item.Title);
                                     var Chapter = StoryWeb.Models.Repositories.ChapterRep.Instance.getListOfChapter(item.Id);
                                     <div class="col-md-2 col-lg-2 col-xl-2 col-sm-3 col-4 col-mb w-100 p-6 border-box card-reader" data-card="tu-tien-tro-ve-tai-vuon-truong---phan-2" title="@item.Title">
                                         <div class="card ele-2 zs-bg-3 d-flex flex-column elevation-2">
                                             <a href='@Url.Action("StoryInfo", "Story", new { id = item.Id })' class="card-block card-flat theme-dark">
                                                 <div class="card-image v-responsive theme-dark">
 
-                                                    <img class="v-image lazy" src="@Url.Content("~/Content/")/Image/@item.Id/@item.Image" alt="@item.Title">
+                                                    <img class="v-image lazy" src="@Url.Content("~/Content/")/Image/@name/@item.Image" alt="@item.Title">
                                                     <div class="info-comic">
                                                         <span class="item-info">
                                                             <svg class="svg-icon-size" focusable="false" viewBox="0 0 24 24" data-testid="RemoveRedEyeIcon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>
