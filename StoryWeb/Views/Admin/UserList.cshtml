@@ -24,12 +24,23 @@
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.Username</td>
-                        <td>@item.Role</td>
+                        @if (item.Role == 0)
+                        {
+                            <td>Thành viên</td>
+                        }
+                        else
+                        {
+                            <td>Quản trị viên</td>
+                        }
                         <td>@item.Email</td>
                         <td>@item.Active</td>
                         <td>
-                            <a href="@Url.Action("ChangeUserRole", "Story", new { id = item.Id })" class="btn btn-primary btn-sm">Sửa</a>
-                            <a href="@Url.Action("Delete", "Story", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                            <a href="@Url.Action("ChangeUserRole", "Admin", new { id=item.Id })" class="btn btn-primary btn-sm">Sửa</a>
+                            <form action="@Url.Action("BanOrUnbanUser","Admin")" method="post">
+                                <input type="hidden" name="Id" value="@item.Id" />
+                                <input type="hidden" name="Active" value="@item.Active" />
+                                <button class="btn btn-danger btn-sm">Xóa</button>
+                            </form>
                         </td>
                     </tr>
                 }

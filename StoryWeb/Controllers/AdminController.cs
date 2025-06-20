@@ -340,10 +340,7 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("CategoryList", "Admin");
         }
-        public async Task<ActionResult> ChangeUserRole()
-        {
-            return RedirectToAction("UserList", "Admin");
-        }
+
         public async Task<ActionResult> AddStory()
         {
             var cate = await CategoryRep.Instance.getCates();
@@ -378,6 +375,71 @@ namespace StoryWeb.Controllers
                 }
             }
             return RedirectToAction("StoryList", "Admin");
+        }
+        public async Task<ActionResult> ChangeUserRole(int id=0)
+        {
+            try
+            {
+                var userGet = new User();
+                if (id != 0)
+                {
+                    userGet = await UserRep.Instance.GetUserById(id);
+                }
+                if (userGet != null)
+                {
+                    ViewBag.user = userGet;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return View();
+        }
+        public async Task<ActionResult> ChangeUserRoleConfirm(User user)
+        {
+            try
+            {
+                if(user != null)
+                {
+                   int result = await UserRep.Instance.ChangeUserRole(user);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return RedirectToAction("UserList", "Admin");
+        }
+        public async Task<ActionResult> BanOrUnbanUser(User user)
+        {
+            try
+            {
+                if (user != null)
+                {
+                    if (user.Active == 0)
+                    {
+                        user.Active = 1;
+                    }
+                    else
+                    {
+                        user.Active = 0;
+                    }
+                    int result = await UserRep.Instance.BanOrUnBan(user);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return RedirectToAction("UserList", "Admin");
+        }
+        public async Task<ActionResult> CategoryDelete(int id)
+        {
+            Category cate = await CategoryRep.Instance.getById(id);
+            if (cate != null)
+            {
+                int a = await CategoryRep.Instance.Delete(cate);
+            }
+            return RedirectToAction("CategoryList","Admin");
         }
     }
 }

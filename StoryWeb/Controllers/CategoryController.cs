@@ -36,7 +36,7 @@ namespace StoryWeb.Controllers
             return RedirectToAction("create");
 
         }
-        public async Task<ActionResult> CategoryList(string name="")
+        public async Task<ActionResult> CategoryList(string name = "")
         {
 
             var cateList = await CategoryRep.Instance.getCates(); ;
@@ -48,5 +48,6 @@ namespace StoryWeb.Controllers
             ViewBag.cate = cateList;
             return View();
         }
+
     }
 }

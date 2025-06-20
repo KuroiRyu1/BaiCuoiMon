@@ -176,9 +176,8 @@ namespace WebStoryService.Areas.MyApi.Controllers
             return user;
         }
         [HttpPut]
-        [Route("changerole")]
-        public int EditUser(User user = null)
-        {
+        [Route("changerole/{user}")]
+        public int EditUser([FromBody]User user) { 
             try
             {
                 if (user == null)
@@ -187,6 +186,24 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 }
                 UserRes res = new UserRes();
                 return res.EditUser(user);
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
+        [HttpPut]
+        [Route("ban/{user}")]
+        public int BanUser([FromBody] User user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return 0;
+                }
+                UserRes res = new UserRes();
+                return res.BanorUnBanUser(user);
             }
             catch (Exception ex)
             {

@@ -21,7 +21,11 @@ namespace WebStoryService.Models.Repositories
                         .AsQueryable();
                     if (categoryId.HasValue && categoryId.Value != 0)
                     {
-                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value);
+                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value&&s.C_active==1);
+                    }
+                    else
+                    {
+                        query = query.Where(s =>  s.C_active == 1);
                     }
                     list = query
                         .OrderBy(s => s.C_id)
@@ -64,7 +68,11 @@ namespace WebStoryService.Models.Repositories
                        .AsQueryable();
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
-                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value);
+                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value&&s.C_active==1);
+                }
+                else
+                {
+                    query = query.Where(s => s.C_active == 1);
                 }
                 var item = query.Select(s=>new Story
                 {
@@ -92,6 +100,24 @@ namespace WebStoryService.Models.Repositories
             {
             }
             return list;
+        }
+        public int checkCategory(int categoryId=0)
+        {
+            try
+            {
+                if (categoryId != 0) { 
+                    DbEntities en = new DbEntities();
+                    var q = en.tbl_story.Any(d=>d.C_category_id == categoryId);
+                    if (q)
+                    {
+                        return 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
         }
         public Story GetById(int id)
         {

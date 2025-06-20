@@ -143,6 +143,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             try
             {
                 CategoryRes res = new CategoryRes();
+                StoryRes story = new StoryRes();
                 //var headerData = Request.Headers;
                 //string username = string.Empty;
                 //string password = string.Empty;
@@ -165,9 +166,12 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 if (item != null)
                 {
 
-                    if (res.Soft_Delete(item) == 1)
+                    if (story.checkCategory(item.Id)==0)
                     {
-                        return 1;
+                        if (res.Soft_Delete(item) == 1)
+                        {
+                            return 1;
+                        }
                     }
                 }
                 //}

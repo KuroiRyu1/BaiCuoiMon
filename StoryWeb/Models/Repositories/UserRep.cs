@@ -125,7 +125,7 @@ namespace StoryWeb.Models.Repositories
             {
                 using (var client = CreateHttpClient())
                 {
-                    var response = await client.GetAsync($"user/get/{id}");
+                    var response = await client.GetAsync($"user/detail/{id}");
                     if (response.IsSuccessStatusCode)
                     {
                         var dataJson = await response.Content.ReadAsStringAsync();
@@ -168,11 +168,12 @@ namespace StoryWeb.Models.Repositories
                if(user != null)
                 {
                     HttpClient client = new HttpClient();
-                    client.BaseAddress = new Uri("http://localhost:8078");
+                    client.BaseAddress = new Uri(base_address.Address);
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     string url = $"user/list";
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-                    HttpResponseMessage res = await client.PostAsync($"user/changerole", content);
+                    HttpResponseMessage res = await client.PutAsync($"user/changerole/{user}", content);
+                    
                     if (res.IsSuccessStatusCode)
                     {
                         var dataJson = await res.Content.ReadAsStringAsync();
@@ -186,6 +187,30 @@ namespace StoryWeb.Models.Repositories
             }
             return 0;
         }
+        public async Task<int> BanOrUnBan(User user)
+        {
+            try
+            {
+                if (user != null)
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri(base_address.Address);
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    string url = $"user/list";
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+                    HttpResponseMessage res = await client.PutAsync($"user/ban/{user}", content);
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var dataJson = await res.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<int>(dataJson);
+                    }
+                }
 
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
     }
 }

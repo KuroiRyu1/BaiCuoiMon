@@ -16,7 +16,7 @@ namespace WebStoryService.Models.Repositories
             try
             {
                 DbEntities en = new DbEntities();
-                list = en.tbl_category.Select(d => new Category
+                list = en.tbl_category.Where(d=>d.C_active==1).Select(d => new Category
                 {
                     Id = d.C_id,
                     Name = d.C_name,
@@ -97,7 +97,7 @@ namespace WebStoryService.Models.Repositories
             {
                 DbEntities en = new DbEntities();
                 category = en.tbl_category.Where(d=> d.C_name.ToLower().
-                Contains(name.ToLower())).Select(d=> new Category
+                Contains(name.ToLower())&&d.C_active==1).Select(d=> new Category
                 {
                     Id = d.C_id,
                     Name = d.C_name,

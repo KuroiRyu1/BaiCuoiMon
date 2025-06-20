@@ -79,7 +79,7 @@ namespace StoryWeb.Models.Repositories
             string a = JsonConvert.SerializeObject(item);
             if (res.IsSuccessStatusCode)
             {
-                return int.Parse(content.ToString());
+                return 1;
             }
             return 0;
         }

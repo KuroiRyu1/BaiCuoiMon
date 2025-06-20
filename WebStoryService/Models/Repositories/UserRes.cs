@@ -148,6 +148,28 @@ namespace WebStoryService.Models.Repositories
             }
             return 0;
         }
+        public int BanorUnBanUser(User user)
+        {
+            try
+            {
+                DbEntities en = new DbEntities();
+                if (user == null)
+                {
+                    return 0;
+                }
+                var item = en.tbl_user.Find(user.Id);
+                if (item != null)
+                {
+                    item.C_active = user.Active;
+                    en.SaveChanges();
+                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
         public User GetUserById(int id)
         {
             var userEntity = _db.tbl_user.FirstOrDefault(u => u.C_id == id);

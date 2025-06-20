@@ -43,7 +43,7 @@
                         }
                         <td>
                             <a href="@Url.Action("CateEdit", "Admin", new { id = item.Id })" class="btn btn-primary btn-sm">Sửa</a>
-                            <a href="@Url.Action("Delete", "Story", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                            <a href="@Url.Action("CategoryDelete", "Admin", new { id = item.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
                         </td>
                     </tr>
                 }

@@ -313,11 +313,11 @@
                     @{
                         if (user != null)
                         {
-                            if (user.Role == 0)
+                            if (user.Role == 1)
                             {
                                 <div class="item-user menu-user-action btn-change-design" data-action="change-design">
                                     <svg class="v-icon v-icon-svg-big" enable-background="new 0 0 32 32" viewBox="0 0 32 32"><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="2 8 10 3 18 8"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="4 7 4 15 16 15 16 7"></polyline><rect width="4" height="6" x="8" y="9" fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" class="colorStroke000 svgStroke"></rect><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="14 22 22 17 30 22"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="16 21 16 29 28 29 28 21"></polyline><rect width="4" height="6" x="20" y="23" fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" class="colorStroke000 svgStroke"></rect><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="7.68 20.406 4.46 18.946 3 22.166"></polyline><polyline fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" points="25.043 13.805 27.964 15.798 29.957 12.878"></polyline><path fill="none" stroke="#a59c9c" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="M12 27c-3.787-.913-6.747-4.05-7.521-8.007M18.999 4c5.08 1.351 8.859 6.053 8.997 11.69" class="colorStroke000 svgStroke"></path></svg>
-                                    <span>Chuyển Đổi Giao Diện</span>
+                                    <a href="@Url.Action("index","Admin")" class="theme-dark btn-default">Chuyển Đổi Giao Diện</a>
                                 </div>
                             }
                         }

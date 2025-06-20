@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "ChangeUserRole";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    StoryWeb.Models.ModelView.User user = new StoryWeb.Models.ModelView.User();
+    if (ViewBag.user!=null)
+    {
+        user = (StoryWeb.Models.ModelView.User)ViewBag.user;
+    }
+}
+
+<h2 class="text-center">Đổi vai trò</h2>
+<div class="container">
+    <form class="form" method="post" action="@Url.Action("ChangeUserRoleConfirm","Admin")">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label class="">Tên</Label>
+                <input class="form-control" id="name" readonly type="text" name="Name" value="@user.Username" />
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <Label for="Role" class="">Vai trò</Label>
+                <select name="Role" id="Role">
+
+                    <option value="0">Thành viên</option>
+                    <option value="1">Quản trị viên</option>
+                </select>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+        <input type="hidden" name="Id" value="@user.Id"/>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                <a class="btn btn-secondary" href="@Url.Action("UserList","Admin")">Hủy</a>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+    </form>
+</div>
