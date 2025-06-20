@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .dashboard-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 25px;
+        text-align: center;
+        transition: transform 0.2s;
+        min-height: 200px; /* Đảm bảo chiều cao tối thiểu */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none; /* Bỏ gạch chân của link */
+        color: inherit; /* Kế thừa màu chữ */
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .dashboard-card i {
+            font-size: 50px;
+            color: #007bff; /* Màu icon mặc định */
+            margin-bottom: 15px;
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .dashboard-card p {
+            font-size: 16px;
+            color: #666;
+        }
+
+    /* Tùy chỉnh màu sắc cho từng card (tùy chọn) */
+    .card-category i {
+        color: #28a745;
+    }
+    /* Xanh lá */
+    .card-user i {
+        color: #ffc107;
+    }
+    /* Vàng */
+    .card-story i {
+        color: #17a2b8;
+    }
+    /* Xanh lam nhạt */
+
+</style>
+
+<h2>Dashboard</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <a href="@Url.Action("CategoryList", "Admin")" class="dashboard-card card-category">
+            <i class="fas fa-sitemap"></i> <h3>Quản lý Category</h3>
+            <p>Thêm, sửa, xóa các danh mục.</p>
+        </a>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <a href="@Url.Action("UserList", "Admin")" class="dashboard-card card-user">
+            <i class="fas fa-users"></i> <h3>Quản lý User</h3>
+            <p>Quản lý tài khoản người dùng và quyền hạn.</p>
+        </a>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <a href="@Url.Action("StoryList", "Admin")" class="dashboard-card card-story">
+            <i class="fas fa-book-open"></i> <h3>Quản lý Story</h3>
+            <p>Xem, chỉnh sửa và đăng tải các câu chuyện.</p>
+        </a>
+    </div>
+</div>
+
+@section scripts {
+}
