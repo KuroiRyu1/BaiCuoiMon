@@ -26,12 +26,19 @@ namespace StoryWeb.Controllers
             return View();
         }
         [Route("thongtintruyen/{id}")]
-        public async Task<ActionResult> StoryInfo(int id=0)
+        public async Task<ActionResult> StoryInfo(int id = 0)
         {
             var story = await StoryRep.Instance.GetStoryById(id);
             var chapterList = await ChapterRep.Instance.getListOfChapter(id);
+            User user = (User)Session["user"];
+            if (user != null&&story!=null)
+            {
+                ViewBag.user = user;
+                var follow = await FollowRep.Instance.checkFollow(story.Id, user.Id);
+                ViewBag.follow = follow;
+            }
             ViewBag.story = story;
-            ViewBag.chapterList = chapterList;  
+            ViewBag.chapterList = chapterList;
             return View();
         }
 
@@ -40,7 +47,7 @@ namespace StoryWeb.Controllers
         {
             return View(new Story());
         }
-        
+
 
         // POST: Story/Create
         [HttpPost]
@@ -96,7 +103,7 @@ namespace StoryWeb.Controllers
         // GET: Story/Delete/{id}
         public async Task<ActionResult> Delete(int id)
         {
-            int result =1;
+            int result = 1;
             if (result == 1)
             {
                 TempData["Success"] = "Xóa truyện thành công!";
@@ -107,15 +114,29 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("Index");
         }
-        public async Task<ActionResult> StoryList(int page = 1,int? categoryId=null)
+        public async Task<ActionResult> StoryList(int page = 1, int? categoryId = null)
         {
             var storyList = await StoryRep.Instance.GetStories(categoryId, page, 6);
             var allstory = await StoryRep.Instance.GetAllStories(categoryId);
-            ViewBag.cateId = categoryId; 
+
+
+            ViewBag.cateId = categoryId;
             ViewBag.storyList = storyList;
             ViewBag.allstory = allstory;
             ViewBag.page = page;
             return View();
+        }
+        public async Task<ActionResult> StoryFollow(int storyId = 0, int userId = 0)
+        {
+            try
+            {
+                int result = await FollowRep.Instance.FollowOrUnfollow(storyId, userId);
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return RedirectToAction("StoryInfo", "Story", new { id = storyId });
         }
     }
 }

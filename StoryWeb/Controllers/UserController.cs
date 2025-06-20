@@ -93,11 +93,15 @@ namespace StoryWeb.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        public async Task<ActionResult> FollowPage()
+        public async Task<ActionResult> FollowPage(int userId=0)
         {
             try
             {
-                
+                List<Story> story = await FollowRep.Instance.getFollowStory(userId);
+                if (story != null)
+                {
+                    ViewBag.story=story;
+                }
             }
             catch (Exception ex)
             {

@@ -4,6 +4,12 @@
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
     StoryWeb.Models.ModelView.Story story = new StoryWeb.Models.ModelView.Story();
     List<StoryWeb.Models.ModelView.Chapter> chapterList = new List<StoryWeb.Models.ModelView.Chapter>();
+    StoryWeb.Models.ModelView.User user = new StoryWeb.Models.ModelView.User();
+    bool follow = false;
+    if (Session["user"] != null)
+    {
+        user = (StoryWeb.Models.ModelView.User)Session["user"];
+    }
     if (ViewBag.story != null)
     {
         story = (StoryWeb.Models.ModelView.Story)ViewBag.story;
@@ -11,6 +17,10 @@
     if (ViewBag.chapterList != null)
     {
         chapterList = (List<StoryWeb.Models.ModelView.Chapter>)ViewBag.chapterList;
+    }
+    if (ViewBag.follow != null)
+    {
+        follow = (bool)ViewBag.follow;
     }
     string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
 }
@@ -133,20 +143,48 @@
                             </div>
                         </div>
                     </div>*@
-                <div class="follow-comic d-flex align-center mt-3">
-                    <a class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+            <div class="follow-comic d-flex align-center mt-3">
+                @if (ViewBag.user != null)
+                {
+                    if (follow == false)
+                    {
+                        <form action="@Url.Action("StoryFollow", "Story", new { storyId = story.Id, userId = user.Id })" method="post">
+                            <button type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                                <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                                <span class="v-btn-content">
+                                    <span class="text-capitalize">Theo dõi</span>
+                                </span>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form action="@Url.Action("StoryFollow","Story", new { storyId = story.Id, userId = user.Id })" method="post">
+                            <button type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                                <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                                <span class="v-btn-content">
+                                    <span class="text-capitalize">Hủy Theo dõi</span>
+                                </span>
+                            </button>
+                        </form>
+                    }
+                }
+                else
+                {
+                    <a href="@Url.Action("Login","User")" type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
                         <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
                         <span class="v-btn-content">
                             <span class="text-capitalize">Theo dõi</span>
                         </span>
                     </a>
-                    <a class="btn-alert mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                        <svg class="v-icon-svg v-icon-alarm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="Notifications" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="Notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
-                        <span class="v-btn-content">
-                            <span class="text-capitalize">Thông Báo</span>
-                        </span>
-                    </a>
-                </div>
+                }
+                <a class="btn-alert mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                    <svg class="v-icon-svg v-icon-alarm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="Notifications" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="Notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
+                    <span class="v-btn-content">
+                        <span class="text-capitalize">Thông Báo</span>
+                    </span>
+                </a>
+            </div>
                 <div class="start-chapter d-flex align-center mt-3">
                     <a href="@Url.Action("Read", "Chapter", new { id = story.Id, chapterIndex = 1 })" class="btn-start mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
                         <span class="v-btn-content">
@@ -401,25 +439,25 @@
                     }
                     else
                     {
-            <div class="comment">
-                <div class="user d-flex">
-                    <p class="name">name</p>
-                    <div class="name d-flex">
+                        <div class="comment">
+                            <div class="user d-flex">
+                                <p class="name">name</p>
+                                <div class="name d-flex">
 
-                        <p class="chapter">chapter</p>
-                    </div>
+                                    <p class="chapter">chapter</p>
+                                </div>
 
-                </div>
-                <div class="p-comment theme-dark zs-bg-3">
+                            </div>
+                            <div class="p-comment theme-dark zs-bg-3">
 
-                    <div class="comment">
-                        <p>comment</p>
-                    </div>
-                </div>
-                <btn class="btn-tag">tag</btn>
-                <btn class="btn-tag">tag</btn>
-                <btn class="btn-tag">tag</btn>
-            </div>
+                                <div class="comment">
+                                    <p>comment</p>
+                                </div>
+                            </div>
+                            <btn class="btn-tag">tag</btn>
+                            <btn class="btn-tag">tag</btn>
+                            <btn class="btn-tag">tag</btn>
+                        </div>
                     }
                 }
             </div>
