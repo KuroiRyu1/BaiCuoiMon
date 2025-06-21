@@ -5,7 +5,7 @@
     StoryWeb.Models.ModelView.Story story = new StoryWeb.Models.ModelView.Story();
     List<StoryWeb.Models.ModelView.Chapter> chapterList = new List<StoryWeb.Models.ModelView.Chapter>();
     StoryWeb.Models.ModelView.User user = new StoryWeb.Models.ModelView.User();
-    bool follow = false;
+    bool isFollowing = false;
     if (Session["user"] != null)
     {
         user = (StoryWeb.Models.ModelView.User)Session["user"];
@@ -20,9 +20,18 @@
     }
     if (ViewBag.follow != null)
     {
-        follow = (bool)ViewBag.follow;
+        isFollowing = (bool)ViewBag.follow;
     }
     string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
+    var isLoggedIn = user != null;
+    var url = isFollowing ? "/Story/StoryFollow" : "/Story/StoryFollow";
+    string image = Url.Content("~/Content/Image/") + name + "/" + story.Image;
+    string path = Server.MapPath($"~/Content/Image/{name}/{story.Image}");
+    bool exist = File.Exists(path);
+    if (!exist)
+    {
+        image = Url.Content("~/Content/Image/default/default.jpg");
+    }
 }
 
 <main class="main">
@@ -35,7 +44,7 @@
                     <div class="side-bar-wrap m-auto relative">
                         <div class="relative d-flex align-center">
                             <div class="v-image mx-auto responsive rounded ele-2 theme-dark">
-                                <img class="image" src="@Url.Content("~/Content")/Image/@name/@story.Image" title="@story.Title" alt="@story.Title" />
+                                <img class="image" src="@image" title="@story.Title" />
                             </div>
                         </div>
                     </div>
@@ -70,7 +79,7 @@
                                 <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"></path>
                             </svg>
                         </span>
-                        <div class="text-caption px-1">
+                        <div class="text-caption px-1" id="follow-num">
                             @story.FollowNumber
                         </div>
                     </div>
@@ -143,48 +152,41 @@
                             </div>
                         </div>
                     </div>*@
-            <div class="follow-comic d-flex align-center mt-3">
-                @if (ViewBag.user != null)
-                {
-                    if (follow == false)
+                <div class="follow-comic d-flex align-center mt-3">
+                    @if (ViewBag.user != null)
                     {
-                        <form action="@Url.Action("StoryFollow", "Story", new { storyId = story.Id, userId = user.Id })" method="post">
-                            <button type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                                <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
-                                <span class="v-btn-content">
-                                    <span class="text-capitalize">Theo dõi</span>
+                        <a class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default"
+                           data-story-id="@story.Id"
+                           data-logged-in="@(isLoggedIn ? "true" : "false")"
+                           data-following="@(isFollowing ? "true" : "false")"
+                           id="btn-follow">
+                            <svg class="v-icon-svg mr-1 icon-heart" viewBox="0 0 24 24">
+                                <use xlink:href="#@(isFollowing ? "icon-heart-filled" : "icon-heart-outline")"></use>
+                            </svg>
+                            <span class="v-btn-content">
+                                <span class="text-capitalize">
+                                    @(isFollowing ? "Hủy theo dõi" : "Theo dõi")
                                 </span>
-                            </button>
-                        </form>
+                            </span>
+                        </a>
+
                     }
                     else
                     {
-                        <form action="@Url.Action("StoryFollow","Story", new { storyId = story.Id, userId = user.Id })" method="post">
-                            <button type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                                <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
-                                <span class="v-btn-content">
-                                    <span class="text-capitalize">Hủy Theo dõi</span>
-                                </span>
-                            </button>
-                        </form>
+                        <a href="@Url.Action("Login","User")" type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                            <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                            <span class="v-btn-content">
+                                <span class="text-capitalize">Theo dõi</span>
+                            </span>
+                        </a>
                     }
-                }
-                else
-                {
-                    <a href="@Url.Action("Login","User")" type="submit" class="btn-follow mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                        <svg class="v-icon-svg mr-1" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="FavoriteBorder" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="FavoriteBorder"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                    <a class="btn-alert mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
+                        <svg class="v-icon-svg v-icon-alarm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="Notifications" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="Notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
                         <span class="v-btn-content">
-                            <span class="text-capitalize">Theo dõi</span>
+                            <span class="text-capitalize">Thông Báo</span>
                         </span>
                     </a>
-                }
-                <a class="btn-alert mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
-                    <svg class="v-icon-svg v-icon-alarm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1" title="Notifications" data-ga-event-category="material-icons" data-ga-event-action="click" data-ga-event-label="Notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
-                    <span class="v-btn-content">
-                        <span class="text-capitalize">Thông Báo</span>
-                    </span>
-                </a>
-            </div>
+                </div>
                 <div class="start-chapter d-flex align-center mt-3">
                     <a href="@Url.Action("Read", "Chapter", new { id = story.Id, chapterIndex = 1 })" class="btn-start mx-1 rounded-sm zs-bg-3 mr-4 btn-default btn-default-is-elevated theme-dark btn-size-default">
                         <span class="v-btn-content">
@@ -462,6 +464,95 @@
                 }
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const sendBtn = document.querySelector(".btn-comment");
+                const textarea = document.querySelector(".input-comment");
+                const storyId = @story.Id;
+
+                sendBtn.addEventListener("click", function () {
+                    const content = textarea.value.trim();
+
+                    fetch("/Story/PostStoryComment", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `storyId=${storyId}&content=${encodeURIComponent(content)}`
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) {
+                            textarea.value = "";
+                            // Optionally, reload comment list or append new comment
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Lỗi gửi bình luận:", err);
+                        alert("Không thể gửi bình luận. Thử lại sau.");
+                    });
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const followBtn = document.getElementById("btn-follow");
+                const textFollowNum = document.getElementById("follow-num")
+                if (!followBtn) return;
+
+                const textSpan = followBtn.querySelector(".text-capitalize");
+                const iconUse = followBtn.querySelector("use"); // SVG <use> element
+
+                const isLoggedIn = followBtn.getAttribute("data-logged-in") === "true";
+                let isFollowing = followBtn.getAttribute("data-following") === "true";
+
+                followBtn.addEventListener("click", function () {
+                    if (!isLoggedIn) {
+                        alert("Bạn cần đăng nhập để theo dõi truyện.");
+                        return;
+                    }
+
+                    const storyId = this.getAttribute("data-story-id");
+                    const url = isFollowing ? "/Story/StoryFollow" : "/Story/StoryFollow";
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `storyId=${encodeURIComponent(storyId)}`
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            alert(data.message);
+                            if (data.success) {
+                                isFollowing = !isFollowing;
+                                textSpan.innerText = isFollowing ? "Hủy theo dõi" : "Theo dõi";
+                                followBtn.setAttribute("data-following", isFollowing.toString());
+                                iconUse.setAttribute("xlink:href", isFollowing ? "#icon-heart-filled" : "#icon-heart-outline");
+                                followBtn.classList.toggle("followed", isFollowing);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Lỗi toggle theo dõi:", err);
+                            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+                        });
+                });
+            });
+        </script>
+        <svg style="display: none;">
+            <symbol id="icon-heart-outline" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+                     C13.09 3.81 14.76 3 16.5 3
+                     19.58 3 22 5.42 22 8.5
+                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </symbol>
+            <symbol id="icon-heart-filled" viewBox="0 0 24 24">
+                <path fill="red" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+                     C13.09 3.81 14.76 3 16.5 3
+                     19.58 3 22 5.42 22 8.5
+                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </symbol>
+        </svg>
 
     </div>
 </main>

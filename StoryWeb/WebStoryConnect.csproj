@@ -266,6 +266,7 @@
     <Content Include="Content\Image\banner\1_gbu3O1VVd9jsLMdumsWHWmHKBjs2mJr62f6.jpg" />
     <Content Include="Content\Image\banner\1_oaRWcpbGymsdAgS6rHuhufeKbbDm-_M62f6.jpg" />
     <Content Include="Content\Image\8\1.jpg" />
+    <Content Include="Content\Image\default\default.jpg" />
     <Content Include="Content\WebTruyen\images\bg2.gif" />
     <Content Include="Content\WebTruyen\images\favicon.ico" />
     <Content Include="Content\WebTruyen\images\google_icon.png" />

@@ -19,6 +19,11 @@ namespace WebStoryService.Models.Repositories
         public int FollowStory(Follow model)
         {
             var tontai = en.tbl_story_follow.Any(d => d.C_story_id == model.StoryId && d.C_user_id == model.UserId);
+            var FollowCount = en.tbl_story.Where(d => d.C_id == model.StoryId).FirstOrDefault();
+            if (FollowCount.C_follow_number == null)
+            {
+                FollowCount.C_follow_number = 0;
+            }
             if (tontai==true)
             {
                 var q = en.tbl_story_follow.Where(d=>d.C_story_id==model.StoryId&&d.C_user_id==model.UserId).FirstOrDefault();
@@ -28,11 +33,13 @@ namespace WebStoryService.Models.Repositories
                     if (q.C_status == 0)
                     {
                         q.C_status = 1;
+                        FollowCount.C_follow_number++;
                         en.SaveChanges();
                         return 1;
                     }
                     else if(q.C_status == 1)
                     {
+                        FollowCount.C_follow_number--;
                         q.C_status = 0;
                         en.SaveChanges();
                         return 2;
@@ -51,6 +58,7 @@ namespace WebStoryService.Models.Repositories
                     C_status = 1,
                 };
                 en.tbl_story_follow.Add(newFollow);
+                FollowCount.C_follow_number++;
                 en.SaveChanges();
                 return 1;
             }

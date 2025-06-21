@@ -177,6 +177,9 @@ namespace WebStoryService.Models.Repositories
                         C_image = story.Image,
                         C_introduction = story.Introduction,
                         C_active = story.Active,
+                        C_follow_number = 0,
+                        C_view_number = 0,
+                        C_like_number = 0,
                     };
                     db.tbl_story.Add(tbl_story);
                     db.SaveChanges();

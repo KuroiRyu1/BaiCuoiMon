@@ -126,11 +126,23 @@ namespace StoryWeb.Controllers
             ViewBag.page = page;
             return View();
         }
-        public async Task<ActionResult> StoryFollow(int storyId = 0, int userId = 0)
+        public async Task<ActionResult> StoryFollow(int storyId = 0)
         {
             try
             {
-                int result = await FollowRep.Instance.FollowOrUnfollow(storyId, userId);
+                var user = Session["user"] as User;
+                if (user == null)
+                    return Json(new { success = false, message = "Bạn cần đăng nhập." });
+
+                int result = await FollowRep.Instance.FollowOrUnfollow(storyId, user.Id);
+                if (result == 1)
+                    return Json(new { success = true, message = "Bạn đã theo dõi truyện." });
+
+                else if(result == 2)
+                {
+                    return Json(new { success = true, message = "Bạn đã bỏ theo dõi truyện." });
+                }
+                return Json(new { success = false, message = "Không thể theo dõi truyện." });
             }
             catch (Exception ex)
             {
@@ -138,5 +150,6 @@ namespace StoryWeb.Controllers
 
             return RedirectToAction("StoryInfo", "Story", new { id = storyId });
         }
+
     }
 }
