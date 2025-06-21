@@ -21,11 +21,11 @@ namespace WebStoryService.Models.Repositories
                         .AsQueryable();
                     if (categoryId.HasValue && categoryId.Value != 0)
                     {
-                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value&&s.C_active==1);
+                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1);
                     }
                     else
                     {
-                        query = query.Where(s =>  s.C_active == 1);
+                        query = query.Where(s => s.C_active == 1);
                     }
                     list = query
                         .OrderBy(s => s.C_id)
@@ -56,7 +56,8 @@ namespace WebStoryService.Models.Repositories
             }
             return list;
         }
-        public List<Story> GetAll(int? categoryId=null)
+
+        public List<Story> GetAll(int? categoryId = null)
         {
             List<Story> list = new List<Story>();
             try
@@ -68,13 +69,13 @@ namespace WebStoryService.Models.Repositories
                        .AsQueryable();
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
-                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value&&s.C_active==1);
+                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1);
                 }
                 else
                 {
                     query = query.Where(s => s.C_active == 1);
                 }
-                var item = query.Select(s=>new Story
+                var item = query.Select(s => new Story
                 {
                     Id = s.C_id,
                     Title = s.C_title,
@@ -91,7 +92,7 @@ namespace WebStoryService.Models.Repositories
                     AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
                     CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
                 }).ToList();
-                if(item != null)
+                if (item != null)
                 {
                     list = item;
                 }
@@ -101,13 +102,15 @@ namespace WebStoryService.Models.Repositories
             }
             return list;
         }
-        public int checkCategory(int categoryId=0)
+
+        public int checkCategory(int categoryId = 0)
         {
             try
             {
-                if (categoryId != 0) { 
+                if (categoryId != 0)
+                {
                     DbEntities en = new DbEntities();
-                    var q = en.tbl_story.Any(d=>d.C_category_id == categoryId);
+                    var q = en.tbl_story.Any(d => d.C_category_id == categoryId);
                     if (q)
                     {
                         return 1;
@@ -119,6 +122,7 @@ namespace WebStoryService.Models.Repositories
             }
             return 0;
         }
+
         public Story GetById(int id)
         {
             try
@@ -156,6 +160,7 @@ namespace WebStoryService.Models.Repositories
                 return null;
             }
         }
+
         public int Create(Story story)
         {
             try
@@ -180,9 +185,11 @@ namespace WebStoryService.Models.Repositories
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error in Create: {ex.Message}");
             }
             return 0;
         }
+
         public bool Delete(int id)
         {
             try
@@ -192,7 +199,7 @@ namespace WebStoryService.Models.Repositories
                     var story = db.tbl_story.FirstOrDefault(s => s.C_id == id);
                     if (story != null)
                     {
-                        story.C_active = 0; // Xóa mềm bằng cách đặt _active = 0
+                        story.C_active = 0; // Xóa mềm
                         db.SaveChanges();
                         System.Diagnostics.Debug.WriteLine($"Successfully soft-deleted story ID {id}.");
                         return true;
@@ -205,6 +212,29 @@ namespace WebStoryService.Models.Repositories
             {
                 System.Diagnostics.Debug.WriteLine($"Error in Delete: {ex.Message}");
                 return false;
+            }
+        }
+
+        public int Update(Story story)
+        {
+            try
+            {
+                using (var db = new DbEntities())
+                {
+                    var entity = db.tbl_story.FirstOrDefault(s => s.C_id == story.Id);
+                    if (entity != null)
+                    {
+                        entity.C_chapter_number = story.ChapterNumber;
+                        db.SaveChanges();
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in Update: {ex.Message}");
+                return 0;
             }
         }
     }

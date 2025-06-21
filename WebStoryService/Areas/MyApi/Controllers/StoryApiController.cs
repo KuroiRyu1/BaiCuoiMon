@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebStoryService.Models.Entities;
 using WebStoryService.Models.ModelData;
 using WebStoryService.Models.Repositories;
 
@@ -26,10 +25,10 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             catch (Exception ex)
             {
+                return new List<Story>();
             }
-
-            return new List<Story>();
         }
+
         [Route("getall")]
         [HttpGet]
         public HttpResponseMessage GetAll()
@@ -44,9 +43,10 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
         }
+
         [HttpGet]
         [Route("getall/cate")]
-        public List<Story> getAll(int? cateId=null)
+        public List<Story> getAll(int? cateId = null)
         {
             var story = new List<Story>();
             try
@@ -63,6 +63,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             }
             return story;
         }
+
         [Route("get/{id}")]
         [HttpGet]
         public HttpResponseMessage GetById(int id)
@@ -81,6 +82,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
         }
+
         [Route("post")]
         [HttpPost]
         public HttpResponseMessage Post(Story story)
@@ -95,11 +97,40 @@ namespace WebStoryService.Areas.MyApi.Controllers
                         return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Truyện đã được thêm thành công." });
                     }
                 }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
             }
             catch (Exception ex)
             {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
             }
-            return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
+        }
+
+        [Route("put")]
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody] Story story)
+        {
+            try
+            {
+                if (story != null && story.Id != 0)
+                {
+                    using (var db = new DbEntities())
+                    {
+                        var entity = db.tbl_story.FirstOrDefault(s => s.C_id == story.Id);
+                        if (entity != null)
+                        {
+                            entity.C_chapter_number = story.ChapterNumber;
+                            db.SaveChanges();
+                            return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Cập nhật số chương thành công." });
+                        }
+                        return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
+                    }
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error: {ex.Message}");
+            }
         }
 
         [Route("delete")]

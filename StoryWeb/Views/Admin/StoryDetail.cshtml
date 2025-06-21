@@ -1,4 +1,5 @@
-﻿@{
+﻿@model StoryWeb.Models.ModelView.Story
+@{
     ViewBag.Title = "Chi tiết truyện";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     var story = ViewBag.Story as StoryWeb.Models.ModelView.Story;
@@ -10,6 +11,10 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
     }
 
     @if (story != null)
@@ -67,9 +72,14 @@
             </div>
         </div>
 
-        <!-- Danh sách chapter -->
+        <!-- Danh sách chương -->
         <div class="mt-4">
-            <h4>Danh sách chương</h4>
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>Danh sách chương</h4>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addChapterModal">
+                    <i class="fas fa-plus"></i> Thêm chương
+                </button>
+            </div>
             <div class="card shadow">
                 <div class="card-body">
                     @if (chapters.Any())
@@ -118,9 +128,99 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Thêm Chương -->
+        <div class="modal fade" id="addChapterModal" tabindex="-1" aria-labelledby="addChapterModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addChapterModalLabel">Thêm Chương Mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addChapterForm" method="post" enctype="multipart/form-data" action="@Url.Action("ChapterCreateConfirm", "Admin", new { storyId = story.Id })">
+                            <div class="mb-3">
+                                <label for="chapterTitle" class="form-label">Tiêu đề chương</label>
+                                <input type="text" class="form-control" id="chapterTitle" name="Title" required placeholder="Nhập tiêu đề chương">
+                            </div>
+                            <div class="mb-3">
+                                <label for="chapterType" class="form-label">Loại chương</label>
+                                <select class="form-select" id="chapterType" name="ChapterType" required>
+                                    <option value="text">Truyện chữ</option>
+                                    <option value="image">Truyện ảnh</option>
+                                </select>
+                            </div>
+                            <div id="textContentSection" class="mb-3">
+                                <label for="chapterContent" class="form-label">Nội dung chương</label>
+                                <textarea class="form-control" id="chapterContent" name="Content" rows="10" placeholder="Nhập nội dung chương"></textarea>
+                            </div>
+                            <div id="imageUploadSection" class="mb-3 d-none">
+                                <label for="chapterImages" class="form-label">Upload ảnh chương</label>
+                                <input type="file" class="form-control" id="chapterImages" name="Images" accept="image/*" multiple>
+                                <div id="imagePreview" class="mt-3"></div>
+                            </div>
+                            <input type="hidden" name="StoryId" value="@story.Id" />
+                            <input type="hidden" name="ChapterIndex" id="chapterIndex" value="@(chapters.Any() ? chapters.Max(c => c.ChapterIndex) + 1 : 1)" />
+                            <button type="submit" class="btn btn-primary">Lưu chương</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
     else
     {
         <div class="alert alert-warning text-center">Không tìm thấy thông tin truyện.</div>
     }
 </main>
+
+@section Scripts {
+    <script>
+        // Xử lý combobox loại chương
+        document.getElementById('chapterType').addEventListener('change', function () {
+            const textSection = document.getElementById('textContentSection');
+            const imageSection = document.getElementById('imageUploadSection');
+            if (this.value === 'text') { // Truyện chữ
+                textSection.classList.remove('d-none');
+                imageSection.classList.add('d-none');
+                document.getElementById('chapterImages').removeAttribute('required');
+                document.getElementById('chapterContent').setAttribute('required', '');
+            } else { // Truyện ảnh
+                textSection.classList.add('d-none');
+                imageSection.classList.remove('d-none');
+                document.getElementById('chapterImages').setAttribute('required', '');
+                document.getElementById('chapterContent').removeAttribute('required');
+            }
+        });
+
+        // Xem trước ảnh khi upload
+        let imageIndex = 1;
+        document.getElementById('chapterImages').addEventListener('change', function (e) {
+            const previewContainer = document.getElementById('imagePreview');
+            const files = e.target.files;
+            for (let file of files) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.className = 'd-inline-block m-2 position-relative';
+                    imgWrapper.innerHTML = `
+                            <img src="${event.target.result}" alt="Preview" style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                            <span class="badge bg-primary position-absolute top-0 start-100 translate-middle">Trang ${imageIndex}</span>
+                        `;
+                    previewContainer.appendChild(imgWrapper);
+                    imageIndex++;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+    <style>
+        #imagePreview img {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+    </style>
+}

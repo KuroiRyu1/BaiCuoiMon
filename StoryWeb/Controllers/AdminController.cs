@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-
-
 namespace StoryWeb.Controllers
 {
     public class AdminController : Controller
@@ -21,13 +19,14 @@ namespace StoryWeb.Controllers
         {
             return View();
         }
+
         public async Task<ActionResult> UserList()
         {
             var user = await UserRep.Instance.GetUser();
             ViewBag.user = user ?? new List<User>();
             return View();
-
         }
+
         public async Task<ActionResult> StoryList()
         {
             try
@@ -81,6 +80,8 @@ namespace StoryWeb.Controllers
                 {
                     client.BaseAddress = new Uri("http://localhost:8078/");
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("username", "admin");
+                    client.DefaultRequestHeaders.Add("tk", "12345");
 
                     // Lấy thông tin truyện
                     var storyResponse = await client.GetAsync($"story/get/{id}");
@@ -122,245 +123,356 @@ namespace StoryWeb.Controllers
 
         public ActionResult ChapterCreate(int storyId)
         {
-            return View(new Chapter { StoryId = storyId });
+            ViewBag.StoryId = storyId;
+            return View(new Chapter());
         }
 
         [HttpPost]
-        public async Task<ActionResult> ChapterCreateConfirm(Chapter chapter, HttpPostedFileBase[] images)
+        public async Task<ActionResult> ChapterCreateConfirm(int storyId, Chapter chapter, string ChapterType, HttpPostedFileBase[] Images)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && chapter != null)
             {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078/");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-
-                using (var content = new MultipartFormDataContent())
+                try
                 {
-                    content.Add(new StringContent(chapter.Title), "title");
-                    content.Add(new StringContent(chapter.Content), "content");
-                    content.Add(new StringContent(chapter.StoryId.ToString()), "storyId");
-
-                    if (images != null && images.Length > 0)
+                    using (var client = new HttpClient())
                     {
-                        foreach (var image in images)
+                        client.BaseAddress = new Uri("http://localhost:8078/");
+                        client.DefaultRequestHeaders.Add("Accept", "application/json");
+                        client.DefaultRequestHeaders.Add("username", "admin");
+                        client.DefaultRequestHeaders.Add("tk", "12345");
+
+                        // Lấy danh sách chương để kiểm tra trùng tên và tính C_chapter_number
+                        var chaptersResponse = await client.GetAsync($"api/chapters/{storyId}");
+                        List<Chapter> chapters = new List<Chapter>();
+                        if (chaptersResponse.IsSuccessStatusCode)
                         {
-                            if (image != null && image.ContentLength > 0)
+                            chapters = await chaptersResponse.Content.ReadAsAsync<List<Chapter>>();
+                            if (chapters.Any(c => c.Title.ToLower() == chapter.Title.ToLower()))
                             {
-                                var streamContent = new StreamContent(image.InputStream);
-                                streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                                {
-                                    Name = "images",
-                                    FileName = image.FileName
-                                };
-                                content.Add(streamContent);
+                                TempData["Error"] = "Tên chương đã tồn tại.";
+                                return RedirectToAction("StoryDetail", new { id = storyId });
                             }
                         }
-                    }
+                        else
+                        {
+                            TempData["Error"] = "Lỗi khi kiểm tra tên chương. Vui lòng thử lại.";
+                            return RedirectToAction("StoryDetail", new { id = storyId });
+                        }
 
-                    var response = await client.PostAsync("api/chapters", content);
-                    var uploadResponse = await client.PostAsync($"api/chapter-images/upload?ChapterId={chapter.StoryId}", content);
-                    if (response.IsSuccessStatusCode && uploadResponse.IsSuccessStatusCode)
-                    {
+                        // Lấy thông tin truyện để tạo thư mục
+                        var storyResponse = await client.GetAsync($"story/get/{storyId}");
+                        if (!storyResponse.IsSuccessStatusCode)
+                        {
+                            TempData["Error"] = "Không tìm thấy truyện.";
+                            return RedirectToAction("StoryDetail", new { id = storyId });
+                        }
+                        var story = await storyResponse.Content.ReadAsAsync<Story>();
+                        string storyFolder = Function.ConvertToUnsign(story.Title).Trim();
+                        string chapterFolder = Function.ConvertToUnsign(chapter.Title).Trim();
+                        string chapterPath = Server.MapPath($"~/Content/Image/{storyFolder}/{chapterFolder}");
+
+                        // Tạo chương mới qua API
+                        var chapterData = new
+                        {
+                            C_title = chapter.Title,
+                            C_content = ChapterType == "text" ? chapter.Content : null,
+                            C_story_id = storyId,
+                            C_chapter_index = chapter.ChapterIndex,
+                            C_active = 1,
+                            C_day_create = DateTime.Now
+                        };
+                        var chapterContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(chapterData), System.Text.Encoding.UTF8, "application/json");
+                        var chapterResponse = await client.PostAsync("api/chapters", chapterContent);
+                        if (!chapterResponse.IsSuccessStatusCode)
+                        {
+                            TempData["Error"] = $"Lỗi khi tạo chương: {await chapterResponse.Content.ReadAsStringAsync()}";
+                            return RedirectToAction("StoryDetail", new { id = storyId });
+                        }
+                        var newChapterId = await chapterResponse.Content.ReadAsAsync<int>();
+
+                        // Nếu là truyện ảnh, lưu ảnh trực tiếp và gửi danh sách đường dẫn qua API
+                        if (ChapterType == "image" && Images != null && Images.Any(i => i != null))
+                        {
+                            Directory.CreateDirectory(chapterPath);
+                            var imageList = new List<object>();
+                            int index = 1;
+                            foreach (var image in Images.Where(i => i != null))
+                            {
+                                if (image.ContentLength > 0)
+                                {
+                                    var fileExtension = Path.GetExtension(image.FileName);
+                                    var fileName = $"{index}{fileExtension}";
+                                    var fullPath = Path.Combine(chapterPath, fileName);
+                                    image.SaveAs(fullPath);
+
+                                    // Thêm vào danh sách ảnh để gửi qua API
+                                    var imagePath = $"images/chapters/{newChapterId}/{fileName}";
+                                    if (imagePath.Length > 50)
+                                    {
+                                        TempData["Error"] = $"Đường dẫn ảnh {imagePath} vượt quá 50 ký tự.";
+                                        return RedirectToAction("StoryDetail", new { id = storyId });
+                                    }
+                                    imageList.Add(new
+                                    {
+                                        C_image = imagePath,
+                                        C_index = index,
+                                        C_chapter_id = newChapterId
+                                    });
+                                    index++;
+                                }
+                            }
+
+                            // Gửi danh sách ảnh qua API
+                            if (imageList.Any())
+                            {
+                                var imageContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(imageList), System.Text.Encoding.UTF8, "application/json");
+                                var imageResponse = await client.PostAsync("api/chapter-images/add-multiple", imageContent);
+                                if (!imageResponse.IsSuccessStatusCode)
+                                {
+                                    TempData["Error"] = $"Lỗi khi thêm ảnh chương: {await imageResponse.Content.ReadAsStringAsync()}";
+                                    return RedirectToAction("StoryDetail", new { id = storyId });
+                                }
+                            }
+                        }
+
+                        // Cập nhật số chương trong bảng tbl_story
+                        var storyUpdate = new { Id = storyId, C_chapter_number = chapters.Any() ? chapters.Max(c => c.ChapterIndex) + 1 : 1 };
+                        var storyContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(storyUpdate), System.Text.Encoding.UTF8, "application/json");
+                        var storyResponseUpdate = await client.PutAsync("story/put", storyContent);
+                        if (!storyResponseUpdate.IsSuccessStatusCode)
+                        {
+                            TempData["Error"] = $"Lỗi khi cập nhật số chương: {await storyResponseUpdate.Content.ReadAsStringAsync()}";
+                            return RedirectToAction("StoryDetail", new { id = storyId });
+                        }
+
                         TempData["Success"] = "Thêm chương thành công!";
-                        return RedirectToAction("StoryDetail", new { id = chapter.StoryId });
+                        return RedirectToAction("StoryDetail", new { id = storyId });
                     }
                 }
-            }
-            TempData["Error"] = "Thêm chương thất bại!";
-            return View("ChapterCreate", chapter);
-        }
-
-
-
-        [HttpPost]
-        public async Task<ActionResult> ChapterEditConfirm(Chapter chapter, HttpPostedFileBase[] images)
-        {
-            if (ModelState.IsValid)
-            {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078/");
-                client.DefaultRequestHeaders.Add("username", "admin");
-                client.DefaultRequestHeaders.Add("pwd", "123");
-                client.DefaultRequestHeaders.Add("tk", "12345");
-
-                using (var content = new MultipartFormDataContent())
+                catch (Exception ex)
                 {
-                    content.Add(new StringContent(chapter.Id.ToString()), "id");
-                    content.Add(new StringContent(chapter.Title), "title");
-                    content.Add(new StringContent(chapter.Content), "content");
-
-                    if (images != null && images.Length > 0)
-                    {
-                        foreach (var image in images)
-                        {
-                            if (image != null && image.ContentLength > 0)
-                            {
-                                var streamContent = new StreamContent(image.InputStream);
-                                streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                                {
-                                    Name = "images",
-                                    FileName = image.FileName
-                                };
-                                content.Add(streamContent);
-                            }
-                        }
-                    }
-
-                    var response = await client.PutAsync($"api/chapters/{chapter.Id}", content);
-                    var uploadResponse = await client.PostAsync($"api/chapter-images/upload?ChapterId={chapter.Id}", content);
-                    if (response.IsSuccessStatusCode && uploadResponse.IsSuccessStatusCode)
-                    {
-                        TempData["Success"] = "Cập nhật chương thành công!";
-                        return RedirectToAction("StoryDetail", new { id = chapter.StoryId });
-                    }
+                    TempData["Error"] = $"Lỗi khi thêm chương: {ex.Message}";
+                    return RedirectToAction("StoryDetail", new { id = storyId });
                 }
             }
-            TempData["Error"] = "Cập nhật chương thất bại!";
-            return View("ChapterEdit", chapter);
+            TempData["Error"] = "Dữ liệu không hợp lệ.";
+            return RedirectToAction("StoryDetail", new { id = storyId });
         }
 
         public async Task<ActionResult> ChapterDelete(int storyId, int chapterId)
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.DeleteAsync($"api/chapters/{chapterId}");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                TempData["Success"] = "Xóa chương thành công!";
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("username", "admin");
+                    client.DefaultRequestHeaders.Add("tk", "12345");
+                    var response = await client.DeleteAsync($"api/chapters/{chapterId}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["Success"] = "Xóa chương thành công!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = $"Xóa chương thất bại: {await response.Content.ReadAsStringAsync()}";
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "Xóa chương thất bại!";
+                TempData["Error"] = $"Lỗi khi xóa chương: {ex.Message}";
             }
             return RedirectToAction("StoryDetail", new { id = storyId });
         }
 
         public async Task<ActionResult> DeleteImage(int chapterId, long imageId)
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8078/");
-            client.DefaultRequestHeaders.Add("username", "admin");
-            client.DefaultRequestHeaders.Add("tk", "12345");
-            var response = await client.DeleteAsync($"api/chapter-images/{imageId}");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                TempData["Success"] = "Xóa ảnh thành công!";
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("username", "admin");
+                    client.DefaultRequestHeaders.Add("tk", "12345");
+                    var response = await client.DeleteAsync($"api/chapter-images/{imageId}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["Success"] = "Xóa ảnh thành công!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = $"Xóa ảnh thất bại: {await response.Content.ReadAsStringAsync()}";
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "Xóa ảnh thất bại!";
+                TempData["Error"] = $"Lỗi khi xóa ảnh: {ex.Message}";
             }
             return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
         }
 
         public async Task<ActionResult> UpdateImage(int chapterId, long imageId, HttpPostedFileBase image)
         {
-            if (image != null && image.ContentLength > 0)
+            try
             {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078/");
-
-
-                using (var content = new MultipartFormDataContent())
+                if (image != null && image.ContentLength > 0)
                 {
-                    var streamContent = new StreamContent(image.InputStream);
-                    streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                    using (var client = new HttpClient())
                     {
-                        Name = "image",
-                        FileName = image.FileName
-                    };
-                    content.Add(streamContent);
+                        client.BaseAddress = new Uri("http://localhost:8078/");
+                        client.DefaultRequestHeaders.Add("Accept", "application/json");
+                        client.DefaultRequestHeaders.Add("username", "admin");
+                        client.DefaultRequestHeaders.Add("tk", "12345");
 
-                    var response = await client.PutAsync($"api/chapter-images/{imageId}", content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        TempData["Success"] = "Cập nhật ảnh thành công!";
-                    }
-                    else
-                    {
-                        TempData["Error"] = "Cập nhật ảnh thất bại!";
+                        using (var content = new MultipartFormDataContent())
+                        {
+                            var streamContent = new StreamContent(image.InputStream);
+                            streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                            {
+                                Name = "image",
+                                FileName = image.FileName
+                            };
+                            content.Add(streamContent);
+
+                            var response = await client.PutAsync($"api/chapter-images/{imageId}", content);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                TempData["Success"] = "Cập nhật ảnh thành công!";
+                            }
+                            else
+                            {
+                                TempData["Error"] = $"Cập nhật ảnh thất bại: {await response.Content.ReadAsStringAsync()}";
+                            }
+                        }
                     }
                 }
+                else
+                {
+                    TempData["Error"] = "Không có ảnh được chọn.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi cập nhật ảnh: {ex.Message}";
             }
             return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
         }
 
-
         public async Task<ActionResult> CategoryList(string name = "")
         {
             var cateList = new List<Category>();
-            if (string.IsNullOrEmpty(name))
+            try
             {
-                cateList = await CategoryRep.Instance.getCatesAdmin();
+                if (string.IsNullOrEmpty(name))
+                {
+                    cateList = await CategoryRep.Instance.getCatesAdmin();
+                }
+                else
+                {
+                    cateList = await CategoryRep.Instance.Search(name);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                cateList = await CategoryRep.Instance.Search(name);
+                TempData["Error"] = $"Lỗi khi tải danh sách danh mục: {ex.Message}";
             }
-
             ViewBag.cateList = cateList;
             return View();
         }
+
         public ActionResult CateCreate()
         {
             return View();
         }
-        public async Task<ActionResult> cateCreateConfirm(Category cate)
+
+        public async Task<ActionResult> CateCreateConfirm(Category cate)
         {
-            if (cate != null)
+            try
             {
-                await CategoryRep.Instance.addCates(cate);
+                if (cate != null)
+                {
+                    await CategoryRep.Instance.addCates(cate);
+                    TempData["Success"] = "Thêm danh mục thành công!";
+                }
+                else
+                {
+                    TempData["Error"] = "Dữ liệu danh mục không hợp lệ.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi thêm danh mục: {ex.Message}";
             }
             return RedirectToAction("CategoryList", "Admin");
         }
+
         public async Task<ActionResult> CateEdit(int id)
         {
             var item = await CategoryRep.Instance.getById(id);
             ViewBag.cate = item;
             return View();
-
         }
+
         public async Task<ActionResult> CateEditConfirm(Category cate)
         {
-            if (cate != null)
+            try
             {
-                int result = await CategoryRep.Instance.Edit(cate);
-                if (result == 1)
+                if (cate != null)
                 {
-                    TempData["Success"] = "Thay đổi thành công";
+                    int result = await CategoryRep.Instance.Edit(cate);
+                    if (result == 1)
+                    {
+                        TempData["Success"] = "Thay đổi danh mục thành công";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Thay đổi danh mục thất bại";
+                    }
                 }
                 else
                 {
-                    TempData["Error"] = "Thay đổi thất bại";
+                    TempData["Error"] = "Dữ liệu danh mục không hợp lệ.";
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi chỉnh sửa danh mục: {ex.Message}";
             }
             return RedirectToAction("CategoryList", "Admin");
         }
 
         public async Task<ActionResult> AddStory()
         {
-            var cate = await CategoryRep.Instance.getCates();
-            var status = await StatusRep.Instance.getAllStatus();
-            ViewBag.cate = cate;
-            ViewBag.status = status;
+            try
+            {
+                var cate = await CategoryRep.Instance.getCates();
+                var status = await StatusRep.Instance.getAllStatus();
+                ViewBag.cate = cate;
+                ViewBag.status = status;
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi tải dữ liệu: {ex.Message}";
+            }
             return View();
         }
+
         public async Task<ActionResult> AddStoryConfirm(HttpPostedFileBase Img, Story story)
         {
-            if (story != null)
+            try
             {
-                string name = Function.ConvertToUnsign(story.Title);
-                try
+                if (story != null)
                 {
-                    if (Img != null)
+                    string name = Function.ConvertToUnsign(story.Title).Trim();
+                    if (Img != null && Img.ContentLength > 0)
                     {
-                        string newFileName = $"{name.Trim()}{Img.FileName}";
-                        string fullPathSave = $"{Server.MapPath(Url.Content($"~/content/Image/{name.Trim()}"))}\\{newFileName}";
-                        string createFolder = Server.MapPath(Url.Content($"~/content/Image/{name.Trim()}"));
+                        string newFileName = $"{name}{Path.GetExtension(Img.FileName)}";
+                        string fullPathSave = Path.Combine(Server.MapPath($"~/Content/Image/{name}"), newFileName);
+                        string createFolder = Server.MapPath($"~/Content/Image/{name}");
                         if (!Directory.Exists(createFolder))
                         {
                             Directory.CreateDirectory(createFolder);
@@ -368,15 +480,33 @@ namespace StoryWeb.Controllers
                         Img.SaveAs(fullPathSave);
                         story.Image = newFileName;
                         var result = await StoryRep.Instance.AddStory(story);
+                        if (result == 1)
+                        {
+                            TempData["Success"] = "Thêm truyện thành công!";
+                        }
+                        else
+                        {
+                            TempData["Error"] = "Lỗi khi thêm truyện.";
+                        }
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Vui lòng chọn ảnh bìa.";
                     }
                 }
-                catch (Exception ex)
+                else
                 {
+                    TempData["Error"] = "Dữ liệu truyện không hợp lệ.";
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi thêm truyện: {ex.Message}";
             }
             return RedirectToAction("StoryList", "Admin");
         }
-        public async Task<ActionResult> ChangeUserRole(int id=0)
+
+        public async Task<ActionResult> ChangeUserRole(int id = 0)
         {
             try
             {
@@ -389,27 +519,46 @@ namespace StoryWeb.Controllers
                 {
                     ViewBag.user = userGet;
                 }
+                else
+                {
+                    TempData["Error"] = "Không tìm thấy người dùng.";
+                }
             }
             catch (Exception ex)
             {
+                TempData["Error"] = $"Lỗi khi tải thông tin người dùng: {ex.Message}";
             }
             return View();
         }
+
         public async Task<ActionResult> ChangeUserRoleConfirm(User user)
         {
             try
             {
-                if(user != null)
+                if (user != null)
                 {
-                   int result = await UserRep.Instance.ChangeUserRole(user);
+                    int result = await UserRep.Instance.ChangeUserRole(user);
+                    if (result == 1)
+                    {
+                        TempData["Success"] = "Thay đổi vai trò thành công!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Thay đổi vai trò thất bại.";
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Dữ liệu người dùng không hợp lệ.";
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                TempData["Error"] = $"Lỗi khi thay đổi vai trò: {ex.Message}";
             }
             return RedirectToAction("UserList", "Admin");
         }
+
         public async Task<ActionResult> BanOrUnbanUser(User user)
         {
             try
@@ -425,21 +574,54 @@ namespace StoryWeb.Controllers
                         user.Active = 0;
                     }
                     int result = await UserRep.Instance.BanOrUnBan(user);
+                    if (result == 1)
+                    {
+                        TempData["Success"] = "Thay đổi trạng thái người dùng thành công!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Thay đổi trạng thái người dùng thất bại.";
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Dữ liệu người dùng không hợp lệ.";
                 }
             }
             catch (Exception ex)
             {
+                TempData["Error"] = $"Lỗi khi thay đổi trạng thái người dùng: {ex.Message}";
             }
             return RedirectToAction("UserList", "Admin");
         }
+
         public async Task<ActionResult> CategoryDelete(int id)
         {
-            Category cate = await CategoryRep.Instance.getById(id);
-            if (cate != null)
+            try
             {
-                int a = await CategoryRep.Instance.Delete(cate);
+                Category cate = await CategoryRep.Instance.getById(id);
+                if (cate != null)
+                {
+                    int result = await CategoryRep.Instance.Delete(cate);
+                    if (result == 1)
+                    {
+                        TempData["Success"] = "Xóa danh mục thành công!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Xóa danh mục thất bại.";
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Không tìm thấy danh mục.";
+                }
             }
-            return RedirectToAction("CategoryList","Admin");
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi xóa danh mục: {ex.Message}";
+            }
+            return RedirectToAction("CategoryList", "Admin");
         }
     }
 }

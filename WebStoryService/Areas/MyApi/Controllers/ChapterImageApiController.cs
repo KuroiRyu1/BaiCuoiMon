@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -39,6 +40,87 @@ namespace WebStoryService.Areas.MyApi.Controllers
                     .ToList();
 
                 return Ok(images);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("add")]
+        public async Task<IHttpActionResult> AddImage([FromBody] tbl_chapter_image image)
+        {
+            try
+            {
+                if (image == null || string.IsNullOrEmpty(image.C_image) || image.C_chapter_id == 0)
+                    return BadRequest("Dữ liệu ảnh không hợp lệ.");
+
+                if (image.C_image.Length > 50)
+                    return BadRequest($"Đường dẫn ảnh vượt quá 50 ký tự: {image.C_image}");
+
+                if (!_db.tbl_chapter.Any(c => c.C_id == image.C_chapter_id))
+                    return NotFound();
+
+                // Kiểm tra unique constraint
+                if (_db.tbl_chapter_image.Any(i => i.C_chapter_id == image.C_chapter_id && i.C_index == image.C_index))
+                    return BadRequest($"Chỉ số ảnh {image.C_index} đã tồn tại cho chương {image.C_chapter_id}.");
+
+                _db.tbl_chapter_image.Add(image);
+                await _db.SaveChangesAsync();
+
+                return Ok(new { Message = "Thêm ảnh thành công", ImageId = image.C_id });
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                var errors = ex.EntityValidationErrors
+                    .SelectMany(e => e.ValidationErrors)
+                    .Select(e => $"{e.PropertyName}: {e.ErrorMessage}");
+                return InternalServerError(new Exception($"Validation failed: {string.Join("; ", errors)}"));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("add-multiple")]
+        public async Task<IHttpActionResult> AddMultipleImages([FromBody] List<tbl_chapter_image> images)
+        {
+            try
+            {
+                if (images == null || !images.Any())
+                    return BadRequest("Danh sách ảnh rỗng.");
+
+                if (images.Any(i => string.IsNullOrEmpty(i.C_image) || !i.C_chapter_id.HasValue))
+                    return BadRequest("Dữ liệu ảnh không hợp lệ: Một số ảnh thiếu đường dẫn hoặc chapter_id.");
+
+                if (images.Any(i => i.C_image.Length > 50))
+                    return BadRequest($"Một hoặc nhiều đường dẫn ảnh vượt quá 50 ký tự: {string.Join(", ", images.Where(i => i.C_image.Length > 50).Select(i => i.C_image))}");
+
+                int chapterId = images.First().C_chapter_id.Value;
+                if (!_db.tbl_chapter.Any(c => c.C_id == chapterId))
+                    return NotFound();
+
+                // Kiểm tra unique constraint
+                foreach (var image in images)
+                {
+                    if (_db.tbl_chapter_image.Any(i => i.C_chapter_id == image.C_chapter_id && i.C_index == image.C_index))
+                        return BadRequest($"Chỉ số ảnh {image.C_index} đã tồn tại cho chương {image.C_chapter_id}.");
+                }
+
+                _db.tbl_chapter_image.AddRange(images);
+                await _db.SaveChangesAsync();
+
+                return Ok(new { Message = "Thêm danh sách ảnh thành công", ImageCount = images.Count });
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                var errors = ex.EntityValidationErrors
+                    .SelectMany(e => e.ValidationErrors)
+                    .Select(e => $"{e.PropertyName}: {e.ErrorMessage}");
+                return InternalServerError(new Exception($"Validation failed: {string.Join("; ", errors)}"));
             }
             catch (Exception ex)
             {
@@ -89,8 +171,15 @@ namespace WebStoryService.Areas.MyApi.Controllers
                     _db.tbl_chapter_image.Add(newImage);
                 }
 
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return Ok(new { Message = "Upload ảnh thành công", LastIndex = nextIndex - 1 });
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                var errors = ex.EntityValidationErrors
+                    .SelectMany(e => e.ValidationErrors)
+                    .Select(e => $"{e.PropertyName}: {e.ErrorMessage}");
+                return InternalServerError(new Exception($"Validation failed: {string.Join("; ", errors)}"));
             }
             catch (Exception ex)
             {
