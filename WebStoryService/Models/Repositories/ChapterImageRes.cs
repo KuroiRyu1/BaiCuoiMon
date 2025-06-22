@@ -15,15 +15,17 @@ namespace WebStoryService.Models.Repositories
         {
             _db = db;
         }
-        public ChapterImageRes() { }
-        public List<ChapterImage> getImage(int chapterId) 
+        public ChapterImageRes()
         {
-            DbEntities _db = new DbEntities();
+            _db = new DbEntities();
+        }
+        public List<ChapterImage> getImage(int chapterId)
+        {
             List<ChapterImage> res = new List<ChapterImage>();
             try
             {
-                var item = _db.tbl_chapter_image.Where(d=>d.C_chapter_id==chapterId)
-                    .Select(d=> new ChapterImage
+                var item = _db.tbl_chapter_image.Where(d => d.C_chapter_id == chapterId)
+                    .Select(d => new ChapterImage
                     {
                         Id = d.C_id,
                         ChapterId = chapterId,
@@ -37,6 +39,7 @@ namespace WebStoryService.Models.Repositories
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error in getImage: {ex.Message}");
             }
             return res;
         }
@@ -72,6 +75,38 @@ namespace WebStoryService.Models.Repositories
                 chapterId,
                 deletedIndex
             );
+        }
+
+        public bool UpdateImagePaths(List<tbl_chapter_image> images)
+        {
+            try
+            {
+                if (images == null || !images.Any())
+                {
+                    System.Diagnostics.Debug.WriteLine("UpdateImagePaths: Empty image list.");
+                    return false;
+                }
+
+                foreach (var image in images)
+                {
+                    var existingImage = _db.tbl_chapter_image.Find(image.C_id);
+                    if (existingImage == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"UpdateImagePaths: Image ID {image.C_id} not found.");
+                        return false;
+                    }
+                    existingImage.C_image = image.C_image;
+                }
+
+                _db.SaveChanges();
+                System.Diagnostics.Debug.WriteLine($"UpdateImagePaths: Updated {images.Count} image paths.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in UpdateImagePaths: {ex.Message}");
+                return false;
+            }
         }
     }
 }

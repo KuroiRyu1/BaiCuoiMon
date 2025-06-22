@@ -1,0 +1,149 @@
+﻿@model StoryWeb.Models.ModelView.Story
+@{
+    ViewBag.Title = "Chỉnh sửa truyện";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var categories = ViewBag.cate as List<StoryWeb.Models.ModelView.Category> ?? new List<StoryWeb.Models.ModelView.Category>();
+    var statuses = ViewBag.status as List<StoryWeb.Models.ModelView.Status> ?? new List<StoryWeb.Models.ModelView.Status>();
+    var authors = ViewBag.authors as List<StoryWeb.Models.ModelView.Author> ?? new List<StoryWeb.Models.ModelView.Author>();
+    var storyTypes = ViewBag.storyTypes as List<StoryWeb.Models.ModelView.StoryType> ?? new List<StoryWeb.Models.ModelView.StoryType>();
+}
+
+<main class="container-fluid pt-4">
+    <h2 class="mb-4">Chỉnh sửa truyện: @Model.Title</h2>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông tin truyện</h5>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("StoryEditConfirm", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation", novalidate = true }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <!-- Thông tin truyện -->
+                        <div class="mb-4">
+                            <h6 class="mb-3">Thông tin cơ bản</h6>
+                            <div class="mb-3">
+                                <label for="Title" class="form-label">
+                                    Tiêu đề <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Nhập tiêu đề truyện, tối đa 200 ký tự."></i>
+                                </label>
+                                @Html.TextBoxFor(m => m.Title, new { @class = "form-control", required = "required", placeholder = "Nhập tiêu đề truyện" })
+                                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mb-3">
+                                <label for="AuthorId" class="form-label">
+                                    Tác giả <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Chọn tác giả từ danh sách."></i>
+                                </label>
+                                @Html.DropDownListFor(m => m.AuthorId, new SelectList(authors, "Id", "Name", Model.AuthorId), "Chọn tác giả", new { @class = "form-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.AuthorId, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="CategoryId" class="form-label">
+                                        Thể loại <span class="text-danger">*</span>
+                                    </label>
+                                    @Html.DropDownListFor(m => m.CategoryId, new SelectList(categories, "Id", "Name", Model.CategoryId), "Chọn thể loại", new { @class = "form-select", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="StatusId" class="form-label">
+                                        Trạng thái <span class="text-danger">*</span>
+                                    </label>
+                                    @Html.DropDownListFor(m => m.StatusId, new SelectList(statuses, "Id", "Title", Model.StatusId), "Chọn trạng thái", new { @class = "form-select", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.StatusId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="StoryTypeId" class="form-label">
+                                    Loại truyện <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Chọn loại truyện từ danh sách."></i>
+                                </label>
+                                @Html.DropDownListFor(m => m.StoryTypeId, new SelectList(storyTypes, "Id", "Title", Model.StoryTypeId), "Chọn loại truyện", new { @class = "form-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.StoryTypeId, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mb-3">
+                                <label for="Introduction" class="form-label">
+                                    Giới thiệu
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Nhập giới thiệu truyện, tối đa 500 ký tự (tùy chọn)."></i>
+                                </label>
+                                @Html.TextAreaFor(m => m.Introduction, new { @class = "form-control", rows = "5", placeholder = "Nhập giới thiệu truyện (tùy chọn)" })
+                                @Html.ValidationMessageFor(m => m.Introduction, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Ảnh bìa -->
+                        <div class="mb-4">
+                            <h6 class="mb-3">Ảnh bìa</h6>
+                            @if (!string.IsNullOrEmpty(Model.Image))
+                            {
+                                var absolutePath = Server.MapPath($"~/{Model.Image}");
+                                if (System.IO.File.Exists(absolutePath))
+                                {
+                                    <div class="mb-3">
+                                        <label class="form-label">Ảnh bìa hiện tại</label>
+                                        <div>
+                                            <img src="@Url.Content($"~/{Model.Image}")" alt="Ảnh bìa hiện tại" class="img-fluid" style="max-width: 200px; max-height: 200px;">
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <div class="mb-3">
+                                <label for="Img" class="form-label">
+                                    Chọn ảnh bìa mới (tùy chọn)
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Chọn file ảnh (JPG, PNG) để thay thế ảnh bìa hiện tại."></i>
+                                </label>
+                                <input type="file" id="Img" name="Img" class="form-control" accept="image/*">
+                                <div id="imagePreview" class="mt-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Nút hành động -->
+                        <div class="d-flex justify-content-end">
+                            <a href="@Url.Action("StoryDetail", "Admin", new { id = Model.Id })" class="btn btn-secondary me-2">Hủy</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        // Xem trước ảnh bìa mới
+        document.getElementById('Img').addEventListener('change', function (e) {
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = ''; // Xóa ảnh cũ
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'img-fluid rounded';
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    img.alt = 'Ảnh bìa xem trước';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

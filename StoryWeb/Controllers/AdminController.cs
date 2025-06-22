@@ -64,13 +64,210 @@ namespace StoryWeb.Controllers
 
         public async Task<ActionResult> StoryEdit(int id)
         {
-            return View();
+            try
+            {
+                var story = await StoryRep.Instance.GetStoryById(id);
+                if (story == null)
+                {
+                    TempData["Error"] = "Không tìm thấy truyện.";
+                    return RedirectToAction("StoryList");
+                }
+
+                var cate = await CategoryRep.Instance.getCates();
+                var status = await StatusRep.Instance.getAllStatus();
+                var authors = await AuthorRep.Instance.GetAuthors();
+                var storyTypes = await StoryTypeRep.Instance.GetStoryTypes();
+                ViewBag.cate = cate;
+                ViewBag.status = status;
+                ViewBag.authors = authors;
+                ViewBag.storyTypes = storyTypes;
+
+                return View(story);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi tải thông tin truyện: {ex.Message}";
+                return RedirectToAction("StoryList");
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult> StoryEditConfirm(Story item)
+        public async Task<ActionResult> StoryEditConfirm(HttpPostedFileBase Img, Story story)
         {
-            return View("StoryEdit", item);
+            try
+            {
+                // Kiểm tra các trường bắt buộc
+                if (story == null ||
+                    string.IsNullOrEmpty(story.Title) ||
+                    story.AuthorId <= 0 ||
+                    story.CategoryId <= 0 ||
+                    story.StatusId <= 0 ||
+                    story.StoryTypeId <= 0 ||
+                    story.Id <= 0)
+                {
+                    TempData["Error"] = "Vui lòng điền đầy đủ các trường bắt buộc (Tiêu đề, Tác giả, Thể loại, Trạng thái, Loại truyện).";
+                    System.Diagnostics.Debug.WriteLine($"Validation failed: Id={story?.Id}, Title={story?.Title}, AuthorId={story?.AuthorId}, CategoryId={story?.CategoryId}, StatusId={story?.StatusId}, StoryTypeId={story?.StoryTypeId}");
+                    return RedirectToAction("StoryEdit", new { id = story.Id });
+                }
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("username", "admin");
+                    client.DefaultRequestHeaders.Add("tk", "12345");
+
+                    // Lấy thông tin truyện hiện tại để so sánh
+                    var currentStoryResponse = await client.GetAsync($"story/get/{story.Id}");
+                    if (!currentStoryResponse.IsSuccessStatusCode)
+                    {
+                        TempData["Error"] = $"Không thể tải thông tin truyện hiện tại: {await currentStoryResponse.Content.ReadAsStringAsync()}";
+                        return RedirectToAction("StoryEdit", new { id = story.Id });
+                    }
+                    var currentStory = await currentStoryResponse.Content.ReadAsAsync<Story>();
+                    if (currentStory == null)
+                    {
+                        TempData["Error"] = "Không tìm thấy truyện.";
+                        return RedirectToAction("StoryEdit", new { id = story.Id });
+                    }
+
+                    // Xử lý thư mục và ảnh bìa
+                    string oldFolder = Function.ConvertToUnsign(currentStory.Title).Trim().Replace(" ", "");
+                    string newFolder = Function.ConvertToUnsign(story.Title).Trim().Replace(" ", "");
+                    string oldImagePath = currentStory.Image;
+                    string newImagePath = oldImagePath; // Mặc định giữ ảnh cũ
+
+                    // Nếu có ảnh mới, lưu ảnh và cập nhật đường dẫn
+                    if (Img != null && Img.ContentLength > 0)
+                    {
+                        string fileExtension = Path.GetExtension(Img.FileName);
+                        string fileName = $"cover{fileExtension}";
+                        string createFolder = Server.MapPath($"~/Content/Image/{newFolder}");
+                        string fullPathSave = Path.Combine(createFolder, fileName);
+                        if (!Directory.Exists(createFolder))
+                        {
+                            Directory.CreateDirectory(createFolder);
+                        }
+                        Img.SaveAs(fullPathSave);
+                        newImagePath = $"Content/Image/{newFolder}/{fileName}";
+
+                        // Xóa ảnh cũ nếu tồn tại
+                        if (!string.IsNullOrEmpty(oldImagePath))
+                        {
+                            var oldAbsolutePath = Server.MapPath($"~/{oldImagePath}");
+                            if (System.IO.File.Exists(oldAbsolutePath))
+                            {
+                                System.IO.File.Delete(oldAbsolutePath);
+                            }
+                        }
+                    }
+                    else if (oldFolder != newFolder)
+                    {
+                        // Nếu tiêu đề thay đổi, di chuyển thư mục ảnh và cập nhật đường dẫn ảnh chương
+                        var oldFolderPath = Server.MapPath($"~/Content/Image/{oldFolder}");
+                        var newFolderPath = Server.MapPath($"~/Content/Image/{newFolder}");
+                        if (Directory.Exists(oldFolderPath))
+                        {
+                            if (Directory.Exists(newFolderPath))
+                            {
+                                Directory.Delete(newFolderPath, true); // Xóa thư mục mới nếu đã tồn tại
+                            }
+                            Directory.Move(oldFolderPath, newFolderPath);
+                            newImagePath = $"Content/Image/{newFolder}/{Path.GetFileName(oldImagePath)}";
+
+                            // Lấy danh sách chương
+                            var chaptersResponse = await client.GetAsync($"api/chapters/{story.Id}");
+                            List<Chapter> chapters = new List<Chapter>();
+                            if (chaptersResponse.IsSuccessStatusCode)
+                            {
+                                chapters = await chaptersResponse.Content.ReadAsAsync<List<Chapter>>();
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Failed to get chapters: {await chaptersResponse.Content.ReadAsStringAsync()}");
+                            }
+
+                            // Cập nhật đường dẫn ảnh chương
+                            if (chapters.Any())
+                            {
+                                var imageUpdates = new List<object>();
+                                foreach (var chapter in chapters)
+                                {
+                                    var imagesResponse = await client.GetAsync($"api/chapter-images/{chapter.Id}");
+                                    if (imagesResponse.IsSuccessStatusCode)
+                                    {
+                                        var images = await imagesResponse.Content.ReadAsAsync<List<dynamic>>();
+                                        foreach (var image in images)
+                                        {
+                                            string oldImage = image.C_image.ToString();
+                                            string newImage = oldImage.Replace($"Content/Image/{oldFolder}/{chapter.ChapterIndex}/", $"Content/Image/{newFolder}/{chapter.ChapterIndex}/");
+                                            imageUpdates.Add(new
+                                            {
+                                                C_id = (long)image.C_id,
+                                                C_image = newImage
+                                            });
+                                        }
+                                    }
+                                }
+
+                                // Gửi request cập nhật đường dẫn ảnh chương
+                                if (imageUpdates.Any())
+                                {
+                                    var imageUpdateContent = new StringContent(
+                                        Newtonsoft.Json.JsonConvert.SerializeObject(imageUpdates),
+                                        System.Text.Encoding.UTF8,
+                                        "application/json"
+                                    );
+                                    var imageUpdateResponse = await client.PutAsync("api/chapter-images/update-paths", imageUpdateContent);
+                                    if (!imageUpdateResponse.IsSuccessStatusCode)
+                                    {
+                                        TempData["Error"] = $"Lỗi khi cập nhật đường dẫn ảnh chương: {await imageUpdateResponse.Content.ReadAsStringAsync()}";
+                                        System.Diagnostics.Debug.WriteLine($"Failed to update chapter image paths: {await imageUpdateResponse.Content.ReadAsStringAsync()}");
+                                        return RedirectToAction("StoryEdit", new { id = story.Id });
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Chuẩn bị dữ liệu truyện để gửi qua API
+                    var storyData = new
+                    {
+                        Id = story.Id,
+                        Title = story.Title,
+                        AuthorId = story.AuthorId,
+                        CategoryId = story.CategoryId,
+                        StatusId = story.StatusId,
+                        StoryTypeId = story.StoryTypeId,
+                        Introduction = story.Introduction,
+                        Image = newImagePath,
+                        Active = story.Active,
+                        ChapterNumber = currentStory.ChapterNumber // Giữ nguyên ChapterNumber hiện tại
+                    };
+
+                    System.Diagnostics.Debug.WriteLine($"Sending story update to API: {Newtonsoft.Json.JsonConvert.SerializeObject(storyData)}");
+
+                    // Gửi request cập nhật truyện qua API
+                    var storyContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(storyData), System.Text.Encoding.UTF8, "application/json");
+                    var storyResponse = await client.PutAsync("story/put", storyContent);
+                    if (!storyResponse.IsSuccessStatusCode)
+                    {
+                        var errorContent = await storyResponse.Content.ReadAsStringAsync();
+                        TempData["Error"] = $"Lỗi khi cập nhật truyện: {errorContent}";
+                        System.Diagnostics.Debug.WriteLine($"API error: {errorContent}");
+                        return RedirectToAction("StoryEdit", new { id = story.Id });
+                    }
+
+                    TempData["Success"] = "Cập nhật truyện thành công!";
+                    return RedirectToAction("StoryDetail", new { id = story.Id });
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi cập nhật truyện: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in StoryEditConfirm: {ex.Message}");
+                return RedirectToAction("StoryEdit", new { id = story.Id });
+            }
         }
 
         public async Task<ActionResult> StoryDelete(int id)
@@ -228,6 +425,12 @@ namespace StoryWeb.Controllers
                             return RedirectToAction("StoryDetail", new { id = storyId });
                         }
                         var story = await storyResponse.Content.ReadAsAsync<Story>();
+                        if (story == null)
+                        {
+                            TempData["Error"] = "Không tìm thấy truyện.";
+                            return RedirectToAction("StoryDetail", new { id = storyId });
+                        }
+
                         string storyFolder = Function.ConvertToUnsign(story.Title).Trim().Replace(" ", "");
                         string chapterFolder = chapter.ChapterIndex.ToString();
                         string chapterPath = Server.MapPath($"~/Content/Image/{storyFolder}/{chapterFolder}");
@@ -267,7 +470,7 @@ namespace StoryWeb.Controllers
                                     image.SaveAs(fullPath);
 
                                     // Thêm vào danh sách ảnh để gửi qua API
-                                    var imagePath = $"images/chapters/{newChapterId}/{fileName}";
+                                    var imagePath = $"Content/Image/{storyFolder}/{chapter.ChapterIndex}/{fileName}";
                                     if (imagePath.Length > 50)
                                     {
                                         TempData["Error"] = $"Đường dẫn ảnh {imagePath} vượt quá 50 ký tự.";
@@ -297,12 +500,26 @@ namespace StoryWeb.Controllers
                         }
 
                         // Cập nhật số chương trong bảng tbl_story
-                        var storyUpdate = new { Id = storyId, C_chapter_number = chapters.Any() ? chapters.Max(c => c.ChapterIndex) + 1 : 1 };
+                        var storyUpdate = new
+                        {
+                            Id = story.Id,
+                            Title = story.Title,
+                            AuthorId = story.AuthorId,
+                            CategoryId = story.CategoryId,
+                            StatusId = story.StatusId,
+                            StoryTypeId = story.StoryTypeId,
+                            Introduction = story.Introduction,
+                            Image = story.Image,
+                            Active = story.Active,
+                            ChapterNumber = chapters.Any() ? chapters.Max(c => c.ChapterIndex) + 1 : 1
+                        };
+                        System.Diagnostics.Debug.WriteLine($"Sending chapter number update to API: {Newtonsoft.Json.JsonConvert.SerializeObject(storyUpdate)}");
                         var storyContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(storyUpdate), System.Text.Encoding.UTF8, "application/json");
                         var storyResponseUpdate = await client.PutAsync("story/put", storyContent);
                         if (!storyResponseUpdate.IsSuccessStatusCode)
                         {
                             TempData["Error"] = $"Lỗi khi cập nhật số chương: {await storyResponseUpdate.Content.ReadAsStringAsync()}";
+                            System.Diagnostics.Debug.WriteLine($"Failed to update chapter number: {await storyResponseUpdate.Content.ReadAsStringAsync()}");
                             return RedirectToAction("StoryDetail", new { id = storyId });
                         }
 
@@ -313,6 +530,7 @@ namespace StoryWeb.Controllers
                 catch (Exception ex)
                 {
                     TempData["Error"] = $"Lỗi khi thêm chương: {ex.Message}";
+                    System.Diagnostics.Debug.WriteLine($"Exception in ChapterCreateConfirm: {ex.Message}");
                     return RedirectToAction("StoryDetail", new { id = storyId });
                 }
             }
@@ -385,12 +603,26 @@ namespace StoryWeb.Controllers
 
                     // Cập nhật số chương trong bảng tbl_story
                     var remainingChapters = chapters.Where(c => c.Id != chapterId).ToList();
-                    var storyUpdate = new { Id = storyId, C_chapter_number = remainingChapters.Any() ? remainingChapters.Max(c => c.ChapterIndex) : 0 };
+                    var storyUpdate = new
+                    {
+                        Id = story.Id,
+                        Title = story.Title,
+                        AuthorId = story.AuthorId,
+                        CategoryId = story.CategoryId,
+                        StatusId = story.StatusId,
+                        StoryTypeId = story.StoryTypeId,
+                        Introduction = story.Introduction,
+                        Image = story.Image,
+                        Active = story.Active,
+                        ChapterNumber = remainingChapters.Any() ? remainingChapters.Max(c => c.ChapterIndex) : 0
+                    };
+                    System.Diagnostics.Debug.WriteLine($"Sending chapter number update to API: {Newtonsoft.Json.JsonConvert.SerializeObject(storyUpdate)}");
                     var storyContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(storyUpdate), System.Text.Encoding.UTF8, "application/json");
                     var storyResponseUpdate = await client.PutAsync("story/put", storyContent);
                     if (!storyResponseUpdate.IsSuccessStatusCode)
                     {
                         TempData["Error"] = $"Lỗi khi cập nhật số chương: {await storyResponseUpdate.Content.ReadAsStringAsync()}";
+                        System.Diagnostics.Debug.WriteLine($"Failed to update chapter number: {await storyResponseUpdate.Content.ReadAsStringAsync()}");
                         return RedirectToAction("StoryDetail", new { id = storyId });
                     }
 
@@ -401,6 +633,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi xóa chương: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in ChapterDelete: {ex.Message}");
                 return RedirectToAction("StoryDetail", new { id = storyId });
             }
         }
@@ -429,6 +662,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi xóa ảnh: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in DeleteImage: {ex.Message}");
             }
             return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
         }
@@ -476,6 +710,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi cập nhật ảnh: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in UpdateImage: {ex.Message}");
             }
             return RedirectToAction("ChapterEdit", new { storyId = chapterId, chapterId = chapterId });
         }
@@ -497,6 +732,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi tải danh sách danh mục: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in CategoryList: {ex.Message}");
             }
             ViewBag.cateList = cateList;
             return View();
@@ -524,15 +760,25 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi thêm danh mục: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in CateCreateConfirm: {ex.Message}");
             }
             return RedirectToAction("CategoryList", "Admin");
         }
 
         public async Task<ActionResult> CateEdit(int id)
         {
-            var item = await CategoryRep.Instance.getById(id);
-            ViewBag.cate = item;
-            return View();
+            try
+            {
+                var item = await CategoryRep.Instance.getById(id);
+                ViewBag.cate = item;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi tải danh mục: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in CateEdit: {ex.Message}");
+                return RedirectToAction("CategoryList");
+            }
         }
 
         public async Task<ActionResult> CateEditConfirm(Category cate)
@@ -559,6 +805,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi chỉnh sửa danh mục: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in CateEditConfirm: {ex.Message}");
             }
             return RedirectToAction("CategoryList", "Admin");
         }
@@ -579,6 +826,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi tải dữ liệu: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in AddStory: {ex.Message}");
             }
             return View();
         }
@@ -632,7 +880,8 @@ namespace StoryWeb.Controllers
                         StoryTypeId = story.StoryTypeId,
                         Introduction = story.Introduction,
                         Image = story.Image,
-                        Active = 1
+                        Active = 1,
+                        ChapterNumber = 0 // Khởi tạo _chapter_number là 0
                     };
 
                     System.Diagnostics.Debug.WriteLine($"Sending story data to API: {Newtonsoft.Json.JsonConvert.SerializeObject(storyData)}");
@@ -681,6 +930,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi tải thông tin người dùng: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in ChangeUserRole: {ex.Message}");
             }
             return View();
         }
@@ -709,6 +959,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi thay đổi vai trò: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in ChangeUserRoleConfirm: {ex.Message}");
             }
             return RedirectToAction("UserList", "Admin");
         }
@@ -745,6 +996,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi thay đổi trạng thái người dùng: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in BanOrUnbanUser: {ex.Message}");
             }
             return RedirectToAction("UserList", "Admin");
         }
@@ -774,6 +1026,7 @@ namespace StoryWeb.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi xóa danh mục: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception in CategoryDelete: {ex.Message}");
             }
             return RedirectToAction("CategoryList", "Admin");
         }

@@ -64,6 +64,11 @@
                                 <p><strong>Lượt xem:</strong> @story.ViewNumber</p>
                             </div>
                         </div>
+                        <div class="mt-3">
+                            <a href="@Url.Action("StoryEdit", "Admin", new { id = story.Id })" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Sửa thông tin truyện
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
