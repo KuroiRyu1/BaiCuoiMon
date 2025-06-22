@@ -168,7 +168,7 @@ namespace StoryWeb.Controllers
                         }
                         var story = await storyResponse.Content.ReadAsAsync<Story>();
                         string storyFolder = Function.ConvertToUnsign(story.Title).Trim();
-                        string chapterFolder = Function.ConvertToUnsign(chapter.Title).Trim();
+                        string chapterFolder = chapter.ChapterIndex.ToString();
                         string chapterPath = Server.MapPath($"~/Content/Image/{storyFolder}/{chapterFolder}");
 
                         // Tạo chương mới qua API
