@@ -32,7 +32,8 @@ namespace StoryWeb.Controllers
             var story = await StoryRep.Instance.GetStoryById(id);
             var chapterList = await ChapterRep.Instance.getListOfChapter(id);
             var commentList = await CommentRep.Instance.GetStoryCommentsAsync(id);
-
+            var Category = await CategoryRep.Instance.getById(story.CategoryId);
+            var storyType = await StoryTypeRep.Instance.GetById(story.StoryTypeId);
             User user = (User)Session["user"];
             if (user != null&&story!=null)
             {
@@ -40,6 +41,8 @@ namespace StoryWeb.Controllers
                 var follow = await FollowRep.Instance.checkFollow(story.Id, user.Id);
                 ViewBag.follow = follow;
             }
+            ViewBag.storytype = storyType;
+            ViewBag.category = Category;
             ViewBag.comments = commentList;
             ViewBag.story = story;
             ViewBag.chapterList = chapterList;
@@ -118,13 +121,14 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("Index");
         }
-        public async Task<ActionResult> StoryList(int page = 1, int? categoryId = null)
+        public async Task<ActionResult> StoryList(int page = 1, int? categoryId = null,int storyTypeId = 1)
         {
-            var storyList = await StoryRep.Instance.GetStories(categoryId, page, 6);
-            var allstory = await StoryRep.Instance.GetAllStories(categoryId);
+            var storyList = await StoryRep.Instance.GetStories(categoryId, page, 6,storyTypeId);
+            var allstory = await StoryRep.Instance.GetAllStories(categoryId,storyTypeId);
 
 
             ViewBag.cateId = categoryId;
+            ViewBag.storyTypeId = storyTypeId;
             ViewBag.storyList = storyList;
             ViewBag.allstory = allstory;
             ViewBag.page = page;

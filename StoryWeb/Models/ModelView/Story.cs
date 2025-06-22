@@ -11,7 +11,7 @@ namespace StoryWeb.Models.ModelView
         public int Id { get; set; } = 0;
         [DisplayName("truyen")]
         public string Title { get; set; } = "";
-        public int ChapterNumber { get; set; } = 1;
+        public int ChapterNumber { get; set; } = 0;
         public string Introduction { get; set; } = "";
         public string Image { get; set; } = "default.jpg";
         public int LikeNumber { get; set; } = 0;

@@ -187,6 +187,7 @@
     <Compile Include="Models\ModelView\Follow.cs" />
     <Compile Include="Models\ModelView\Status.cs" />
     <Compile Include="Models\ModelView\Story.cs" />
+    <Compile Include="Models\ModelView\StoryType.cs" />
     <Compile Include="Models\ModelView\User.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
     <Compile Include="Models\Repositories\ChapterImageRes.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Models\Repositories\FollowRep.cs" />
     <Compile Include="Models\Repositories\StatusRep.cs" />
     <Compile Include="Models\Repositories\StoryRep.cs" />
+    <Compile Include="Models\Repositories\StoryTypeRep.cs" />
     <Compile Include="Models\Repositories\UserRep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

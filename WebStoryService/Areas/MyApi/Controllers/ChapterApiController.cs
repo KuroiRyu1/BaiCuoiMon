@@ -37,6 +37,8 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             var chapters = new Chapter();
             ChapterRes res = new ChapterRes();
+            StoryRes storyRes = new StoryRes();
+            storyRes.IncreaseView(storyId);
             chapters = res.StoryRead(storyId, chapterIndex);
             return Ok(chapters);
         }

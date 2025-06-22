@@ -17,11 +17,11 @@ namespace WebStoryService.Areas.MyApi.Controllers
 
         [Route("get")]
         [HttpGet]
-        public IEnumerable<Story> Get(int? categoryId = null, int page = 1, int pageSize = 10)
+        public IEnumerable<Story> Get(int? categoryId = null, int page = 1, int pageSize = 10,int storyTypeId=1)
         {
             try
             {
-                return _storyRes.Gets(categoryId, page, pageSize);
+                return _storyRes.Gets(categoryId, page, pageSize,storyTypeId);
             }
             catch (Exception ex)
             {
@@ -46,13 +46,13 @@ namespace WebStoryService.Areas.MyApi.Controllers
 
         [HttpGet]
         [Route("getall/cate")]
-        public List<Story> getAll(int? cateId = null)
+        public List<Story> getAll(int? cateId = null,int storyTypeId=1)
         {
             var story = new List<Story>();
             try
             {
-                StoryRes storyRes = new StoryRes();
-                var item = storyRes.GetAll(cateId);
+
+                var item = _storyRes.GetAll(cateId,storyTypeId);
                 if (item != null)
                 {
                     story = item;
@@ -156,6 +156,19 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 System.Diagnostics.Debug.WriteLine($"Error in Delete: {ex.Message}");
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new { Message = $"Error: {ex.Message}" });
             }
+        }
+        [Route("search/{name}")]
+        [HttpGet]
+        public List<Story> Search (string name)
+        {
+            try
+            {
+               return _storyRes.Search(name);
+            }
+            catch (Exception ex)
+            {
+            }
+            return new List<Story>();
         }
     }
 }

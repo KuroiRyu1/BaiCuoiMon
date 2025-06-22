@@ -162,21 +162,29 @@
             <div class="image-section">
                 <div class="warning-level">
                     @{
-                        int a = 1;
-                        if (a == 0)
+                        if (story.StoryTypeId == 1)
                         {
-                            <div class="white-color mx-auto text-capitalize font-sans-serif">Đang kiểm tra trạng thái tài khoản...</div>
-                            <div class="lds-loading">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
+                            foreach (StoryWeb.Models.ModelView.ChapterImage item in chapterImage)
+                            {
+                                string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
+                                string images = Url.Content($"~/Content/Image/{name}/{item.ImagePath}");
+                                string path = Server.MapPath($"~/Content/Image/{name}/{item.ImagePath}");
+                                bool exist = File.Exists(path);
+                                if (!exist)
+                                {
+                                    images = Url.Content("~/Content/Image/default/default.jpg");
+                                }
+                                <div>
+                                    <img src="images" />
+                                </div>
+                            }
                         }
-                        foreach (StoryWeb.Models.ModelView.ChapterImage image in chapterImage)
+                        else
                         {
-                            <div>
-                                <img src="@Url.Content("~/Content")/Image/@story.Id/@chapter.ChapterIndex/@image.ImagePath" />
-                            </div>
+                                <div>
+                                   <p>@chapter.Content</p>
+                                </div>
+
                         }
 
 

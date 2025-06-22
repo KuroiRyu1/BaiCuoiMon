@@ -54,14 +54,14 @@ namespace StoryWeb.Models.Repositories
             }
             return new List<Story>();
         }
-        public async Task<List<Story>> GetAllStories(int? cateId = null)
+        public async Task<List<Story>> GetAllStories(int? cateId = null,int storyTypeId=1)
         {
             try
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpResponseMessage res = await client.GetAsync($"story/getall/cate?cateId={cateId}");
+                HttpResponseMessage res = await client.GetAsync($"story/getall/cate?cateId={cateId}&storyTypeId={storyTypeId}");
                 if (res.IsSuccessStatusCode)
                 {
                     var response = await client.GetAsync("story/getall");
@@ -78,14 +78,14 @@ namespace StoryWeb.Models.Repositories
             }
             return new List<Story>();
         }
-        public async Task<List<Story>> GetStories(int? categoryId = null, int page = 1, int pageSize = 10)
+        public async Task<List<Story>> GetStories(int? categoryId = null, int page = 1, int pageSize = 10,int storyTypeId=1)
         {
             try
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                string url = $"story/get?page={page}&pageSize={pageSize}";
+                string url = $"story/get?page={page}&pageSize={pageSize}&storyTypeId={storyTypeId}";
                 if (categoryId.HasValue && categoryId.Value != 0)
                 {
                     url += $"&categoryId={categoryId.Value}";

@@ -14,10 +14,13 @@ namespace StoryWeb.Controllers
         public async Task<ActionResult> Index()
         {
             List<Story> story = new List<Story>();
-            story = await StoryRep.Instance.GetStories(0,1,18);
+            List<Story> novel = new List<Story>();
+            story = await StoryRep.Instance.GetStories(0, 1, 18, 1);
+            novel = await StoryRep.Instance.GetStories(0, 1, 18, 2);
             ViewBag.Story = story;
+            ViewBag.novel=novel;
             return View();
-        } 
+        }
 
         public ActionResult About()
         {

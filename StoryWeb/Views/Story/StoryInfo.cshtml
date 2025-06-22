@@ -6,6 +6,8 @@
     List<StoryWeb.Models.ModelView.Chapter> chapterList = new List<StoryWeb.Models.ModelView.Chapter>();
     StoryWeb.Models.ModelView.User user = new StoryWeb.Models.ModelView.User();
     bool isFollowing = false;
+    StoryWeb.Models.ModelView.Category cate = new StoryWeb.Models.ModelView.Category();
+    StoryWeb.Models.ModelView.StoryType storyType = new StoryWeb.Models.ModelView.StoryType();
     if (Session["user"] != null)
     {
         user = (StoryWeb.Models.ModelView.User)Session["user"];
@@ -21,6 +23,14 @@
     if (ViewBag.follow != null)
     {
         isFollowing = (bool)ViewBag.follow;
+    }
+    if (ViewBag.category != null)
+    {
+        cate = (StoryWeb.Models.ModelView.Category)ViewBag.category;
+    }
+    if (ViewBag.storytype != null)
+    {
+        storyType = (StoryWeb.Models.ModelView.StoryType)ViewBag.storytype;
     }
     string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
     var isLoggedIn = user != null;
@@ -86,72 +96,72 @@
                 </div>
 
                 @*<div class="rating mx-auto mt-3">
-                    <div class="d-flex mx-2 align-center zs-bg-1 rounded-sm ele-2">
-                        <div class="v-rating v-rating--dense">
+                        <div class="d-flex mx-2 align-center zs-bg-1 rounded-sm ele-2">
+                            <div class="v-rating v-rating--dense">
 
 
 
-                            <div data-score="1" class="active">
-                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
-                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
-                                </svg>
+                                <div data-score="1" class="active">
+                                    <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                        <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                    </svg>
+                                </div>
+
+
+
+
+
+
+                                <div data-score="2" class="active">
+                                    <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                        <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                    </svg>
+                                </div>
+
+
+
+
+
+
+                                <div data-score="3" class="active">
+                                    <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                        <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                    </svg>
+                                </div>
+
+
+
+
+
+
+                                <div data-score="4" class="active">
+                                    <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                        <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                    </svg>
+                                </div>
+
+
+
+
+
+
+                                <div data-score="5" class="active">
+                                    <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
+                                        <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
+                                    </svg>
+                                </div>
+
+
+
+
                             </div>
-
-
-
-
-
-
-                            <div data-score="2" class="active">
-                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
-                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
-                                </svg>
+                            <div class="spacer"></div>
+                            <div class="pr-3">
+                                <b class="text--disabled">5</b>
+                                <small class="text--disabled">/5</small>
                             </div>
-
-
-
-
-
-
-                            <div data-score="3" class="active">
-                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
-                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
-                                </svg>
-                            </div>
-
-
-
-
-
-
-                            <div data-score="4" class="active">
-                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
-                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
-                                </svg>
-                            </div>
-
-
-
-
-
-
-                            <div data-score="5" class="active">
-                                <svg viewBox="0 0 24 24" class="star-inactive v-icon-svg">
-                                    <path d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"></path>
-                                </svg>
-                            </div>
-
-
-
-
                         </div>
-                        <div class="spacer"></div>
-                        <div class="pr-3">
-                            <b class="text--disabled">5</b>
-                            <small class="text--disabled">/5</small>
-                        </div>
-                    </div>
-                </div>*@
+                    </div>*@
                 <div class="follow-comic d-flex align-center mt-3">
                     @if (ViewBag.user != null)
                     {
@@ -211,58 +221,25 @@
                             <div class="group-content-wrap">
                                 <div class="group-content">
 
-                                    <a href="../danh-sach9217.html?category=COM" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                    <a href="@Url.Action("StoryList", "Story", new {page=1,categoryId=cate.Id})" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
                                         <div class="v-chip-content">
                                             <span class="v-icon v-icon-left theme-dark">
                                                 <svg viewBox="0 0 24 24" class="v-icon-svg-small">
                                                     <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
                                                 </svg>
                                             </span>
-                                            <span>Hài Hước</span>
+                                            <span>@cate.Name</span>
                                         </div>
                                     </a>
 
-                                    <a href="../danh-sachac57.html?category=MAW" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
+                                    <a href="@Url.Action("StoryList", "Story",new {page = 1,storyTypeId=2 })" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
                                         <div class="v-chip-content">
                                             <span class="v-icon v-icon-left theme-dark">
                                                 <svg viewBox="0 0 24 24" class="v-icon-svg-small">
                                                     <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
                                                 </svg>
                                             </span>
-                                            <span>Manhwa</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="../danh-sach61c4.html?category=MYS" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
-                                        <div class="v-chip-content">
-                                            <span class="v-icon v-icon-left theme-dark">
-                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
-                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
-                                                </svg>
-                                            </span>
-                                            <span>Huyền Bí</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="../danh-sachcd5d.html?category=ACT" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
-                                        <div class="v-chip-content">
-                                            <span class="v-icon v-icon-left theme-dark">
-                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
-                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
-                                                </svg>
-                                            </span>
-                                            <span>Hành Động</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="../danh-sach97ed.html?category=ADV" class="mr-1 v-chip-active v-chip v-chip-clickable v-chip-link v-chip-no-color theme-dark v-size--small">
-                                        <div class="v-chip-content">
-                                            <span class="v-icon v-icon-left theme-dark">
-                                                <svg viewBox="0 0 24 24" class="v-icon-svg-small">
-                                                    <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.44 21.77,11.94 21.41,11.58Z"></path>
-                                                </svg>
-                                            </span>
-                                            <span>Phiêu Lưu</span>
+                                            <span>@storyType.Title</span>
                                         </div>
                                     </a>
 
@@ -450,7 +427,7 @@
                             </div>
                             <btn class="btn-tag">Báo cáo</btn>
                             @*<btn class="btn-tag">tag</btn>
-                            <btn class="btn-tag">tag</btn>*@
+                                <btn class="btn-tag">tag</btn>*@
                         </div>
                     }
                 }

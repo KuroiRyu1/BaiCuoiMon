@@ -166,6 +166,7 @@
     <Compile Include="Areas\MyApi\Controllers\StatusController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterImageApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\StoryTypeController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
     <Compile Include="Areas\MyApi\MyApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Models\ModelData\Status.cs" />
     <Compile Include="Models\ModelData\Story.cs" />
     <Compile Include="Models\ModelData\StoryComment.cs" />
+    <Compile Include="Models\ModelData\StoryType.cs" />
     <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />
@@ -240,6 +242,7 @@
     <Compile Include="Models\Repositories\LoginRequest.cs" />
     <Compile Include="Models\Repositories\StatusRep.cs" />
     <Compile Include="Models\Repositories\StoryRes.cs" />
+    <Compile Include="Models\Repositories\StoryTypeRep.cs" />
     <Compile Include="Models\Repositories\UserRes.cs" />
     <Compile Include="Models\ModelData\Chapter.cs" />
     <Compile Include="Models\ModelData\ChapterImage.cs" />
