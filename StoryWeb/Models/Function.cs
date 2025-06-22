@@ -22,7 +22,8 @@ namespace StoryWeb.Models
                 ConvertToUnsign_rg = new Regex("p{IsCombiningDiacriticalMarks}+");
             }
             var temp = strInput.Normalize(NormalizationForm.FormD);
-            return ConvertToUnsign_rg.Replace(temp, string.Empty).Replace("đ", "d").Replace("Đ", "D").ToLower();
+            var value = ConvertToUnsign_rg.Replace(temp, string.Empty).Replace("đ", "d").Replace("Đ", "D").ToLower()
+            return value.Replace(" ", string.Empty);
         }
         public static string GenerateToken(int length = 20)
         {
