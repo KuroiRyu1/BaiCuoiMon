@@ -105,9 +105,7 @@
                                                 <i class="fas fa-eye"></i> Xem chi tiết
                                             </a>
                                             <form action="@Url.Action("ChapterDelete", "Admin")" method="post" style="display:inline-block;">
-                                                @Html.Hidden("Id", chapter.Id)
-                                                @Html.Hidden("Title", chapter.Title)
-                                                @Html.Hidden("DayCreate", chapter.DayCreate.ToString())
+                                                @Html.Hidden("chapterId", chapter.Id)
                                                 @Html.Hidden("StoryId", chapter.StoryId)
                                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa chương này?')">
                                                     <i class="fas fa-trash"></i> Xóa

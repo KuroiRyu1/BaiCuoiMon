@@ -261,6 +261,12 @@ namespace StoryWeb.Controllers
 
         public async Task<ActionResult> ChapterDelete(int storyId, int chapterId)
         {
+            if (storyId <= 0 || chapterId <= 0)
+            {
+                TempData["Error"] = "ID truyện hoặc chương không hợp lệ.";
+                return RedirectToAction("StoryDetail", new { id = storyId });
+            }
+
             try
             {
                 using (var client = new HttpClient())
@@ -269,22 +275,73 @@ namespace StoryWeb.Controllers
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     client.DefaultRequestHeaders.Add("username", "admin");
                     client.DefaultRequestHeaders.Add("tk", "12345");
-                    var response = await client.DeleteAsync($"api/chapters/{chapterId}");
-                    if (response.IsSuccessStatusCode)
+
+                    // Lấy thông tin truyện để tạo thư mục
+                    var storyResponse = await client.GetAsync($"story/get/{storyId}");
+                    if (!storyResponse.IsSuccessStatusCode)
                     {
-                        TempData["Success"] = "Xóa chương thành công!";
+                        TempData["Error"] = $"Không thể tải thông tin truyện: {await storyResponse.Content.ReadAsStringAsync()}";
+                        return RedirectToAction("StoryDetail", new { id = storyId });
                     }
-                    else
+                    var story = await storyResponse.Content.ReadAsAsync<Story>();
+                    if (story == null)
                     {
-                        TempData["Error"] = $"Xóa chương thất bại: {await response.Content.ReadAsStringAsync()}";
+                        TempData["Error"] = "Không tìm thấy truyện.";
+                        return RedirectToAction("StoryDetail", new { id = storyId });
                     }
+
+                    // Lấy danh sách chương để lấy ChapterIndex
+                    var chaptersResponse = await client.GetAsync($"api/chapters/{storyId}");
+                    if (!chaptersResponse.IsSuccessStatusCode)
+                    {
+                        TempData["Error"] = $"Không thể tải danh sách chương: {await chaptersResponse.Content.ReadAsStringAsync()}";
+                        return RedirectToAction("StoryDetail", new { id = storyId });
+                    }
+                    var chapters = await chaptersResponse.Content.ReadAsAsync<List<Chapter>>();
+                    var chapter = chapters.FirstOrDefault(c => c.Id == chapterId);
+                    if (chapter == null)
+                    {
+                        TempData["Error"] = "Không tìm thấy chương.";
+                        return RedirectToAction("StoryDetail", new { id = storyId });
+                    }
+
+                    // Xóa thư mục ảnh chương
+                    string storyFolder = Function.ConvertToUnsign(story.Title).Trim();
+                    string chapterFolder = chapter.ChapterIndex.ToString();
+                    string chapterPath = Server.MapPath($"~/Content/Image/{storyFolder}/{chapterFolder}");
+                    if (Directory.Exists(chapterPath))
+                    {
+                        Directory.Delete(chapterPath, true);
+                    }
+
+                    // Xóa chương qua API
+                    var deleteResponse = await client.DeleteAsync($"api/chapters/{chapterId}");
+                    if (!deleteResponse.IsSuccessStatusCode)
+                    {
+                        TempData["Error"] = $"Xóa chương thất bại: {await deleteResponse.Content.ReadAsStringAsync()}";
+                        return RedirectToAction("StoryDetail", new { id = storyId });
+                    }
+
+                    // Cập nhật số chương trong bảng tbl_story
+                    var remainingChapters = chapters.Where(c => c.Id != chapterId).ToList();
+                    var storyUpdate = new { Id = storyId, C_chapter_number = remainingChapters.Any() ? remainingChapters.Max(c => c.ChapterIndex) : 0 };
+                    var storyContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(storyUpdate), System.Text.Encoding.UTF8, "application/json");
+                    var storyResponseUpdate = await client.PutAsync("story/put", storyContent);
+                    if (!storyResponseUpdate.IsSuccessStatusCode)
+                    {
+                        TempData["Error"] = $"Lỗi khi cập nhật số chương: {await storyResponseUpdate.Content.ReadAsStringAsync()}";
+                        return RedirectToAction("StoryDetail", new { id = storyId });
+                    }
+
+                    TempData["Success"] = "Xóa chương thành công!";
+                    return RedirectToAction("StoryDetail", new { id = storyId });
                 }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi xóa chương: {ex.Message}";
+                return RedirectToAction("StoryDetail", new { id = storyId });
             }
-            return RedirectToAction("StoryDetail", new { id = storyId });
         }
 
         public async Task<ActionResult> DeleteImage(int chapterId, long imageId)
