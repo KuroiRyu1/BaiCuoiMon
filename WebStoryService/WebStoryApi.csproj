@@ -161,6 +161,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\MyApi\Controllers\CategoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\CommentApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\FollowApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StatusController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StoryApiController.cs" />
@@ -227,9 +228,11 @@
     </Compile>
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelData\Category.cs" />
+    <Compile Include="Models\ModelData\ChapterComment.cs" />
     <Compile Include="Models\ModelData\Follow.cs" />
     <Compile Include="Models\ModelData\Status.cs" />
     <Compile Include="Models\ModelData\Story.cs" />
+    <Compile Include="Models\ModelData\StoryComment.cs" />
     <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />

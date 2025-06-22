@@ -1,4 +1,5 @@
-﻿using StoryWeb.Models.ModelView;
+﻿using Antlr.Runtime.Tree;
+using StoryWeb.Models.ModelView;
 using StoryWeb.Models.Repositories;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ namespace StoryWeb.Controllers
         {
             var story = await StoryRep.Instance.GetStoryById(id);
             var chapterList = await ChapterRep.Instance.getListOfChapter(id);
+            var commentList = await CommentRep.Instance.GetStoryCommentsAsync(id);
+
             User user = (User)Session["user"];
             if (user != null&&story!=null)
             {
@@ -37,6 +40,7 @@ namespace StoryWeb.Controllers
                 var follow = await FollowRep.Instance.checkFollow(story.Id, user.Id);
                 ViewBag.follow = follow;
             }
+            ViewBag.comments = commentList;
             ViewBag.story = story;
             ViewBag.chapterList = chapterList;
             return View();
@@ -149,6 +153,30 @@ namespace StoryWeb.Controllers
             }
 
             return RedirectToAction("StoryInfo", "Story", new { id = storyId });
+        }
+        [HttpPost]
+        public async Task<JsonResult> PostStoryComment(int storyId, string content)
+        {
+            var user = Session["user"] as User;
+            if (user == null)
+                return Json(new { success = false, message = "Bạn cần đăng nhập để bình luận." });
+
+            if (string.IsNullOrWhiteSpace(content))
+                return Json(new { success = false, message = "Bình luận không được để trống." });
+
+            var comment = new StoryComment
+            {
+                StoryId = storyId,
+                UserId = user.Id,
+                Content = content,
+                Active = 1
+            };
+
+            int result = await CommentRep.Instance.AddStoryCommentAsync(comment);
+            if (result == 1)
+                return Json(new { success = true, message = "Bình luận đã được gửi." });
+
+            return Json(new { success = false, message = "Không thể gửi bình luận." });
         }
 
     }

@@ -181,6 +181,8 @@
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\ModelView\Category.cs" />
     <Compile Include="Models\ModelView\Chapter.cs" />
+    <Compile Include="Models\ModelView\ChapterComment.cs" />
+    <Compile Include="Models\ModelView\StoryComment.cs" />
     <Compile Include="Models\ModelView\ChapterImage.cs" />
     <Compile Include="Models\ModelView\Follow.cs" />
     <Compile Include="Models\ModelView\Status.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Models\Repositories\CategoryRep.cs" />
     <Compile Include="Models\Repositories\ChapterImageRes.cs" />
     <Compile Include="Models\Repositories\ChapterRep.cs" />
+    <Compile Include="Models\Repositories\CommentRep.cs" />
     <Compile Include="Models\Repositories\FollowRep.cs" />
     <Compile Include="Models\Repositories\StatusRep.cs" />
     <Compile Include="Models\Repositories\StoryRep.cs" />
