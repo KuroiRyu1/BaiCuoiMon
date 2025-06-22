@@ -26,13 +26,10 @@
                     <div class="card-body d-flex align-items-center justify-content-center">
                         @if (!string.IsNullOrEmpty(story.Image))
                         {
-                            string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
-                            var imageFolder = $"{name}";
-                            var imagePath = $"~/Content/Image/{imageFolder}/{story.Image}";
-                            var absolutePath = Server.MapPath($"~/Content/Image/{imageFolder}/{story.Image}");
-                            if (System.IO.Directory.Exists(Server.MapPath($"~/Content/Image/{imageFolder}")) && System.IO.File.Exists(absolutePath))
+                            var absolutePath = Server.MapPath($"~/{story.Image}");
+                            if (System.IO.File.Exists(absolutePath))
                             {
-                                <img src="@Url.Content(imagePath)" alt="Ảnh bìa của @story.Title" class="img-fluid" style="max-height: 300px; object-fit: cover;">
+                                <img src="@Url.Content($"~/{story.Image}")" alt="Ảnh bìa của @story.Title" class="img-fluid" style="max-height: 300px; object-fit: cover;">
                             }
                             else
                             {
@@ -97,7 +94,7 @@
                                 @foreach (var chapter in chapters)
                                 {
                                     <tr>
-                                        <td>Chapter @chapter.Id</td>
+                                        <td>@chapter.ChapterIndex</td>
                                         <td>@chapter.Title</td>
                                         <td>@chapter.DayCreate.ToString("dd/MM/yyyy")</td>
                                         <td>
@@ -203,9 +200,9 @@
                     const imgWrapper = document.createElement('div');
                     imgWrapper.className = 'd-inline-block m-2 position-relative';
                     imgWrapper.innerHTML = `
-                            <img src="${event.target.result}" alt="Preview" style="max-width: 100px; max-height: 100px; object-fit: cover;">
-                            <span class="badge bg-primary position-absolute top-0 start-100 translate-middle">Trang ${imageIndex}</span>
-                        `;
+                                <img src="${event.target.result}" alt="Preview" style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                                <span class="badge bg-primary position-absolute top-0 start-100 translate-middle">Trang ${imageIndex}</span>
+                            `;
                     previewContainer.appendChild(imgWrapper);
                     imageIndex++;
                 };

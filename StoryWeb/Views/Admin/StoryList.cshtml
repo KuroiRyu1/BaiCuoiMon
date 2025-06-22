@@ -1,11 +1,13 @@
-﻿@model System.Collections.Generic.List<StoryWeb.Models.ModelView.Story>
+﻿@model IEnumerable<StoryWeb.Models.ModelView.Story>
 @{
     ViewBag.Title = "Danh sách truyện";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var statuses = ViewBag.Statuses as Dictionary<int, string> ?? new Dictionary<int, string>();
+    int rowNumber = 1;
 }
 
 <main class="container-fluid pt-4">
-    <h2 class="mb-4">Quản lý truyện</h2>
+    <h2 class="mb-4">Danh sách truyện</h2>
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
@@ -14,72 +16,62 @@
     {
         <div class="alert alert-success">@TempData["Success"]</div>
     }
-    <a href="@Url.Action("AddStory","Admin")" class="btn btn-success mb-3">
-        <i class="fas fa-plus"></i> Thêm truyện mới
-    </a>
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tiêu đề</th>
-                        <th>Tác giả</th>
-                        <th>Danh mục</th>
-                        <th>Số chương</th>
-                        <th>Lượt thích</th>
-                        <th>Lượt theo dõi</th>
-                        <th>Lượt xem</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@item.Title</td>
-                            <td>@item.AuthorName</td>
-                            <td>@item.CategoryName</td>
-                            <td>@item.ChapterNumber</td>
-                            <td>@item.LikeNumber</td>
-                            <td>@item.FollowNumber</td>
-                            <td>@item.ViewNumber</td>
-                            <td>
-                                <a href="@Url.Action("StoryDetail", "Admin", new { id = item.Id })" class="btn btn-info btn-sm">
-                                    <i class="fas fa-eye"></i> Chi tiết
-                                </a>
-                                <form action="@Url.Action("StoryDelete", "Admin")" method="post" style="display:inline;">
-                                    @Html.Hidden("Id", item.Id)
-                                    @Html.Hidden("Title", item.Title)
-                                    @Html.Hidden("ChapterNumber", item.ChapterNumber)
-                                    @Html.Hidden("Introduction", item.Introduction)
-                                    @Html.Hidden("Image", item.Image)
-                                    @Html.Hidden("LikeNumber", item.LikeNumber)
-                                    @Html.Hidden("FollowNumber", item.FollowNumber)
-                                    @Html.Hidden("ViewNumber", item.ViewNumber)
-                                    @Html.Hidden("AuthorId", item.AuthorId)
-                                    @Html.Hidden("StatusId", item.StatusId)
-                                    @Html.Hidden("CategoryId", item.CategoryId)
-                                    @Html.Hidden("StoryTypeId", item.StoryTypeId)
-                                    @Html.Hidden("AuthorName", item.AuthorName)
-                                    @Html.Hidden("CategoryName", item.CategoryName)
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa truyện này?')">
-                                        <i class="fas fa-trash"></i> Xóa
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                    @if (!Model.Any())
-                    {
-                        <tr>
-                            <td colspan="9" class="text-center">Không có truyện nào.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="@Url.Action("AddStory", "Admin")" class="btn btn-success">
+            <i class="fas fa-plus"></i> Thêm truyện
+        </a>
     </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Số thứ tự</th>
+                            <th>Tiêu đề</th>
+                            <th>Tác giả</th>
+                            <th>Thể loại</th>
+                            <th>Tình trạng</th>
+                            <th>Lượt xem</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@rowNumber</td>
+                                <td>@item.Title</td>
+                                <td>@item.AuthorName</td>
+                                <td>@item.CategoryName</td>
+                                <td>@(statuses.ContainsKey(item.StatusId) ? statuses[item.StatusId] : "Không xác định")</td>
+                                <td>@item.ViewNumber</td>
+                                <td>
+                                    <a href="@Url.Action("StoryDetail", "Admin", new { id = item.Id })" class="btn btn-info btn-sm me-2">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a>
+                                    <form action="@Url.Action("StoryDelete", "Admin")" method="post" style="display:inline-block;">
+                                        @Html.Hidden("id", item.Id)
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa truyện này?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            rowNumber++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center" role="alert">
+            Không có truyện nào.
+        </div>
+    }
 </main>

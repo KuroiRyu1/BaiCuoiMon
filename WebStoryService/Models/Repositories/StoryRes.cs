@@ -165,29 +165,39 @@ namespace WebStoryService.Models.Repositories
         {
             try
             {
-                DbEntities db = new DbEntities();
-                if (story != null)
+                using (var db = new DbEntities())
                 {
+                    if (story == null || story.AuthorId <= 0 || string.IsNullOrEmpty(story.Title))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Invalid story data: AuthorId or Title is missing.");
+                        return 0;
+                    }
+
                     var tbl_story = new tbl_story
                     {
                         C_title = story.Title,
                         C_status_id = story.StatusId,
                         C_category_id = story.CategoryId,
                         C_story_type_id = story.StoryTypeId,
+                        C_author_id = story.AuthorId,
                         C_image = story.Image,
                         C_introduction = story.Introduction,
                         C_active = story.Active,
+                        C_like_number = 0, // Thiết lập mặc định là 0
+                        C_follow_number = 0, // Thiết lập mặc định là 0
+                        C_view_number = 0 // Thiết lập mặc định là 0
                     };
                     db.tbl_story.Add(tbl_story);
                     db.SaveChanges();
+                    System.Diagnostics.Debug.WriteLine($"Story created with ID: {tbl_story.C_id}, AuthorId: {tbl_story.C_author_id}");
                     return 1;
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in Create: {ex.Message}");
+                return 0;
             }
-            return 0;
         }
 
         public bool Delete(int id)

@@ -1,96 +1,135 @@
-﻿
+﻿@model StoryWeb.Models.ModelView.Story
 @{
-    ViewBag.Title = "CateCreate";
+    ViewBag.Title = "Thêm truyện mới";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    List<StoryWeb.Models.ModelView.Category> cate = new List<StoryWeb.Models.ModelView.Category>();
-    List<StoryWeb.Models.ModelView.Status> status = new List<StoryWeb.Models.ModelView.Status>();
-    if (ViewBag.cate != null)
-    {
-        cate = (List<StoryWeb.Models.ModelView.Category>)ViewBag.cate;
-    }
-    if (ViewBag.status != null)
-    {
-        status = (List<StoryWeb.Models.ModelView.Status>)ViewBag.status;
-    }
+    var categories = ViewBag.cate as List<StoryWeb.Models.ModelView.Category> ?? new List<StoryWeb.Models.ModelView.Category>();
+    var statuses = ViewBag.status as List<StoryWeb.Models.ModelView.Status> ?? new List<StoryWeb.Models.ModelView.Status>();
+    var authors = ViewBag.authors as List<StoryWeb.Models.ModelView.Author> ?? new List<StoryWeb.Models.ModelView.Author>();
+    var storyTypes = ViewBag.storyTypes as List<StoryWeb.Models.ModelView.StoryType> ?? new List<StoryWeb.Models.ModelView.StoryType>();
 }
 
-<h2 class="text-center">Thêm Truyện</h2>
-<div class="container">
-    <form class="form" method="post" enctype="multipart/form-data" action="@Url.Action("AddStoryConfirm","Admin")">
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="name" class="">Tên Truyện</Label>
-                <input class="form-control" id="name" type="text" name="Title" />
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="name" class="">Giới thiệu</Label>
-                <input class="form-control" id="name" type="text" name="Introduction" />
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="CategoryId" class="">danh mục</Label>
-                <select name="CategoryId" id="CategoryId">
-                    @foreach (var item in cate)
+<main class="container-fluid pt-4">
+    <h2 class="mb-4">Thêm truyện mới</h2>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông tin truyện</h5>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("AddStoryConfirm", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation", novalidate = true }))
                     {
-                        <option value="@item.Id">@item.Name</option>
+                        @Html.AntiForgeryToken()
+
+                        <!-- Thông tin truyện -->
+                        <div class="mb-4">
+                            <h6 class="mb-3">Thông tin cơ bản</h6>
+                            <div class="mb-3">
+                                <label for="Title" class="form-label">
+                                    Tiêu đề <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Nhập tiêu đề truyện, tối đa 200 ký tự."></i>
+                                </label>
+                                @Html.TextBoxFor(m => m.Title, new { @class = "form-control", required = "required", placeholder = "Nhập tiêu đề truyện" })
+                                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mb-3">
+                                <label for="AuthorId" class="form-label">
+                                    Tác giả <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Chọn tác giả từ danh sách."></i>
+                                </label>
+                                @Html.DropDownListFor(m => m.AuthorId, new SelectList(authors, "Id", "Name"), "Chọn tác giả", new { @class = "form-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.AuthorId, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="CategoryId" class="form-label">
+                                        Thể loại <span class="text-danger">*</span>
+                                    </label>
+                                    @Html.DropDownListFor(m => m.CategoryId, new SelectList(categories, "Id", "Name"), "Chọn thể loại", new { @class = "form-select", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="StatusId" class="form-label">
+                                        Trạng thái <span class="text-danger">*</span>
+                                    </label>
+                                    @Html.DropDownListFor(m => m.StatusId, new SelectList(statuses, "Id", "Title"), "Chọn trạng thái", new { @class = "form-select", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.StatusId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="StoryTypeId" class="form-label">
+                                    Loại truyện <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Chọn loại truyện từ danh sách."></i>
+                                </label>
+                                @Html.DropDownListFor(m => m.StoryTypeId, new SelectList(storyTypes, "Id", "Title"), "Chọn loại truyện", new { @class = "form-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.StoryTypeId, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mb-3">
+                                <label for="Introduction" class="form-label">
+                                    Giới thiệu
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Nhập giới thiệu truyện, tối đa 500 ký tự (tùy chọn)."></i>
+                                </label>
+                                @Html.TextAreaFor(m => m.Introduction, new { @class = "form-control", rows = "5", placeholder = "Nhập giới thiệu truyện (tùy chọn)" })
+                                @Html.ValidationMessageFor(m => m.Introduction, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Ảnh bìa -->
+                        <div class="mb-4">
+                            <h6 class="mb-3">Ảnh bìa</h6>
+                            <div class="mb-3">
+                                <label for="Img" class="form-label">
+                                    Chọn ảnh bìa <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Chọn file ảnh (JPG, PNG) làm ảnh bìa."></i>
+                                </label>
+                                <input type="file" id="Img" name="Img" class="form-control" accept="image/*" required>
+                                <div id="imagePreview" class="mt-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Nút hành động -->
+                        <div class="d-flex justify-content-end">
+                            <a href="@Url.Action("StoryList", "Admin")" class="btn btn-secondary me-2">Hủy</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Lưu
+                            </button>
+                        </div>
                     }
-                </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="StatusId" class="">Trạng thái</Label>
-                <select name="StatusId" id="StatusId">
-                    @foreach (var item in status)
-                    {
-                        <option value="@item.Id">@item.Title</option>
-                    }
-                </select>
-
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="StoryTypeId" class="">Loại truyện</Label>
-                <select name="StoryTypeId" id="StoryTypeId">
-                    <option value="1">
-                        Truyện Tranh
-                    </option>
-                    <option value="2">Truyện Chữ</option>
-                </select>
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <Label for="Img" class="Image">Ảnh bìa</Label>
-                <input class="form-control" id="Img" type="file" name="Img" />
-            </div>
-            <div class="col-sm"></div>
-        </div>
-        <input type="hidden" name="Id" />
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <button class="btn btn-primary" type="submit">Thêm</button>
-                <button class="btn btn-secondary" type="reset">Hủy</button>
-            </div>
-            <div class="col-sm"></div>
-        </div>
-    </form>
-</div>
-
+@section Scripts {
+    <script>
+        // Xem trước ảnh bìa
+        document.getElementById('Img').addEventListener('change', function (e) {
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = ''; // Xóa ảnh cũ
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'img-fluid rounded';
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    img.alt = 'Ảnh bìa xem trước';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}
