@@ -104,7 +104,6 @@ namespace StoryWeb.Models.Repositories
             return new List<Story>();
         }
 
-
         public async Task<Story> GetStoryById(int id)
         {
             try
@@ -118,7 +117,6 @@ namespace StoryWeb.Models.Repositories
                     var dataJson = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<Story>(dataJson);
                 }
-
             }
             catch (Exception)
             {
@@ -144,6 +142,27 @@ namespace StoryWeb.Models.Repositories
             {
             }
             return 0;
-        } 
+        }
+        public async Task<int> UpdateStory(Story story)
+        {
+            try
+            {
+                using (var client = CreateHttpClient())
+                {
+                    var content = new StringContent(JsonConvert.SerializeObject(story), Encoding.UTF8, "application/json");
+                    var response = await client.PutAsync("story/put", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return 1;
+                    }
+                    System.Diagnostics.Debug.WriteLine($"UpdateStory failed: {await response.Content.ReadAsStringAsync()}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateStory error: {ex.Message}");
+            }
+            return 0;
+        }
     }
 }

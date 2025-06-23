@@ -20,6 +20,7 @@ namespace WebStoryService.Models.Repositories
                         .Include("tbl_author")
                         .Include("tbl_category")
                         .AsQueryable();
+
                     if (categoryId.HasValue && categoryId.Value != 0)
                     {
                         query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1);
@@ -28,6 +29,7 @@ namespace WebStoryService.Models.Repositories
                     {
                         query = query.Where(s => s.C_active == 1 && s.C_story_type_id == storyTypeId);
                     }
+
                     list = query
                         .OrderBy(s => s.C_id)
                         .Skip((page - 1) * pageSize)
@@ -53,7 +55,7 @@ namespace WebStoryService.Models.Repositories
             }
             catch (Exception ex)
             {
-                // Log error if needed
+                System.Diagnostics.Debug.WriteLine($"Error in Gets: {ex.Message}");
             }
             return list;
         }
@@ -63,43 +65,44 @@ namespace WebStoryService.Models.Repositories
             List<Story> list = new List<Story>();
             try
             {
-                var en = new DbEntities();
-                var query = en.tbl_story
-                       .Include("tbl_author")
-                       .Include("tbl_category")
-                       .AsQueryable();
-                if (categoryId.HasValue && categoryId.Value != 0)
+                using (var en = new DbEntities())
                 {
-                    query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1 && s.C_story_type_id == storyTypeId);
-                }
-                else
-                {
-                    query = query.Where(s => s.C_active == 1 && s.C_story_type_id == storyTypeId);
-                }
-                var item = query.Select(s => new Story
-                {
-                    Id = s.C_id,
-                    Title = s.C_title,
-                    ChapterNumber = s.C_chapter_number ?? 0,
-                    Introduction = s.C_introduction,
-                    Image = s.C_image,
-                    LikeNumber = s.C_like_number ?? 0,
-                    FollowNumber = s.C_follow_number ?? 0,
-                    ViewNumber = s.C_view_number ?? 0,
-                    AuthorId = s.C_author_id ?? 0,
-                    StatusId = s.C_status_id ?? 0,
-                    CategoryId = s.C_category_id ?? 0,
-                    StoryTypeId = s.C_story_type_id ?? 0,
-                    AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
-                    CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
-                }).ToList();
-                if (item != null)
-                {
-                    list = item;
+                    var query = en.tbl_story
+                        .Include("tbl_author")
+                        .Include("tbl_category")
+                        .AsQueryable();
+
+                    if (categoryId.HasValue && categoryId.Value != 0)
+                    {
+                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1 && s.C_story_type_id == storyTypeId);
+                    }
+                    else
+                    {
+                        query = query.Where(s => s.C_active == 1 && s.C_story_type_id == storyTypeId);
+                    }
+
+                    list = query.Select(s => new Story
+                    {
+                        Id = s.C_id,
+                        Title = s.C_title,
+                        ChapterNumber = s.C_chapter_number ?? 0,
+                        Introduction = s.C_introduction,
+                        Image = s.C_image,
+                        LikeNumber = s.C_like_number ?? 0,
+                        FollowNumber = s.C_follow_number ?? 0,
+                        ViewNumber = s.C_view_number ?? 0,
+                        AuthorId = s.C_author_id ?? 0,
+                        StatusId = s.C_status_id ?? 0,
+                        CategoryId = s.C_category_id ?? 0,
+                        StoryTypeId = s.C_story_type_id ?? 0,
+                        AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
+                        CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
+                    }).ToList();
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error in GetAll: {ex.Message}");
             }
             return list;
         }
@@ -110,16 +113,19 @@ namespace WebStoryService.Models.Repositories
             {
                 if (categoryId != 0)
                 {
-                    DbEntities en = new DbEntities();
-                    var q = en.tbl_story.Any(d => d.C_category_id == categoryId);
-                    if (q)
+                    using (var en = new DbEntities())
                     {
-                        return 1;
+                        var q = en.tbl_story.Any(d => d.C_category_id == categoryId);
+                        if (q)
+                        {
+                            return 1;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error in checkCategory: {ex.Message}");
             }
             return 0;
         }
@@ -166,32 +172,81 @@ namespace WebStoryService.Models.Repositories
         {
             try
             {
-                DbEntities db = new DbEntities();
-                if (story != null)
+                using (var db = new DbEntities())
                 {
+                    if (story == null || string.IsNullOrEmpty(story.Title) || story.AuthorId <= 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Invalid story data: AuthorId or Title is missing.");
+                        return 0;
+                    }
+
                     var tbl_story = new tbl_story
                     {
                         C_title = story.Title,
                         C_status_id = story.StatusId,
                         C_category_id = story.CategoryId,
                         C_story_type_id = story.StoryTypeId,
+                        C_author_id = story.AuthorId,
                         C_image = story.Image,
                         C_introduction = story.Introduction,
                         C_active = story.Active,
+                        C_like_number = 0,
                         C_follow_number = 0,
                         C_view_number = 0,
-                        C_like_number = 0,
+                        C_chapter_number = 0
                     };
+
                     db.tbl_story.Add(tbl_story);
                     db.SaveChanges();
+                    System.Diagnostics.Debug.WriteLine($"Story created with ID: {tbl_story.C_id}, AuthorId: {tbl_story.C_author_id}, ChapterNumber: {tbl_story.C_chapter_number}");
                     return 1;
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in Create: {ex.Message}");
+                return 0;
             }
-            return 0;
+        }
+
+        public int Update(Story story)
+        {
+            try
+            {
+                using (var db = new DbEntities())
+                {
+                    if (story == null || story.Id <= 0 || string.IsNullOrEmpty(story.Title) || story.AuthorId <= 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Invalid story data: Id={story?.Id}, Title={story?.Title}, AuthorId={story?.AuthorId}");
+                        return 0;
+                    }
+
+                    var entity = db.tbl_story.FirstOrDefault(s => s.C_id == story.Id);
+                    if (entity != null)
+                    {
+                        entity.C_title = story.Title;
+                        entity.C_author_id = story.AuthorId;
+                        entity.C_category_id = story.CategoryId;
+                        entity.C_status_id = story.StatusId;
+                        entity.C_story_type_id = story.StoryTypeId;
+                        entity.C_introduction = story.Introduction;
+                        entity.C_image = story.Image;
+                        entity.C_active = story.Active;
+                        entity.C_chapter_number = story.ChapterNumber;
+                        db.SaveChanges();
+                        System.Diagnostics.Debug.WriteLine($"Story updated with ID: {story.Id}, ChapterNumber: {story.ChapterNumber}");
+                        return 1;
+                    }
+
+                    System.Diagnostics.Debug.WriteLine($"Story ID {story.Id} not found in database.");
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in Update: {ex.Message}");
+                return 0;
+            }
         }
 
         public bool Delete(int id)
@@ -203,11 +258,12 @@ namespace WebStoryService.Models.Repositories
                     var story = db.tbl_story.FirstOrDefault(s => s.C_id == id);
                     if (story != null)
                     {
-                        story.C_active = 0; // Xóa mềm
+                        story.C_active = 0;
                         db.SaveChanges();
                         System.Diagnostics.Debug.WriteLine($"Successfully soft-deleted story ID {id}.");
                         return true;
                     }
+
                     System.Diagnostics.Debug.WriteLine($"Story ID {id} not found in database.");
                     return false;
                 }
@@ -219,83 +275,60 @@ namespace WebStoryService.Models.Repositories
             }
         }
 
-        public int Update(Story story)
-        {
-            try
-            {
-                using (var db = new DbEntities())
-                {
-                    var entity = db.tbl_story.FirstOrDefault(s => s.C_id == story.Id);
-                    if (entity != null)
-                    {
-                        entity.C_chapter_number = story.ChapterNumber;
-                        db.SaveChanges();
-                        return 1;
-                    }
-                    return 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in Update: {ex.Message}");
-                return 0;
-            }
-        }
         public void IncreaseView(int storyId)
         {
             try
             {
-                DbEntities en = new DbEntities();
-                var item = en.tbl_story.Where(d => d.C_story_type_id == storyId).FirstOrDefault();
-                if (item != null)
+                using (var en = new DbEntities())
                 {
-                    if (item.C_view_number == null)
+                    var item = en.tbl_story.FirstOrDefault(d => d.C_id == storyId);
+                    if (item != null)
                     {
-                        item.C_view_number = 0;
-                    }
-                    else
-                    {
-                        item.C_view_number++;
+                        item.C_view_number = (item.C_view_number ?? 0) + 1;
+                        en.SaveChanges();
                     }
                 }
             }
             catch (Exception ex)
             {
-
-
+                System.Diagnostics.Debug.WriteLine($"Error in IncreaseView: {ex.Message}");
             }
         }
+
         public List<Story> Search(string name)
         {
             try
             {
-                DbEntities en = new DbEntities();
-                var item = en.tbl_story.Where(d => d.C_title.ToLower().Contains(name.ToLower())).Select(s => new Story
+                using (var en = new DbEntities())
                 {
-                    Id = s.C_id,
-                    Title = s.C_title ?? "",
-                    ChapterNumber = s.C_chapter_number ?? 0,
-                    Introduction = s.C_introduction ?? "",
-                    Image = s.C_image ?? "default.jpg",
-                    LikeNumber = s.C_like_number ?? 0,
-                    FollowNumber = s.C_follow_number ?? 0,
-                    ViewNumber = s.C_view_number ?? 0,
-                    AuthorId = s.C_author_id ?? 0,
-                    StatusId = s.C_status_id ?? 0,
-                    CategoryId = s.C_category_id ?? 0,
-                    StoryTypeId = s.C_story_type_id ?? 0,
-                    AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
-                    CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
-                }).ToList();
-                if (item != null)
-                {
-                    return item;
+                    var item = en.tbl_story
+                        .Where(d => d.C_title.ToLower().Contains(name.ToLower()))
+                        .Select(s => new Story
+                        {
+                            Id = s.C_id,
+                            Title = s.C_title ?? "",
+                            ChapterNumber = s.C_chapter_number ?? 0,
+                            Introduction = s.C_introduction ?? "",
+                            Image = s.C_image ?? "default.jpg",
+                            LikeNumber = s.C_like_number ?? 0,
+                            FollowNumber = s.C_follow_number ?? 0,
+                            ViewNumber = s.C_view_number ?? 0,
+                            AuthorId = s.C_author_id ?? 0,
+                            StatusId = s.C_status_id ?? 0,
+                            CategoryId = s.C_category_id ?? 0,
+                            StoryTypeId = s.C_story_type_id ?? 0,
+                            AuthorName = s.tbl_author != null ? s.tbl_author.C_name : "",
+                            CategoryName = s.tbl_category != null ? s.tbl_category.C_name : ""
+                        }).ToList();
+
+                    return item ?? new List<Story>();
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error in Search: {ex.Message}");
+                return new List<Story>();
             }
-            return new List<Story>();
         }
     }
 }

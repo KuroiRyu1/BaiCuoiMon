@@ -111,19 +111,14 @@ namespace WebStoryService.Areas.MyApi.Controllers
         {
             try
             {
-                if (story != null && story.Id != 0)
+                if (story != null && story.Id != 0 && !string.IsNullOrEmpty(story.Title) && story.AuthorId != 0)
                 {
-                    using (var db = new DbEntities())
+                    var result = _storyRes.Update(story);
+                    if (result == 1)
                     {
-                        var entity = db.tbl_story.FirstOrDefault(s => s.C_id == story.Id);
-                        if (entity != null)
-                        {
-                            entity.C_chapter_number = story.ChapterNumber;
-                            db.SaveChanges();
-                            return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Cập nhật số chương thành công." });
-                        }
-                        return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
+                        return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Cập nhật truyện thành công." });
                     }
+                    return Request.CreateResponse(HttpStatusCode.NotFound, new { Message = "Truyện không tìm thấy." });
                 }
                 return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Dữ liệu truyện không hợp lệ." });
             }

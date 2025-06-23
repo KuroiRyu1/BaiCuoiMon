@@ -179,6 +179,7 @@
     <Compile Include="Models\base_address.cs" />
     <Compile Include="Models\AdminAuthorizeAttribute.cs" />
     <Compile Include="Models\Function.cs" />
+    <Compile Include="Models\ModelView\Author.cs" />
     <Compile Include="Models\ModelView\Category.cs" />
     <Compile Include="Models\ModelView\Chapter.cs" />
     <Compile Include="Models\ModelView\ChapterComment.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Models\ModelView\Story.cs" />
     <Compile Include="Models\ModelView\StoryType.cs" />
     <Compile Include="Models\ModelView\User.cs" />
+    <Compile Include="Models\Repositories\AuthorRep.cs" />
     <Compile Include="Models\Repositories\CategoryRep.cs" />
     <Compile Include="Models\Repositories\ChapterImageRes.cs" />
     <Compile Include="Models\Repositories\ChapterRep.cs" />
@@ -376,6 +378,7 @@
     <Content Include="Views\Admin\CateCreate.cshtml" />
     <Content Include="Views\Admin\AddStory.cshtml" />
     <Content Include="Views\Admin\ChangeUserRole.cshtml" />
+    <Content Include="Views\Admin\StoryEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

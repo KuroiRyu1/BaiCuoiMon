@@ -159,6 +159,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\MyApi\Controllers\AuthorApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\CategoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\CommentApiController.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Areas\MyApi\Controllers\StoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterImageApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StoryTypeController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\StoryTypeApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
     <Compile Include="Areas\MyApi\MyApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -187,9 +189,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DbEntities.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Entities\sysdiagram.cs">
-      <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Entities\tbl_author.cs">
       <DependentUpon>DbEntities.tt</DependentUpon>
@@ -228,6 +227,7 @@
       <DependentUpon>DbEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Function.cs" />
+    <Compile Include="Models\ModelData\Author.cs" />
     <Compile Include="Models\ModelData\Category.cs" />
     <Compile Include="Models\ModelData\ChapterComment.cs" />
     <Compile Include="Models\ModelData\Follow.cs" />
@@ -237,6 +237,7 @@
     <Compile Include="Models\ModelData\StoryType.cs" />
     <Compile Include="Models\ModelData\User.cs" />
     <Compile Include="Models\Repositories\AccountRep.cs" />
+    <Compile Include="Models\Repositories\AuthorRes.cs" />
     <Compile Include="Models\Repositories\CategoryRes.cs" />
     <Compile Include="Models\Repositories\FollowRep.cs" />
     <Compile Include="Models\Repositories\LoginRequest.cs" />

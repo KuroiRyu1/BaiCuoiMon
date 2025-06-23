@@ -257,5 +257,42 @@ namespace WebStoryService.Areas.MyApi.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        [HttpPut]
+        [Route("update-paths")]
+        public async Task<IHttpActionResult> UpdateImagePaths([FromBody] List<tbl_chapter_image> images)
+        {
+            try
+            {
+                if (images == null || !images.Any())
+                    return BadRequest("Danh sách ảnh rỗng.");
+
+                if (images.Any(i => i.C_id <= 0 || string.IsNullOrEmpty(i.C_image)))
+                    return BadRequest("Dữ liệu ảnh không hợp lệ: Một số ảnh thiếu ID hoặc đường dẫn.");
+
+                foreach (var image in images)
+                {
+                    var existingImage = _db.tbl_chapter_image.Find(image.C_id);
+                    if (existingImage == null)
+                        return BadRequest($"Không tìm thấy ảnh với ID {image.C_id}.");
+
+                    existingImage.C_image = image.C_image;
+                }
+
+                await _db.SaveChangesAsync();
+                return Ok(new { Message = "Cập nhật đường dẫn ảnh thành công", ImageCount = images.Count });
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                var errors = ex.EntityValidationErrors
+                    .SelectMany(e => e.ValidationErrors)
+                    .Select(e => $"{e.PropertyName}: {e.ErrorMessage}");
+                return InternalServerError(new Exception($"Validation failed: {string.Join("; ", errors)}"));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

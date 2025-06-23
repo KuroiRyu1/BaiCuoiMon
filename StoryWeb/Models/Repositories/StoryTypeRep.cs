@@ -3,9 +3,10 @@ using StoryWeb.Models.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace StoryWeb.Models.Repositories
 {
@@ -13,6 +14,9 @@ namespace StoryWeb.Models.Repositories
     {
         private static StoryTypeRep _instance = null;
         private StoryTypeRep() { }
+        private static StoryTypeRep _instance;
+        private StoryTypeRep() { }
+
         public static StoryTypeRep Instance
         {
             get
@@ -51,6 +55,29 @@ namespace StoryWeb.Models.Repositories
                 storytype = JsonConvert.DeserializeObject<StoryType>(dataJson);
             }
             return storytype;
+        }
+
+        public async Task<List<StoryType>> GetStoryTypes()
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    var response = await client.GetAsync("api/story-types/get");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<List<StoryType>>(dataJson);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetStoryTypes: {ex.Message}");
+            }
+            return new List<StoryType>();
         }
     }
 }
