@@ -244,6 +244,7 @@
     <Compile Include="Models\Repositories\StatusRep.cs" />
     <Compile Include="Models\Repositories\StoryRes.cs" />
     <Compile Include="Models\Repositories\StoryTypeRep.cs" />
+    <Compile Include="Models\Repositories\StoryTypeRes.cs" />
     <Compile Include="Models\Repositories\UserRes.cs" />
     <Compile Include="Models\ModelData\Chapter.cs" />
     <Compile Include="Models\ModelData\ChapterImage.cs" />

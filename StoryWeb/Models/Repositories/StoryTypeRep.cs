@@ -14,8 +14,6 @@ namespace StoryWeb.Models.Repositories
     {
         private static StoryTypeRep _instance = null;
         private StoryTypeRep() { }
-        private static StoryTypeRep _instance;
-        private StoryTypeRep() { }
 
         public static StoryTypeRep Instance
         {
