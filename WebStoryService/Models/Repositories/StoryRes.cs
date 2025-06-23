@@ -60,7 +60,7 @@ namespace WebStoryService.Models.Repositories
             return list;
         }
 
-        public List<Story> GetAll(int? categoryId = null, int storyTypeId = 1)
+        public List<Story> GetAll(int? categoryId = null)
         {
             List<Story> list = new List<Story>();
             try
@@ -74,11 +74,11 @@ namespace WebStoryService.Models.Repositories
 
                     if (categoryId.HasValue && categoryId.Value != 0)
                     {
-                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1 && s.C_story_type_id == storyTypeId);
+                        query = query.Where(s => (s.C_category_id ?? 0) == categoryId.Value && s.C_active == 1);
                     }
                     else
                     {
-                        query = query.Where(s => s.C_active == 1 && s.C_story_type_id == storyTypeId);
+                        query = query.Where(s => s.C_active == 1);
                     }
 
                     list = query.Select(s => new Story

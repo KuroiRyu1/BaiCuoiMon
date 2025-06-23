@@ -52,7 +52,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
             try
             {
 
-                var item = _storyRes.GetAll(cateId,storyTypeId);
+                var item = _storyRes.GetAll(cateId);
                 if (item != null)
                 {
                     story = item;
