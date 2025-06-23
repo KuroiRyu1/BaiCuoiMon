@@ -28,7 +28,7 @@ namespace StoryWeb.Models.Repositories
         {
             var client = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:8078/")
+                BaseAddress = new Uri(base_address.Address)
             };
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             return client;

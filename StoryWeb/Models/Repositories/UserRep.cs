@@ -144,7 +144,7 @@ namespace StoryWeb.Models.Repositories
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:8078");
+                client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 string url = $"user/list";
               

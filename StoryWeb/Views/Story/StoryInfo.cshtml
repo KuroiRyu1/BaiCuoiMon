@@ -8,7 +8,7 @@
     bool isFollowing = false;
     StoryWeb.Models.ModelView.Category cate = new StoryWeb.Models.ModelView.Category();
     StoryWeb.Models.ModelView.StoryType storyType = new StoryWeb.Models.ModelView.StoryType();
-    StoryWeb.Models.ModelView.Status status = new StoryWeb.Models.ModelView.Status;
+    StoryWeb.Models.ModelView.Status status = new StoryWeb.Models.ModelView.Status();
     if (Session["user"] != null)
     {
         user = (StoryWeb.Models.ModelView.User)Session["user"];
@@ -254,7 +254,7 @@ if (ViewBag.status != null)
                                 </div>
                                 <div class="row mb-1">
                                     Trạng thái:
-                                    <span>@status.Title</span>
+                                    <span>Đang hoạt động</span>
                                 </div>
 
 

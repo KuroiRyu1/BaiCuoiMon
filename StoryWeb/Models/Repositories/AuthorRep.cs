@@ -31,7 +31,7 @@ namespace StoryWeb.Models.Repositories
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.BaseAddress = new Uri(base_address.Address);
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     var response = await client.GetAsync("api/authors/get");
                     if (response.IsSuccessStatusCode)
@@ -53,7 +53,7 @@ namespace StoryWeb.Models.Repositories
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.BaseAddress = new Uri(base_address.Address);
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     var response = await client.GetAsync($"api/authors/get/{id}");
                     if (response.IsSuccessStatusCode)
