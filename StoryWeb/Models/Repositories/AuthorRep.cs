@@ -47,5 +47,46 @@ namespace StoryWeb.Models.Repositories
             }
             return new List<Author>();
         }
+        public async Task<Author> GetAuthorsById(int id)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    var response = await client.GetAsync($"api/authors/get/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var dataJson = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<Author>(dataJson);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetAuthors: {ex.Message}");
+            }
+            return new Author();
+        }
+        public async Task<int> AddAuthor(Author author)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(author), Encoding.UTF8, "application/json");
+                HttpResponseMessage res = await client.PostAsync("api/authors/post", content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
     }
 }

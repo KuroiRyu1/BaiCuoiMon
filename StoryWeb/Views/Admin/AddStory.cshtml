@@ -48,6 +48,9 @@
                                 </label>
                                 @Html.DropDownListFor(m => m.AuthorId, new SelectList(authors, "Id", "Name"), "Chọn tác giả", new { @class = "form-select", required = "required" })
                                 @Html.ValidationMessageFor(m => m.AuthorId, "", new { @class = "text-danger" })
+                            <a href="@Url.Action("author","Admin")">
+                                <i class="fas fa-plus"></i> Thêm Tác giả
+                            </a>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
