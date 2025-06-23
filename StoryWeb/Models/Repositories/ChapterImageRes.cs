@@ -25,7 +25,7 @@ namespace StoryWeb.Models.Repositories
                 return _instance;
             }
         }
-        public async Task<List<ChapterImage>> getChapterImage(int id)
+        public async Task<List<ChapterImage>> getChapterImage(int chapterId)
         {
             var chapterImage = new List<ChapterImage>();
             try
@@ -33,7 +33,7 @@ namespace StoryWeb.Models.Repositories
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(base_address.Address);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpResponseMessage res = await client.GetAsync($"api/chapter-images/{id}");
+                HttpResponseMessage res = await client.GetAsync($"api/chapter-images/{chapterId}");
                 if (res.IsSuccessStatusCode)
                 {
                     var dataJson = res.Content.ReadAsStringAsync().Result;

@@ -35,7 +35,7 @@ namespace WebStoryService.Areas.MyApi.Controllers
                         i.C_id,
                         i.C_image,
                         i.C_index,
-                        FullPath = VirtualPathUtility.ToAbsolute(string.IsNullOrEmpty(i.C_image) ? "Content/images/default.jpg" : i.C_image)
+                        //FullPath = VirtualPathUtility.ToAbsolute(string.IsNullOrEmpty(i.C_image) ? "Content/images/default.jpg" : i.C_image)
                     })
                     .ToList();
 
