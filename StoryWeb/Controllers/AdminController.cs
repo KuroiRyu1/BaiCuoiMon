@@ -150,6 +150,7 @@ namespace StoryWeb.Controllers
                         }
                         Img.SaveAs(fullPathSave);
                         newImagePath = $"Content/Image/{newFolder}/{fileName}";
+                        newImagePath =fileName;
 
                         // Xóa ảnh cũ nếu tồn tại
                         if (!string.IsNullOrEmpty(oldImagePath))
@@ -471,6 +472,7 @@ namespace StoryWeb.Controllers
 
                                     // Thêm vào danh sách ảnh để gửi qua API
                                     var imagePath = $"Content/Image/{storyFolder}/{chapter.ChapterIndex}/{fileName}";
+                                    imagePath =fileName;
                                     if (imagePath.Length > 50)
                                     {
                                         TempData["Error"] = $"Đường dẫn ảnh {imagePath} vượt quá 50 ký tự.";

@@ -14,8 +14,6 @@ namespace StoryWeb.Models.Repositories
     {
         private static StoryTypeRep _instance = null;
         private StoryTypeRep() { }
-        private static StoryTypeRep _instance;
-        private StoryTypeRep() { }
 
         public static StoryTypeRep Instance
         {
@@ -63,7 +61,7 @@ namespace StoryWeb.Models.Repositories
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:8078/");
+                    client.BaseAddress = new Uri(base_address.Address);
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     var response = await client.GetAsync("api/story-types/get");
                     if (response.IsSuccessStatusCode)

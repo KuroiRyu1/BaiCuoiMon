@@ -15,15 +15,32 @@ namespace StoryWeb.Models
         private static readonly char[] tokenChars =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
         static Regex ConvertToUnsign_rg = null;
-        public static string ConvertToUnsign(string strInput)
+        private static readonly string[] VietNamChar = new string[]
+    {
+        "aAeEoOuUiIdDyY",
+        "áàạảãâấầậẩẫăắằặẳẵ",
+        "ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
+        "éèẹẻẽêếềệểễ",
+        "ÉÈẸẺẼÊẾỀỆỂỄ",
+        "óòọỏõôốồộổỗơớờợởỡ",
+        "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
+        "úùụủũưứừựửữ",
+        "ÚÙỤỦŨƯỨỪỰỬỮ",
+        "íìịỉĩ",
+        "ÍÌỊỈĨ",
+        "đ",
+        "Đ",
+        "ýỳỵỷỹ",
+        "ÝỲỴỶỸ"
+    };
+        public static string ConvertToUnsign(string str)
         {
-            if (ReferenceEquals(ConvertToUnsign_rg, null))
+            for (int i = 1; i < VietNamChar.Length; i++)
             {
-                ConvertToUnsign_rg = new Regex("p{IsCombiningDiacriticalMarks}+");
+                for (int j = 0; j < VietNamChar[i].Length; j++)
+                    str = str.Replace(VietNamChar[i][j], VietNamChar[0][i - 1]);
             }
-            var temp = strInput.Normalize(NormalizationForm.FormD);
-            var value = ConvertToUnsign_rg.Replace(temp, string.Empty).Replace("đ", "d").Replace("Đ", "D").ToLower();
-            return value.Replace(" ", string.Empty);
+            return str.Replace(" ","").ToLower();
         }
         public static string GenerateToken(int length = 20)
         {

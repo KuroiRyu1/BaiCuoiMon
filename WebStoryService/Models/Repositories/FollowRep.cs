@@ -54,7 +54,6 @@ namespace WebStoryService.Models.Repositories
                 {
                     C_user_id = model.UserId,
                     C_story_id = model.StoryId,
-                    C_day_create = DateTime.Now,
                     C_status = 1,
                 };
                 en.tbl_story_follow.Add(newFollow);
