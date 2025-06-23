@@ -8,6 +8,7 @@
     bool isFollowing = false;
     StoryWeb.Models.ModelView.Category cate = new StoryWeb.Models.ModelView.Category();
     StoryWeb.Models.ModelView.StoryType storyType = new StoryWeb.Models.ModelView.StoryType();
+    StoryWeb.Models.ModelView.Status status = new StoryWeb.Models.ModelView.Status;
     if (Session["user"] != null)
     {
         user = (StoryWeb.Models.ModelView.User)Session["user"];
@@ -32,6 +33,10 @@
     {
         storyType = (StoryWeb.Models.ModelView.StoryType)ViewBag.storytype;
     }
+if (ViewBag.status != null)
+            {
+        status = (StoryWeb.Models.ModelView.Status)ViewBag.author;
+            }
     string name = StoryWeb.Models.Function.ConvertToUnsign(story.Title);
     var isLoggedIn = user != null;
     var url = isFollowing ? "/Story/StoryFollow" : "/Story/StoryFollow";
@@ -59,20 +64,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="icon-group mx-auto d-flex justify-space-around mt-5">
-                    <div title="Lượt đánh giá" class="rounded-sm he-4 zs-bg-1 d-flex flex-column align-center justify-center v-sheet theme-dark ele-2">
-                        <span class="v-icon notranslate theme-dark">
-                            <svg viewBox="0 0 24 24" class="v-icon-svg">
-                                <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
-                            </svg>
-                        </span>
-                        <div class="text-caption">
-
-
-
-                            101
-                        </div>
-                    </div>
                     <div title="Lượt xem" class="rounded-sm he-4 zs-bg-1 d-flex flex-column align-center justify-center v-sheet theme-dark ele-2">
                         <span class="v-icon notranslate theme-dark">
                             <svg viewBox="0 0 24 24" class="v-icon-svg">
@@ -263,7 +254,7 @@
                                 </div>
                                 <div class="row mb-1">
                                     Trạng thái:
-                                    <span>Đang thực hiện</span>
+                                    <span>@status.Title</span>
                                 </div>
 
 

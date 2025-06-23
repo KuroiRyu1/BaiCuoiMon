@@ -34,6 +34,7 @@ namespace StoryWeb.Controllers
             var commentList = await CommentRep.Instance.GetStoryCommentsAsync(id);
             var Category = await CategoryRep.Instance.getById(story.CategoryId);
             var storyType = await StoryTypeRep.Instance.GetById(story.StoryTypeId);
+            var status = await StatusRep.Instance.getById(story.StatusId);
             User user = (User)Session["user"];
             if (user != null&&story!=null)
             {
@@ -41,6 +42,7 @@ namespace StoryWeb.Controllers
                 var follow = await FollowRep.Instance.checkFollow(story.Id, user.Id);
                 ViewBag.follow = follow;
             }
+            ViewBag.status = status;
             ViewBag.storytype = storyType;
             ViewBag.category = Category;
             ViewBag.comments = commentList;
@@ -48,6 +50,7 @@ namespace StoryWeb.Controllers
             ViewBag.chapterList = chapterList;
             return View();
         }
+
 
         // GET: Story/Create
         public ActionResult Create()

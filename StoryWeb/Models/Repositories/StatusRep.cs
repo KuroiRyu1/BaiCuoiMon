@@ -45,5 +45,26 @@ namespace StoryWeb.Models.Repositories
             }
             return new List<Status>();
         }
+        public async Task<Status> getById(int id)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(base_address.Address);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                HttpResponseMessage res = await client.GetAsync($"status/get/{id}");
+                var status = new Status();
+                if (res.IsSuccessStatusCode)
+                {
+                    var dataJson = res.Content.ReadAsStringAsync().Result;
+                    status = JsonConvert.DeserializeObject<Status>(dataJson);
+                }
+                return status;
+            }
+            catch (Exception e)
+            {
+            }
+            return new Status();
+        }
     }
 }

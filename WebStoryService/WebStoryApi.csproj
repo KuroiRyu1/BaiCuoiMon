@@ -167,8 +167,8 @@
     <Compile Include="Areas\MyApi\Controllers\StatusController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StoryApiController.cs" />
     <Compile Include="Areas\MyApi\Controllers\ChapterImageApiController.cs" />
-    <Compile Include="Areas\MyApi\Controllers\StoryTypeController.cs" />
     <Compile Include="Areas\MyApi\Controllers\StoryTypeApiController.cs" />
+    <Compile Include="Areas\MyApi\Controllers\StoryTypeController.cs" />
     <Compile Include="Areas\MyApi\Controllers\UsersApiController.cs" />
     <Compile Include="Areas\MyApi\MyApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />

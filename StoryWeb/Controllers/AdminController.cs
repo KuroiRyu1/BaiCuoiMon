@@ -150,6 +150,7 @@ namespace StoryWeb.Controllers
                         }
                         Img.SaveAs(fullPathSave);
                         newImagePath = $"Content/Image/{newFolder}/{fileName}";
+                        newImagePath =fileName;
 
                         // Xóa ảnh cũ nếu tồn tại
                         if (!string.IsNullOrEmpty(oldImagePath))
@@ -471,6 +472,7 @@ namespace StoryWeb.Controllers
 
                                     // Thêm vào danh sách ảnh để gửi qua API
                                     var imagePath = $"Content/Image/{storyFolder}/{chapter.ChapterIndex}/{fileName}";
+                                    imagePath =fileName;
                                     if (imagePath.Length > 50)
                                     {
                                         TempData["Error"] = $"Đường dẫn ảnh {imagePath} vượt quá 50 ký tự.";
@@ -868,7 +870,7 @@ namespace StoryWeb.Controllers
                         Directory.CreateDirectory(createFolder);
                     }
                     Img.SaveAs(fullPathSave);
-                    story.Image = $"Content/Image/{storyFolder}/{fileName}";
+                    story.Image = fileName;
 
                     // Chuẩn bị dữ liệu truyện để gửi qua API
                     var storyData = new
@@ -908,7 +910,39 @@ namespace StoryWeb.Controllers
             }
             return RedirectToAction("AddStory");
         }
-
+        public ActionResult author()
+        {
+            return View();
+        }
+        public async Task<ActionResult> addAuthor(HttpPostedFileBase Images, Author author)
+        {
+            try
+            {
+                if (author != null)
+                {
+                    if (Images != null)
+                    {
+                        string authorFolder = Function.ConvertToUnsign(author.Name).Trim().Replace(" ", "");
+                        string fileExtension = Path.GetExtension(Images.FileName);
+                        string fileName = $"cover{fileExtension}";
+                        string createFolder = Server.MapPath($"~/Content/Image/Author/{authorFolder}");
+                        string fullPathSave = Path.Combine(createFolder, fileName);
+                        if (!Directory.Exists(createFolder))
+                        {
+                            Directory.CreateDirectory(createFolder);
+                        }
+                        Images.SaveAs(fullPathSave);
+                        author.Image = fileName;
+                        
+                    }
+                    var item = await AuthorRep.Instance.AddAuthor(author);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return RedirectToAction("AddStory","Admin");
+        }
         public async Task<ActionResult> ChangeUserRole(int id = 0)
         {
             try

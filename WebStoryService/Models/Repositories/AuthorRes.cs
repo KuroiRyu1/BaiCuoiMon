@@ -32,5 +32,50 @@ namespace WebStoryService.Models.Repositories
             }
             return new List<Author>();
         }
+        public Author getAuthorById(int id=0)
+        {
+            try
+            {
+                DbEntities en = new DbEntities();
+                if (id != 0)
+                {
+                    var item = en.tbl_author.Where(d=>d.C_id == id).Select(d =>new Author
+                    {
+                        Id = d.C_id,
+                        Name = d.C_name ,
+                        Information = d.C_information ,
+                        Image = d.C_image ,
+                    }).FirstOrDefault();
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return new Author();
+        }
+        public int AddAuthor(Author author)
+        {
+            try
+            {
+                DbEntities db = new DbEntities();
+                if (author != null)
+                {
+                    var tbl = new tbl_author
+                    {
+                        C_id = author.Id,
+                        C_name = author.Name,
+                        C_image = author.Image,
+                        C_information = author.Information
+                    };
+                    db.tbl_author.Add(tbl);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return 0;
+        }
     }
 }
